@@ -1,1 +1,16 @@
 ### scripts/validate_memory.py  cwd=<scratch> isolated PILOT_DB_PATH/DATA_DIR/LOG_DIR (2026-09-30T19:03:08Z); Ollama NOT installed
+Terminated
+exit=124
+wall_clock_seconds=600.015267503
+----- generated report file -----
+# Memory Validation Report
+
+## Task Retrieval Validation
+Status: **PASS**
+Latency: Evaluated internally by ChromaDB
+Top-K Matches: 1
+
+## Details
+Successfully extracted and stored episodic memory, and retrieved it semantically via vector search.
+collection_count= 1
+['Task: Set preference to dark mode. Status: Success.']

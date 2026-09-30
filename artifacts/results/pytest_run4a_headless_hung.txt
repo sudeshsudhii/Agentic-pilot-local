@@ -1,0 +1,5 @@
+### RUN 4 (canonical): PILOT_HEADLESS_BROWSER=true python -m pytest -q -rA --continue-on-collection-errors --junitxml=artifacts/results/junit.xml --durations=25  (start 2026-09-30T18:52:57Z); playwright==1.56.0 (matches /opt/pw-browsers/chromium-1194); no DISPLAY; Ollama NOT installed
+F........Terminated
+exit=143
+wall_clock_seconds=1292.453640951
+NOTE: killed by evaluator (SIGTERM) at ~19:14Z after ~21.5 min wall / 11 s CPU; hung in tests/test_browser_agent_pipeline.py::test_action_failure_never_marks_completed (py-spy: MainThread idle in asyncio select inside pytest_asyncio runner)

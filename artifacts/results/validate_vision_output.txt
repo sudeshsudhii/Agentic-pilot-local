@@ -1,0 +1,20 @@
+### scripts/validate_vision.py  cwd=<scratch> isolated PILOT_DB_PATH/DATA_DIR/LOG_DIR (2026-09-30T19:13:08Z); Ollama NOT installed
+Validating Vision Fallback...
+OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+[VISION]
+called=false
+model=none
+image_attached=false
+error=VISION_UNAVAILABLE
+Vision Validation Complete! Saved to VISION_VALIDATION.md
+exit=0
+wall_clock_seconds=.733505517
+----- generated report file -----
+# Vision Validation Report
+
+## Vision Fallback Execution
+Status: **FAIL**
+Reason: Failed to invoke vision model: VISION_UNAVAILABLE: No compatible vision model installed in Ollama.
+
+## Details
+Successfully triggered the vision fallback, passed screenshot bytes to VLM, and received bounding box coordinates.

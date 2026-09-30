@@ -1,0 +1,27 @@
+### OBSERVATORY: python -m pytest observatory/tests -q -rA --timeout=240 --junitxml=artifacts/results/junit_observatory.xml -p no:cacheprovider (isolated PILOT_DB_PATH/LOG_DIR/DATA_DIR; 2026-09-30T19:15:14Z)
+....................                                                     [100%]
+==================================== PASSES ====================================
+=========================== short test summary info ============================
+PASSED observatory/tests/test_observatory.py::test_01_event_stream_connects
+PASSED observatory/tests/test_observatory.py::test_02_events_arrive_in_real_time
+PASSED observatory/tests/test_observatory.py::test_03_events_preserve_run_id
+PASSED observatory/tests/test_observatory.py::test_04_events_preserve_ordering
+PASSED observatory/tests/test_observatory.py::test_05_model_selected_appears
+PASSED observatory/tests/test_observatory.py::test_06_plan_created_appears
+PASSED observatory/tests/test_observatory.py::test_07_screenshot_captured_appears
+PASSED observatory/tests/test_observatory.py::test_08_vision_started_separate_from_screenshot
+PASSED observatory/tests/test_observatory.py::test_09_image_attached_accurate
+PASSED observatory/tests/test_observatory.py::test_10_decision_made_appears
+PASSED observatory/tests/test_observatory.py::test_11_action_started_appears
+PASSED observatory/tests/test_observatory.py::test_12_action_succeeded_appears
+PASSED observatory/tests/test_observatory.py::test_13_verification_passed_appears
+PASSED observatory/tests/test_observatory.py::test_14_task_completed_only_after_verification
+PASSED observatory/tests/test_observatory.py::test_15_captcha_appears_as_blocked
+PASSED observatory/tests/test_observatory.py::test_16_retry_events_appear
+PASSED observatory/tests/test_observatory.py::test_17_model_timing_calculated_correctly
+PASSED observatory/tests/test_observatory.py::test_18_run_history_works
+PASSED observatory/tests/test_observatory.py::test_19_sensitive_info_redacted
+PASSED observatory/tests/test_observatory.py::test_20_disconnection_reconnection_works
+20 passed in 0.82s
+exit=0
+wall_clock_seconds=2.070881102
