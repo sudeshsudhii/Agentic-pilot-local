@@ -21,14 +21,14 @@
 \node[box, minimum width=1.4cm] (run) at (0.85,-1.3) {Task runner\\checkpoints};
 \node[draw, rounded corners=2pt, minimum width=6.35cm, minimum height=1.0cm, fill=gray!6] (agent) at (5.05,-1.3) {};
 \node[font=\tiny\bfseries, anchor=north] at (agent.north) {LangGraph agent (Fig.~\ref{fig:graph})};
-\node[sub] (s1) at (2.45,-1.42) {risk gate};
+\node[sub] (s1) at (2.45,-1.42) {risk gate (once)};
 \node[sub] (s2) at (3.72,-1.42) {plan + sanitize};
 \node[sub] (s3) at (4.99,-1.42) {execute};
 \node[sub, fill=gray!20] (s4) at (6.26,-1.42) {verify $\Phi$};
 \node[sub] (s5) at (7.53,-1.42) {recover};
 
 % row 3
-\node[box, minimum width=1.6cm] (router) at (3.4,-2.55) {Model router};
+\node[box, minimum width=1.6cm] (router) at (3.4,-2.55) {Model router (text)};
 \node[box, minimum width=1.6cm] (pool)   at (7.4,-2.55) {Browser pool\\Playwright};
 
 % row 4
@@ -53,6 +53,6 @@
 \draw[arr] (2.25,-1.8) -- (2.25,-3.55) -- (chroma.east);
 \draw[arr, dashed] (api) -- node[font=\tiny, above] {events} (obs);
 \end{tikzpicture}
-\caption{Components of Agentic Pilot. Everything inside the dashed boundary runs on the user's machine, including model inference. Web pages are the main untrusted input, and browsing is the main outbound traffic. The Observatory also reads the task database and evidence files.}
+\caption{Components of Agentic Pilot. Everything inside the dashed boundary runs on the user's machine, including model inference. Web pages are the main untrusted input, and browsing is the main outbound traffic. The Observatory also reads the task database and evidence files. Memory records are written to Chroma but not read on the live path.}
 \label{fig:arch}
 \end{figure}

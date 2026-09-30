@@ -1,6 +1,6 @@
 \begin{table}[t]
 \centering
-\caption{Proposed desktop postconditions and default permission tiers (design, not implemented). $h_0$, $t_0$: values captured before the action; $(\mathit{pid}, t_c)$: process ID and creation time.}
+\caption{Proposed desktop postconditions and default permission tiers (design, not implemented). $h_0$: hash captured before the action; $(\mathit{pid}, t_c)$: process ID and creation time.}
 \label{tab:desktop}
 \footnotesize
 \setlength{\tabcolsep}{2.5pt}
@@ -8,7 +8,6 @@
 \toprule
 Action & Postcondition checked after execution & Tier \\
 \midrule
-file read, list, hash & workspace manifest unchanged & T0 \\
 create file & file exists $\wedge$ $\mathrm{sha256}=\mathrm{sha256}(\text{content})$ & T1 \\
 overwrite & backup of pre-image stored $\wedge$ hash equals new content & T1 \\
 move & source absent $\wedge$ $\mathrm{sha256}(\text{dst}) = h_0(\text{src})$ & T1 \\
@@ -16,9 +15,7 @@ move to trash & path absent $\wedge$ trash entry with that origin & T1 \\
 permanent delete & path absent & T2 \\
 launch app & $\mathit{pid}$ alive with creation time $t_c$ $\wedge$ window title matches & T1/T3 \\
 terminate & $(\mathit{pid}, t_c)$ gone within timeout & T1/T2 \\
-focus window & foreground title matches pattern & T0 \\
 set value & accessibility value of element equals input & T1/T3 \\
-toggle control & element state contains \textit{checked} & T1/T2 \\
 \bottomrule
 \end{tabular}
 \end{table}

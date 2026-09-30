@@ -9,21 +9,22 @@ Every factual statement in the paper about the system, a number, or other work, 
 
 | ID | Section | Claim | Type | Source | Status |
 |---|---|---|---|---|---|
-| N1 | Abstract, §VII, Tab. IV | 35 constructed end states; 22 unsatisfied, 13 satisfied | experiment | `artifacts/results/verification_gate_summary.csv` row `all` | verified |
-| N2 | Abstract, §VII | Gate withheld completion in 15 of 22 unsatisfied states; dispatch-only accepts all 22 | experiment | same CSV: false_completions 7 of 22 (so 15 caught); dispatch rule reported_complete = 35 | verified |
-| N3 | Abstract, §VII | Rejected 1 of 13 satisfied states (X6) | experiment | `verification_gate_cases.csv` X6: oracle 1, decision rejected | verified |
-| N4 | Tab. IV | Per-category counts and FCR 0.629 / 0.368 | experiment | `verification_gate_summary.csv` | verified |
-| N5 | Abstract, §VII | Median 33.8 ms per decision; max per-case median 52.5 ms; URL-level CAPTCHA stops < 8 ms | experiment | `verification_gate_cases.csv` `gate_ms_median`: median of 35 = 33.78, max 52.54, blocked cases 0.00 / 5.77 / 7.06 (computed this session) | verified |
+| N1 | Abstract, §VII, Tab. IV | 38 constructed end states: 23 unsatisfied, 15 satisfied | experiment | `artifacts/results/verification_gate_summary.csv`, row `all` | verified |
+| N2 | Abstract, §VII | Component gate withholds 15/23 (8 FC); dispatch-only accepts all 23 | experiment | same CSV, rule `component` vs `dispatch_only` | verified |
+| N3 | Abstract, §VII | Live `verify_node`: withholds 14/23 (empty reasoning) and 13/23 (verbose reasoning); P1 lost in both, X2 lost with verbose | experiment | same CSV, rules `live_empty` / `live_verbose`; `verification_gate_cases.csv` | verified |
+| N3b | Abstract, §VII | 3 of 15 satisfied states rejected (X6, C5, C6), identical across the three rules | experiment | `verification_gate_cases.csv` | verified |
+| N4 | Tab. IV | Per-category FC/FR; FCR 0.605 / 0.400 / 0.429 / 0.455 | experiment | `verification_gate_summary.csv` (table generated from `verification_gate_cases.csv` by script) | verified |
+| N5 | Abstract, §VII | Median 35.2 ms over the 33 decisions that evaluate Φ (max 52.5); 5 pre-check stops ≤ 8.2 ms | experiment | `results/verification_gate_run.log` line `cases=38 …` | verified |
 | N6 | §VI | 20 repetitions after a warm-up call | code | `artifacts/experiments/verification_gate_study.py` (`--reps 20`; the first `gate_decision` call is untimed) | verified |
 | N7 | §VI, §VII | 4-core Xeon 2.8 GHz, 15 GiB, no GPU; Python 3.11.15; Playwright 1.56.0; Chromium 141.0.7390.37; LangGraph 1.2.12 | experiment | `lscpu`, `free -h`, `importlib.metadata`, `browser.version` run this session; also `04_results_raw.md` §environment | verified |
-| N8 | Tab. V, §VII | Router selections per call type and scenario; 3 fallbacks in the default install | experiment | `artifacts/results/routing_resolution.csv` (`artifacts/experiments/routing_default_install.py`) | verified |
-| N9 | Tab. VI, §VII | 108 collected, 104 passed, 4 failed, 1 collection error; Observatory 20/20; 62.0% line coverage | experiment | `results/junit.xml` (109 entries including the error), `tests_by_file.csv`, `junit_observatory.xml`, `coverage_by_subsystem.csv`. Run by A4; the Lead Editor re-parsed the XML and CSVs. | verified |
-| N10 | §VII | Failure causes: 2 need Ollama, 1 timeout, 1 needs `scratch/`; collection error is a missing import on Py 3.11 | experiment | `04_results_raw.md` "Failures in the canonical run 4" | verified |
+| N8 | §VII-B | Router selections per call type and scenario; 3 fallbacks in the default install; substring-keyword probes route to moondream; the recovery model is sticky for the next planning call | experiment | `artifacts/results/routing_resolution.csv` (`artifacts/experiments/routing_default_install.py`, rows `keyword_probe`, `recovery_then_plan`) | verified |
+| N9 | §VII-C | 108 collected, 104 passed, 4 failed, 1 collection error; Observatory 20/20; 62.0% line coverage | experiment | `results/junit.xml` (109 entries including the error), `tests_by_file.csv`, `junit_observatory.xml`, `coverage_by_subsystem.csv`. Run by A4; the Lead Editor re-parsed the XML and CSVs. | verified |
+| N10 | §VII | Failure causes: 2 need Ollama; 1 timeout (`test_action_failure_never_marks_completed`); 1 needs the missing `scratch/` directory as cwd; the collection error is a missing import on Python 3.11 | experiment | `04_results_raw.md` "Failures in the canonical run 4" | verified |
 | N11 | §V | 10,755 backend lines, 1,682 in `nodes.py` | code | `wc -l` (A1 §15); `nodes.py` confirmed 1,682 by the Lead Editor | verified |
 | N12 | §IV-C, Eq. (1) | Answer-length threshold 40 chars; budget K = 15 model calls | code | `verification/manager.py:270-272`; `agent/nodes.py:1469,1509` | verified |
 | N13 | §IV-D | 3 verify-node retries; 7 failure types; 2 attempts per ladder level; fail after 6 | code | `nodes.py:1369-1373`; `recovery/engine.py:33-41,45-50,61,98-102` | verified |
 | N14 | §IV-B | 120 chars per element; ≤ 5 links; cap 50; 1280×800 viewport | code | `browser/dom.py:153-172,195-198,206-207`; `browser/pool.py:128` | verified (A1 §7) |
-| N15 | §IV-E | Probe refresh 300 s | code | `llm/registry.py:178,251` | verified |
+| N15 | §IV-E | Installed-model list refreshed at every task start | code | `nodes.py:189-192` → `vision/fallback.py:62` → `llm/gateway.py` `list_model_names` → `registry.mark_installed` | verified |
 | N16 | §IV-F | Context budget 3,500 tokens | code | `config.py:62`; `rag/context_builder.py:75,104-105` | verified (A1 §9) |
 | N17 | §III | Wall-clock limit 5 min | code | `config.py:28`; `agent/runner.py:364-372` | verified |
 | N18 | §VIII | Sanitizer has 17 patterns | code | `security/sanitizer.py:16-38` | verified (A1 §10) |
@@ -73,6 +74,25 @@ Every factual statement in the paper about the system, a number, or other work, 
 | S33 | Tab. I (ours) | Loc Y, Web Y, Desk P, Gate Y, Evid Y, Mem P, Inj P, Appr P | S13–S30 above | verified |
 | S34 | §VI | Ollama called without temperature or seed | grep `temperature\|seed` in `llm/gateway.py`: no match | verified |
 | S35 | §IX | Case-study-specific extraction code | `nodes.py:1100-1142` (read by the Lead Editor) | verified; **author action** (`\todo`) |
+
+## Corrections after mock review (C5)
+
+| ID | Section | Claim, now corrected | Source | Status |
+|---|---|---|---|---|
+| R1 | §III | Browser is headed by default | `config.py:22`, `pool.py:86-91` | verified |
+| R2 | §III, §V | Checkpoints are used only when re-scheduling after approval or CAPTCHA; there is no crash resume | `runner.py:85,96-104,138,188,229` | verified |
+| R3 | §IV-B | Selector precedence: the injected id is always used | `browser/executor.py:309-316`, `dom.py:166` | verified |
+| R4 | §IV-B | The vision model receives the action verb and target | `nodes.py:758` | verified |
+| R5 | §IV-D | Shared retry counter; `replan` reachable only via shortcuts | `nodes.py:1369`; `engine.py:98-112` | verified |
+| R6 | §IV-E, §VII-B | Substring keywords; stickiness uses the router's own last choice; recovery routed but no LLM call; vision bypasses the router | `analyzer.py:28-31,115`; `router.py:121`; `engine.py:114-200`; `fallback.py:58-80` | verified (and probed) |
+| R7 | §IV-F | Memory is not in the untrusted banner; knowledge retrieval is also inert | `context_builder.py:108-120,139`; `runner.py:265-266` | verified |
+| R8 | §IV-C | ŷ = final_answer or the planner's reasoning; Φ runs after each successful action for one-step plans | `nodes.py:1431-1448` | verified (and measured, N3) |
+| R9 | §V | Verification records are rewritten on each update and reset on a JSON error | `evidence/manager.py:87-104` | verified (A1 §8; reviewer) |
+| R10 | §V | Extraction handler fabricates campus facts | `nodes.py:1100-1142` | verified |
+| R11 | §VIII | Risk label comes from the task text only; approval is once per task; no API authentication; locality flag is a substring test | `nodes.py:94-99,257-281`; `approval.py`; `backend/main.py`; `audit.py:68` | verified |
+| R12 | §VIII | The CAPTCHA fallback loads result URLs directly | `runner.py:155-176` | verified (reviewer; the Lead Editor read `runner.py:141-189` via A1 §10) |
+| R13 | §VIII | The DOM extractor writes `data-pilot-id` into pages | `dom.py:152-153` | verified |
+| R14 | Tab. I | Gate cells for WebArena, WebVoyager, OSWorld and AgentDojo changed to N; ours to P | column definition in the Table I caption | verified |
 
 ## Claims about other work
 

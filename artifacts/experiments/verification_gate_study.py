@@ -5,9 +5,19 @@ What this measures
 The agent decides "task complete" in verify_node (backend/agent/nodes.py) by
 (1) a CAPTCHA pre-check (backend.browser.dom.detect_captcha, plus a '/sorry/'
 URL test) and (2) VerificationManager.verify_task_completion
-(backend/verification/manager.py). This script runs exactly that code against
-hand-built end states whose true outcome is known, and compares it with a
-dispatch-only rule that reports success whenever the last action dispatched.
+(backend/verification/manager.py). Hand-built end states with a known true
+outcome are judged by four rules:
+
+  dispatch_only  report success whenever the last action dispatched
+  component      CAPTCHA pre-check + verify_task_completion, called directly
+                 with the case's answer (isolates the predicate)
+  live_empty     the real verify_node, with I/O stubbed, the terminal action and
+                 plan state set as the graph would leave them, and an empty
+                 planner `reasoning` string
+  live_verbose   as live_empty, but with a generic one-sentence `reasoning`
+                 string. verify_node uses `state.final_answer or
+                 action.reasoning` as the answer (nodes.py:1448), so this shows
+                 how much of the gate survives a talkative planner.
 
 What it does NOT measure
 ------------------------
@@ -82,6 +92,7 @@ class Case:
     final_answer: str | None = None
     extracted: dict = field(default_factory=dict)
     task_plan: TaskPlan | None = None
+    last_action: str = "complete"  # planner action that preceded verification
 
 
 SEARCH_GOAL = "Search Google for 'Alan Turing'"
@@ -142,7 +153,23 @@ CASES: list[Case] = [
          task_plan=plan(("navigate", "completed"), ("click", "completed"))),
     Case("P4", "multi_step", "Go to wikipedia.org, then open the Alan Turing article", "https://en.wikipedia.org/wiki/Alan_Turing", TURING, True, "both steps done",
          task_plan=plan(("navigate", "completed"), ("click", "completed"))),
+    # Controls added after review: satisfied states that look like bot checks, and a goal
+    # that triggers none of the keyword-activated conjuncts.
+    Case("C5", "captcha", "Open the Wikipedia article on Robot", "https://en.wikipedia.org/wiki/Robot",
+         page("Robot - Wikipedia", "<h1>Robot</h1><p>A robot is a machine capable of carrying out actions automatically.</p>"),
+         True, "ordinary article whose title contains 'robot'"),
+    Case("C6", "captcha", "Go to https://accounts.example.com/login", "https://accounts.example.com/login",
+         page("Sign in - Example", "<form><input name='user'><input type='password'></form>"
+              "<iframe src='https://www.google.com/recaptcha/api2/anchor?size=invisible' style='display:none'></iframe>"),
+         True, "login page with an invisible reCAPTCHA iframe, no challenge shown"),
+    Case("N8", "navigation", "Open the pricing page on example.com", "https://example.com/",
+         page("Example Domain", "<h1>Example Domain</h1><a href='/pricing'>Pricing</a>"),
+         False, "still on the home page; goal wording triggers no conjunct"),
 ]
+
+for _c in CASES:
+    if _c.category in ("search", "text_entry"):
+        _c.last_action = "type_text"
 
 
 async def gate_decision(vm: VerificationManager, pg, case: Case) -> tuple[str, str]:
@@ -157,9 +184,58 @@ async def gate_decision(vm: VerificationManager, pg, case: Case) -> tuple[str, s
     return ("completed" if res.verified else "rejected"), res.message
 
 
+GENERIC_REASONING = "The requested step has been carried out on the current page as the user instructed."
+
+
+def install_live_stubs(evidence_dir: Path):
+    """Stub the I/O that verify_node performs, leaving its decision logic intact."""
+    import backend.agent.nodes as nodes
+
+    async def _noop(*_a, **_k):
+        return None
+
+    nodes.database.add_event = _noop
+    nodes.browser_pool.retain_task_context = _noop
+    nodes.evidence_manager.evidence_dir = evidence_dir
+    return nodes
+
+
+async def live_decision(nodes, pg, case: Case, reasoning: str) -> tuple[str, str]:
+    """Run the real verify_node on the state the graph would hold after the terminal action."""
+    from backend.llm.parser import ActionResult, ParsedIntent, PlannedAction
+
+    async def _page(_state):
+        return pg
+
+    nodes._get_task_page = _page
+    if case.task_plan is not None:
+        tp = case.task_plan.model_copy(deep=True)
+        tp.steps[-1].status = "pending"  # verify_node itself marks the current step on dispatch
+        idx = len(tp.steps)
+    else:
+        tp = plan((case.last_action, "pending"))
+        idx = 1
+    state = {
+        "task_id": f"fixture-{case.cid}", "input_text": case.goal, "session_id": None,
+        "parsed_intent": ParsedIntent(action="navigate", site="unknown", risk_level="low", reasoning="fixture"),
+        "current_url": case.url, "action_manifest": None, "navigation_succeeded": True,
+        "planned_action": PlannedAction(action_type=case.last_action, reasoning=reasoning),
+        "action_history": [ActionResult(success=True, action_type=case.last_action if case.last_action != "complete" else "click",
+                                        page_state_after="ready", duration_ms=1)],
+        "task_plan": tp, "current_step_index": idx, "retry_count": 0, "llm_call_count": 3,
+        "status": "running", "error": None, "approved": False, "blocked_reason": None,
+        "extracted_data": case.extracted, "final_answer": case.final_answer, "vision_called": False,
+    }
+    out = await nodes.verify_node(state)
+    status = out.get("status", "running")
+    return {"completed": "completed", "blocked": "blocked", "running": "rejected"}.get(status, status), str(out.get("error") or "")
+
+
 async def main(reps: int) -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     vm = VerificationManager()
+    import tempfile
+    nodes = install_live_stubs(Path(tempfile.mkdtemp(prefix="gate_evidence_")))
     rows = []
     async with async_playwright() as pw:
         browser = await pw.chromium.launch(headless=True)
@@ -175,6 +251,8 @@ async def main(reps: int) -> None:
             await pg.route("**/*", make_handler(case.html))
             await pg.goto(case.url)
             decision, msg = await gate_decision(vm, pg, case)
+            live_e, _ = await live_decision(nodes, pg, case, "")
+            live_v, _ = await live_decision(nodes, pg, case, GENERIC_REASONING)
             times = []
             for _ in range(reps):
                 t0 = time.perf_counter()
@@ -188,6 +266,9 @@ async def main(reps: int) -> None:
                 "gate_reports_complete": int(decision == "completed"),
                 "gate_message": msg[:160].replace("\n", " "),
                 "gate_ms_median": round(statistics.median(times), 2) if times else "",
+                "last_action": case.last_action,
+                "live_empty_decision": live_e, "live_empty_reports_complete": int(live_e == "completed"),
+                "live_verbose_decision": live_v, "live_verbose_reports_complete": int(live_v == "completed"),
             })
         await browser.close()
 
@@ -200,10 +281,13 @@ async def main(reps: int) -> None:
         pos = [r for r in sub if r["oracle_satisfied"]]
         neg = [r for r in sub if not r["oracle_satisfied"]]
         out = []
-        for rule in ("dispatch_only", "evidence_gate"):
-            rep = [r for r in sub if (rule == "dispatch_only" or r["gate_reports_complete"])]
+        col = {"dispatch_only": None, "component": "gate_reports_complete",
+               "live_empty": "live_empty_reports_complete", "live_verbose": "live_verbose_reports_complete"}
+        for rule, key in col.items():
+            ok = (lambda r: True) if key is None else (lambda r, k=key: bool(r[k]))
+            rep = [r for r in sub if ok(r)]
             false_c = [r for r in rep if not r["oracle_satisfied"]]
-            missed = [r for r in pos if rule == "evidence_gate" and not r["gate_reports_complete"]]
+            missed = [r for r in pos if not ok(r)]
             out.append({
                 "subset": label, "rule": rule, "n_cases": len(sub), "n_oracle_true": len(pos), "n_oracle_false": len(neg),
                 "reported_complete": len(rep), "false_completions": len(false_c),
@@ -221,15 +305,16 @@ async def main(reps: int) -> None:
         w.writeheader()
         w.writerows(summary)
 
-    lat = [r["gate_ms_median"] for r in rows if r["gate_ms_median"] != ""]
+    full = [r["gate_ms_median"] for r in rows if r["gate_decision"] != "blocked"]
+    blk = [r["gate_ms_median"] for r in rows if r["gate_decision"] == "blocked"]
     print(f"python={platform.python_version()} platform={platform.platform()} reps={reps}")
-    print(f"cases={len(rows)} gate latency median-of-medians={statistics.median(lat):.2f} ms "
-          f"min={min(lat):.2f} max={max(lat):.2f}")
+    print(f"cases={len(rows)} full decisions (pre-check + Phi): n={len(full)} median={statistics.median(full):.2f} ms "
+          f"max={max(full):.2f}; stopped at pre-check: n={len(blk)} values={sorted(blk)}")
     for s in summary:
         print(s)
     for r in rows:
-        if r["gate_reports_complete"] != r["oracle_satisfied"]:
-            print("DISAGREE", r["case"], r["gate_decision"], "oracle=", r["oracle_satisfied"], "-", r["oracle_rationale"])
+        print(f'{r["case"]:3s} oracle={r["oracle_satisfied"]} component={r["gate_decision"]:9s} '
+              f'live_empty={r["live_empty_decision"]:9s} live_verbose={r["live_verbose_decision"]:9s} {r["oracle_rationale"]}')
 
 
 if __name__ == "__main__":

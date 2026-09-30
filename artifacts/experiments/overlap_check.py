@@ -33,7 +33,7 @@ def grams(ws: list[str]) -> set[tuple[str, ...]]:
 
 def main() -> None:
     sources = [REPO / "README.md", REPO / "ARCHITECTURE.md"]
-    sources += sorted(REPO.glob("*.md")) + sorted((REPO / "docs").glob("*.md")) + sorted((REPO / "wiki").glob("*.md"))
+    sources += [p for p in sorted(REPO.glob("*.md")) if p.name != "README_FOR_AUTHOR.md"] + sorted((REPO / "docs").glob("*.md")) + sorted((REPO / "wiki").glob("*.md"))
     sources += [REPO / "artifacts" / "03_literature_matrix.md"]
     src_grams: dict[tuple[str, ...], str] = {}
     for s in dict.fromkeys(sources):

@@ -14,7 +14,7 @@ The paper describes the system **as the code actually behaves**, not as the READ
 2. **Recovery strategies are labels only.** `alternative_selector`, `vision_fallback` and `replan` are recorded but never executed. The `recovery_strategy` key is not in `AgentState`, so LangGraph drops it, and every retry re-observes the page and re-plans.
 3. **Memory is written but never read on the live path.** `runner.py:265-266` seeds `retrieved_*=[]`, and `rag/router.py:71-77` treats that as already retrieved. Knowledge RAG therefore never runs in production either.
 4. **`enable_verification` is never read** by the agent, so the "no verification" ablation changes nothing.
-5. **The routing cool-down (`model_switch_cooldown_steps`) is never read.** With a full model set installed, stickiness means the planner model is never used in a normal run (see Table V of the paper).
+5. **The routing cool-down (`model_switch_cooldown_steps`) is never read.** With a full model set installed, stickiness means the planner model was never selected for planning in our probes (paper §VII-B).
 6. **The privacy auditor logs only Ollama calls.** `record_external_request` is never called, and the keyring `CredentialStore` is unused. "Zero exfiltration" is not a claim the paper can make; §VIII states a narrow, true property instead.
 7. **⚠ Extraction is hard-coded to one case study** (`backend/agent/nodes.py:1100-1142`). Every `extract` action produces a "Kattankulathur campus" answer. When fewer than 3 matching lines are found, it returns **three fixed campus facts**. The click fallback also matches the literal `"srm"` (`nodes.py:1052`). **You must remove or generalize this before running any end-to-end evaluation**; otherwise extraction results are invalid. The paper carries a visible `\todo` about it in §IX.
 8. **Repository "results" are not usable as evidence:**
@@ -36,11 +36,22 @@ Environment: Linux container, 4 vCPU Xeon @ 2.8 GHz, 15 GiB, no GPU, Python 3.11
 
 | What | Result | Source |
 |---|---|---|
-| Completion-gate study, 35 constructed end states (no LLM; offline pages via request interception) | Gate withheld 15 of 22 unsatisfied states. Dispatch-only accepts all 22. 1 of 13 satisfied states rejected. 7 misses, each traced to a missing check. Median 33.8 ms per decision. | `artifacts/experiments/verification_gate_study.py` → `results/verification_gate_{cases,summary}.csv` |
-| Router resolution (no LLM) | Default install: every text role resolves to `qwen2.5:1.5b`, 3 of them via fallback. Full install, in agent call order: stickiness keeps `deepseek-r1:1.5b` for planning. | `artifacts/experiments/routing_default_install.py` → `results/routing_resolution.csv` |
+| Completion-gate study, 38 constructed end states (no LLM; offline pages via request interception) | The predicate called directly withheld 15 of 23 unsatisfied states; **the real `verify_node` withheld only 14 (empty planner reasoning) or 13 (verbose reasoning)**, because the planner's reasoning stands in for the answer and steps complete on dispatch. Dispatch-only accepts all 23. 3 of 15 satisfied states were rejected, including 2 pages falsely blocked as CAPTCHAs (a Wikipedia "Robot" article; a login page with a hidden invisible-reCAPTCHA iframe). Median 35.2 ms per full decision. | `artifacts/experiments/verification_gate_study.py` → `results/verification_gate_{cases,summary}.csv`, `verification_gate_run.log` |
+| Router resolution (no LLM) | Default install: the agent's text call sites resolve to `qwen2.5:1.5b` (3 via fallback). However, substring keywords ("gui" in "guide", "image", "screen") send text requests to `moondream`. Full install, in agent call order: stickiness keeps `deepseek-r1:1.5b` for planning, and after a recovery `qwen2.5:7b` is kept, although recovery makes no LLM call. | `artifacts/experiments/routing_default_install.py` → `results/routing_resolution.csv` |
 | Test suite | 108 collected: 104 pass, 4 fail, 1 collection error. Observatory 20/20. Line coverage 62.0%. | `results/junit.xml`, `tests_by_file.csv`, `coverage_by_subsystem.csv` |
 
-**Caveat for the gate study.** The fixtures and oracle labels were written by the AI editor. **Review every case and its label** in `verification_gate_study.py` (the `CASES` list). The FCR values depend on that case mix; the paper says so explicitly.
+**Caveat for the gate study.** The fixtures and oracle labels were written by the AI editor. **Review every case and its label** in `verification_gate_study.py` (the `CASES` list). The FCR values depend on that case mix; the paper says so explicitly. The live-node mode stubs I/O and sets the planner's `reasoning` to either an empty or a generic sentence. Real planner reasoning should be sampled from end-to-end runs.
+
+## 2b. The mock review (C5) and what changed
+
+A hostile-reviewer agent recommended **Reject** (novelty 2, soundness 2, clarity 4, reproducibility 3, significance 2); see `artifacts/09_mock_review.md`. Every number in the paper survived its check, but it found about 48 wording or behaviour errors. The main ones:
+- the gate is weaker on the live path than in the component study;
+- the browser is headed, not headless;
+- there is no crash resume;
+- routing has substring-keyword bugs;
+- the §VIII sentence about the risk label was wrong.
+
+All were verified against the code and fixed. The gate study was extended to run the real `verify_node` and gained 3 control cases, which changed the headline numbers. Section 7 of `09_mock_review.md` lists each item and its disposition. **The core weakness remains: there is no end-to-end evidence yet.**
 
 ## 3. Every `\todo{}` in the PDF (all shown in red)
 
@@ -52,7 +63,7 @@ Environment: Linux container, 4 vCPU Xeon @ 2.8 GHz, 15 GiB, no GPU, Python 3.11
 | §VI Task suite | Finalize the 30 tasks and their independent oracles; publish them |
 | §VII End-to-end | Run the protocol. Report success rate, FCR, model calls, wall-clock time, recovery success, vision rate and evidence completeness per configuration, with Wilson 95% CIs |
 | §VII Case study | Add before/after screenshots of one task where the gate rejected a premature completion and the agent then finished |
-| §IX | Remove or generalize the case-study extraction code (see §1 item 7), or disclose it |
+| §IX | Remove the case-study extraction and `"srm"` click code (see §1 item 7), list the remaining site-specific rules, and state whether earlier repo figures depended on them |
 | Acknowledgment | Review the AI-assistance disclosure wording |
 
 ## 4. Before running the end-to-end protocol (§VI), make these code changes
@@ -62,7 +73,14 @@ Environment: Linux container, 4 vCPU Xeon @ 2.8 GHz, 15 GiB, no GPU, Python 3.11
 3. Pass `options={"temperature": 0, "seed": <n>}` in `llm/gateway.py`.
 4. Add a vision-only switch that withholds the DOM manifest.
 5. Remove the case-study extraction code (item 7 above).
-6. Optional, but needed before any memory or recovery ablation means anything:
+6. Fix the gate weaknesses measured in §VII-A:
+   - stop using `action.reasoning` as the answer;
+   - check step `expected_outcome`;
+   - use exact match for exact-text requests;
+   - make CAPTCHA detection visibility-aware and remove the bare "robot" title match.
+7. Fix `tests/test_task_runner.py` (import `Database`) and the headless hang in `test_action_failure_never_marks_completed`. That test covers the paper's central property.
+8. Note the latent `running`→`completed` mapping in `complete_node` (`nodes.py:1589-1591`). The compiled routers never reach it with `running`, but removing it makes the gate unconditional.
+9. Optional, but needed before any memory or recovery ablation means anything:
    - initialize `retrieved_*` to `None` in `runner.py`;
    - add `recovery_strategy` to `AgentState` and act on it.
    - If you make these changes, update Table III and §IV-D/F of the paper so that they stay truthful.
@@ -83,8 +101,8 @@ Environment: Linux container, 4 vCPU Xeon @ 2.8 GHz, 15 GiB, no GPU, Python 3.11
 1. **Introduction:** the motivation and contribution list should be in your voice, and should reflect whatever you implement from §4 above.
 2. **§VII Results:** once end-to-end data exist, restructure around them. The gate study then becomes a component analysis.
 3. **§IV-G Local-system extension:** if you implement part of it before submission, change the status labels and tense.
-4. **§VIII Ethics:** decide your position on the anti-detection browser settings (`pool.py:90-93,127,138`). Consider removing them, since the paper discloses them.
-5. **Page budget:** the body is now about 8.1 pages including the red TODO text. End-to-end results will need space; candidates to move to an appendix or supplement are Table II (desktop predicates) and Table III (status).
+4. **§VIII Ethics:** the draft states a position ("acceptable only for a personal assistant at human pace"). That position must be yours. Consider removing the anti-detection settings (`pool.py:90-93,127,138`) instead.
+5. **Page budget:** the PDF is 9 pages, and the body ends just past page 8, including the red TODO text. End-to-end results will need space. The routing and test tables were folded into the text; their LaTeX is kept in `artifacts/table_*_unused.tex`. Candidates to move to a supplement are Table II (desktop postconditions) and Table III (status).
 
 ## 7. Files
 

@@ -54,7 +54,8 @@ They were **not** checked against the full PDFs. The author should re-read the P
 
 1. **§II-G.** Changed "surveys note that dependable execution and deployment constraints remain open problems", which was stronger than the matrix supports, to a description of the taxonomy plus trustworthiness.
 2. **§VIII.** Changed "denylist can be evaded by paraphrase or encoding [liu2024formalizing]", which attributed our own reasoning to the paper. The citation now supports only "existing defenses insufficient", and the paraphrase remark stands as our own uncited observation about regex matching.
-3. **Table I.** The matrix row for Agentic Pilot claimed "memory: yes", "injection defense: yes" and "approval: yes". The paper uses P (partial) for all three, with footnotes, per the code audit.
+3. **Table I, after the mock review.** WebArena, WebVoyager, OSWorld and AgentDojo "Gate" cells were changed from P to N: their checks are benchmark-side or post hoc, not in-agent at run time, per the column's own definition. Our own Gate cell was changed from Y to P.
+4. **Table I.** The matrix row for Agentic Pilot claimed "memory: yes", "injection defense: yes" and "approval: yes". The paper uses P (partial) for all three, with footnotes, per the code audit.
 
 ## Author to-do
 

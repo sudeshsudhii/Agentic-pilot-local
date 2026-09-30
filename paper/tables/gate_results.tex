@@ -1,23 +1,26 @@
 \begin{table}[t]
 \centering
-\caption{Completion decisions on 35 constructed end states. $n^{+}$/$n^{-}$: cases whose goal is / is not satisfied by the oracle. Rep.: cases reported complete. FC: false completions (reported complete, goal not satisfied). FR: false rejections (goal satisfied, not reported complete). Dispatch-only reports every case complete. Source: \texttt{verification\_gate\_summary.csv}.}
+\caption{Decisions on 38 constructed end states. $n^{+}$/$n^{-}$: states that do / do not satisfy the goal under the oracle. FC: false completions (reported complete, goal not satisfied); FR: false rejections (goal satisfied, not reported complete). A dispatch-only rule has FC\,$=n^{-}$ and FR\,$=0$. Comp.: CAPTCHA pre-check and $\Phi$ called with the case's answer. Live: the real \texttt{verify} node with an empty (E) or a generic one-sentence (V) planner \texttt{reasoning} string. Source: \texttt{verification\_gate\_summary.csv}.}
 \label{tab:gate}
 \footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{@{}lcc|cc|ccc@{}}
+\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{@{}lcc|cc|cc|cc@{}}
 \toprule
- & & & \multicolumn{2}{c|}{Dispatch-only} & \multicolumn{3}{c}{Evidence gate} \\
-Category & $n^{+}$ & $n^{-}$ & Rep. & FC & Rep. & FC & FR \\
+ & & & \multicolumn{2}{c|}{Comp.} & \multicolumn{2}{c|}{Live E} & \multicolumn{2}{c}{Live V} \\
+Category & $n^{+}$ & $n^{-}$ & FC & FR & FC & FR & FC & FR \\
 \midrule
-Search         & 3 & 4 & 7 & 4 & 4 & 1 & 0 \\
-Navigation     & 2 & 5 & 7 & 5 & 4 & 2 & 0 \\
-CAPTCHA        & 0 & 4 & 4 & 4 & 1 & 1 & 0 \\
-Text entry     & 3 & 3 & 6 & 3 & 4 & 1 & 0 \\
-Extraction     & 3 & 4 & 7 & 4 & 3 & 1 & 1 \\
-Multi-step     & 2 & 2 & 4 & 2 & 3 & 1 & 0 \\
+Search & 3 & 4 & 1 & 0 & 1 & 0 & 1 & 0 \\
+Navigation & 2 & 6 & 3 & 0 & 3 & 0 & 3 & 0 \\
+Bot check & 2 & 4 & 1 & 2 & 1 & 2 & 1 & 2 \\
+Text entry & 3 & 3 & 1 & 0 & 1 & 0 & 1 & 0 \\
+Extraction & 3 & 4 & 1 & 1 & 1 & 1 & 2 & 1 \\
+Multi-step & 2 & 2 & 1 & 0 & 2 & 0 & 2 & 0 \\
 \midrule
-All            & 13 & 22 & 35 & 22 & 19 & 7 & 1 \\
-FCR            &  &  & \multicolumn{2}{c|}{0.629} & \multicolumn{3}{c}{0.368} \\
+All & 15 & 23 & 8 & 3 & 9 & 3 & 10 & 3 \\
+FCR & \multicolumn{2}{c|}{0.605$^{*}$} & \multicolumn{2}{c|}{0.400} & \multicolumn{2}{c|}{0.429} & \multicolumn{2}{c}{0.455} \\
 \bottomrule
 \end{tabular}
+\vspace{1pt}
+
+\raggedright\scriptsize $^{*}$Dispatch-only rule.
 \end{table}

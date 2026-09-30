@@ -10,22 +10,22 @@ System & Loc & Web & Desk & Gate & Evid & Mem & Inj & Appr \\
 \midrule
 ReAct~\cite{yao2023react}               & N & P & N & N & N & N & N & N \\
 Reflexion~\cite{shinn2023reflexion}     & -- & P & N & P & N & Y & N & N \\
-WebArena~\cite{zhou2024webarena}        & -- & Y & N & P & -- & N & N & N \\
+WebArena~\cite{zhou2024webarena}        & -- & Y & N & N & -- & N & N & N \\
 Mind2Web~\cite{deng2023mind2web}        & Y & Y & N & N & P & N & N & N \\
-WebVoyager~\cite{he2024webvoyager}      & N & Y & N & P & Y & N & N & N \\
+WebVoyager~\cite{he2024webvoyager}      & N & Y & N & N & Y & N & N & N \\
 SeeAct~\cite{zheng2024seeact}           & P & Y & N & N & -- & N & N & P \\
-OSWorld~\cite{xie2024osworld}           & Y & Y & Y & P & -- & N & N & N \\
+OSWorld~\cite{xie2024osworld}           & Y & Y & Y & N & -- & N & N & N \\
 UFO~\cite{zhang2025ufo}                 & N & P & Y & -- & -- & P & N & Y \\
 AppAgent~\cite{zhang2025appagent}       & N & N & N & -- & -- & Y & N & N \\
 CogAgent~\cite{hong2024cogagent}        & Y & Y & -- & N & N & N & N & N \\
 MemGPT~\cite{packer2023memgpt}          & -- & N & N & N & N & Y & N & N \\
-AgentDojo~\cite{debenedetti2024agentdojo} & Y & N & N & P & -- & N & Y & -- \\
+AgentDojo~\cite{debenedetti2024agentdojo} & Y & N & N & N & -- & N & Y & -- \\
 \midrule
-Agentic Pilot                           & Y & Y & P$^{a}$ & Y$^{b}$ & Y & P$^{c}$ & P$^{d}$ & P$^{e}$ \\
+Agentic Pilot                           & Y & Y & P$^{a}$ & P$^{b}$ & Y & P$^{c}$ & P$^{d}$ & P$^{e}$ \\
 \bottomrule
 \end{tabular}
 \vspace{2pt}
 
 \raggedright\scriptsize
-$^{a}$Designed (Section~\ref{sec:desktop}); a prototype executor exists but is not wired into the agent. $^{b}$Rule-based predicate $\Phi$; see its measured blind spots in Section~\ref{sec:results}. $^{c}$Outcomes are written; retrieval is not active on the live path. $^{d}$Pattern denylist on element text. $^{e}$Task-level, triggered by the intent's action type or model-assigned risk level. AppAgent targets Android, which we do not count as desktop.
+$^{a}$Designed (Section~\ref{sec:desktop}); a prototype executor exists but is not wired into the agent. $^{b}$Rule-based predicate $\Phi$, weakened on the live path (Section~\ref{sec:results}). Benchmark-side checkers (WebArena, OSWorld, AgentDojo) and post-hoc judges (WebVoyager) are not in-agent gates. $^{c}$Outcomes are written; retrieval is not active on the live path. $^{d}$Pattern denylist on element text. $^{e}$Task-level, triggered by the intent's action type or model-assigned risk level. AppAgent targets Android, which we do not count as desktop.
 \end{table}

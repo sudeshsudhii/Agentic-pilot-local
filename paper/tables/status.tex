@@ -8,17 +8,17 @@
 \toprule
 Mechanism & Status & Live & Note \\
 \midrule
-Graph, checkpoints, resume & I+T & yes & compiled graph not tested \\
-Completion predicate $\Phi$ & I+T & yes & rule-based (Sec.~\ref{sec:results}) \\
+Graph, checkpoints, re-scheduling & I+T & yes & graph run only by e2e tests \\
+Completion predicate $\Phi$ & I+T & yes & weaker live (Sec.~\ref{sec:results}) \\
 Per-step predicates, click check & P & -- & steps advance on dispatch \\
 CAPTCHA halt, resume, fallback & I+T & yes & no solver \\
 DOM grounding, vision fallback & I+T & yes & vision on \texttt{need\_help} only \\
-Failure classes, retry bounds & I+T & yes & 7 types, 6 attempts \\
+Failure classes, retry bounds & I+T & yes & 7 types; 3+3 attempts \\
 Strategy-specific recovery & P & no & strategy label dropped \\
-Role routing, stickiness & I+T & yes & cool-down not read \\
-Memory write / retrieval & I / I+T & yes / no & retrieval bypassed \\
+Role routing, stickiness & I+T & yes & substring keywords; no cool-down \\
+Memory write / RAG retrieval & I / I+T & yes / no & retrieval bypassed \\
 Sanitizer on element text & I+T & yes & title, URL unfiltered \\
-Task-level approval gate & I & yes & model-assigned risk \\
+Task-level approval gate & I & yes & once per task \\
 Model-call audit log & I+T & yes & browsing not logged \\
 Evidence store & I+T & yes & some files overwritten \\
 Ablation flags & I & partial & verification flag unread \\

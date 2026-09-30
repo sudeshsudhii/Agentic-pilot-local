@@ -1,0 +1,30 @@
+launcher_default  isolated intent_parsing (parse_intent)              role=lightweight model=qwen2.5:1.5b       fallback=False
+launcher_default  isolated decomposition (parse_intent)               role=reasoning   model=qwen2.5:1.5b       fallback=True
+launcher_default  isolated action planning, 1-step (plan_action)      role=lightweight model=qwen2.5:1.5b       fallback=False
+launcher_default  isolated action planning, multi-step (plan_action)  role=reasoning   model=qwen2.5:1.5b       fallback=True
+launcher_default  isolated recovery (error_recovery)                  role=recovery    model=qwen2.5:1.5b       fallback=True
+launcher_default  isolated image input                                role=vision      model=moondream          fallback=False
+launcher_default  sequence intent_parsing (parse_intent)              role=lightweight model=qwen2.5:1.5b       fallback=False
+launcher_default  sequence decomposition (parse_intent)               role=reasoning   model=qwen2.5:1.5b       fallback=True
+launcher_default  sequence action planning, 1-step (plan_action)      role=lightweight model=qwen2.5:1.5b       fallback=False
+launcher_default  sequence action planning, multi-step (plan_action)  role=reasoning   model=qwen2.5:1.5b       fallback=True
+launcher_default  sequence recovery (error_recovery)                  role=recovery    model=qwen2.5:1.5b       fallback=True
+launcher_default  sequence image input                                role=vision      model=moondream          fallback=False
+full_role_set     isolated intent_parsing (parse_intent)              role=lightweight model=deepseek-r1:1.5b   fallback=False
+full_role_set     isolated decomposition (parse_intent)               role=reasoning   model=qwen3.5:2b         fallback=False
+full_role_set     isolated action planning, 1-step (plan_action)      role=lightweight model=deepseek-r1:1.5b   fallback=False
+full_role_set     isolated action planning, multi-step (plan_action)  role=reasoning   model=qwen3.5:2b         fallback=False
+full_role_set     isolated recovery (error_recovery)                  role=recovery    model=qwen2.5:7b         fallback=False
+full_role_set     isolated image input                                role=vision      model=qwen3-vl:2b        fallback=False
+full_role_set     sequence intent_parsing (parse_intent)              role=lightweight model=deepseek-r1:1.5b   fallback=False
+full_role_set     sequence decomposition (parse_intent)               role=reasoning   model=deepseek-r1:1.5b   fallback=False
+full_role_set     sequence action planning, 1-step (plan_action)      role=lightweight model=deepseek-r1:1.5b   fallback=False
+full_role_set     sequence action planning, multi-step (plan_action)  role=reasoning   model=deepseek-r1:1.5b   fallback=False
+full_role_set     sequence recovery (error_recovery)                  role=recovery    model=qwen2.5:7b         fallback=False
+full_role_set     sequence image input                                role=vision      model=qwen3-vl:2b        fallback=False
+keyword probe 'Find a guitar guide on youtube.com'          role=vision      model=moondream
+keyword probe 'Search Google Images for cats'               role=vision      model=moondream
+keyword probe 'Open the screening schedule on imdb.com'     role=vision      model=moondream
+keyword probe 'Search Google for Alan Turing'               role=lightweight model=qwen2.5:1.5b
+recovery probe recovery after deepseek-r1:1.5b     model=qwen2.5:7b (Dynamic capability match: recovery -> qwen2.5:7b)
+recovery probe next planning call                  model=qwen2.5:7b (Active model 'qwen2.5:7b' retained (stickiness: satisfies re)

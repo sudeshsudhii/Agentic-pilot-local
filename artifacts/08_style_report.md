@@ -7,13 +7,14 @@
 - `docs/*.md` and `wiki/*.md`;
 - the agent-written literature matrix.
 
-**Result on the current draft.** 4 overlapping spans (from `python3 artifacts/experiments/overlap_check.py`), all acceptable:
+**Result on the current draft.** 5 overlapping spans (from `python3 artifacts/experiments/overlap_check.py`), all acceptable:
 
 | Span | Source | Disposition |
 |---|---|---|
 | Paper title | FINAL_IMPLEMENTATION_REPORT.md | The author's own title, kept by instruction |
 | Failure-type identifiers `captcha transient element_not_found …` | wiki/Architecture.md | Code identifiers, which cannot be paraphrased |
 | Strategy identifiers `retry alternative_selector vision_fallback replan` | wiki/Agent-Execution-Lifecycle.md | Code identifiers |
+| Model tags `qwen2.5:1.5b moondream` | wiki/API-Reference.md | Model names |
 | "on open or locally hostable models web" | literature matrix | Our own sub-agent's wording in a table caption; not external text |
 
 **Rewritten.** One span from the matrix in §II-G, "whether small local models can complete verified GUI tasks", has been reworded.
@@ -39,6 +40,8 @@
 - Architecture reduced to 3 paragraphs.
 - The routing-configuration table was folded into the text; the file was moved to `artifacts/table_routing_config_unused.tex`.
 - Results bullets converted to running text.
+- After the mock review, the routing-results and test-suite tables were folded into the text; their files were moved to `artifacts/table_*_unused.tex`.
+- The Related Work subsections became run-in paragraphs.
 - Security, Setup and Implementation paragraphs shortened.
 
-**Result.** The body is about 8.1 pages with the visible `\todo` markers and ends a quarter of the way down page 9; references take roughly 1.6 pages.
+**Result.** The PDF is 9 pages. The body, including the visible `\todo` markers, ends near the top of page 9, and the rest of page 9 is references.
