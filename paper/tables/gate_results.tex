@@ -1,0 +1,23 @@
+\begin{table}[t]
+\centering
+\caption{Completion decisions on 35 constructed end states. $n^{+}$/$n^{-}$: cases whose goal is / is not satisfied by the oracle. Rep.: cases reported complete. FC: false completions (reported complete, goal not satisfied). FR: false rejections (goal satisfied, not reported complete). Dispatch-only reports every case complete. Source: \texttt{verification\_gate\_summary.csv}.}
+\label{tab:gate}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lcc|cc|ccc@{}}
+\toprule
+ & & & \multicolumn{2}{c|}{Dispatch-only} & \multicolumn{3}{c}{Evidence gate} \\
+Category & $n^{+}$ & $n^{-}$ & Rep. & FC & Rep. & FC & FR \\
+\midrule
+Search         & 3 & 4 & 7 & 4 & 4 & 1 & 0 \\
+Navigation     & 2 & 5 & 7 & 5 & 4 & 2 & 0 \\
+CAPTCHA        & 0 & 4 & 4 & 4 & 1 & 1 & 0 \\
+Text entry     & 3 & 3 & 6 & 3 & 4 & 1 & 0 \\
+Extraction     & 3 & 4 & 7 & 4 & 3 & 1 & 1 \\
+Multi-step     & 2 & 2 & 4 & 2 & 3 & 1 & 0 \\
+\midrule
+All            & 13 & 22 & 35 & 22 & 19 & 7 & 1 \\
+FCR            &  &  & \multicolumn{2}{c|}{0.629} & \multicolumn{3}{c}{0.368} \\
+\bottomrule
+\end{tabular}
+\end{table}

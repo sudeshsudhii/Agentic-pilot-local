@@ -2,58 +2,57 @@
 \centering
 \begin{tikzpicture}[
   font=\scriptsize,
-  box/.style={draw, rounded corners=1.5pt, align=center, minimum height=0.55cm, inner sep=2pt, fill=white},
-  store/.style={draw, cylinder, shape border rotate=90, aspect=0.18, align=center, minimum height=0.62cm, inner sep=1.5pt, fill=white},
-  arr/.style={-{Stealth[length=1.6mm]}, semithick},
-  darr/.style={{Stealth[length=1.6mm]}-{Stealth[length=1.6mm]}, semithick},
-  node distance=0.28cm and 0.3cm]
+  box/.style={draw, rounded corners=1.5pt, align=center, minimum height=0.6cm, inner sep=1.5pt, fill=white},
+  sub/.style={draw, rounded corners=1pt, align=center, minimum height=0.4cm, minimum width=1.08cm, inner sep=1pt, font=\tiny, fill=white},
+  store/.style={draw, cylinder, shape border rotate=90, aspect=0.2, align=center, minimum height=0.66cm, minimum width=1.05cm, inner sep=1pt, fill=white},
+  arr/.style={-{Stealth[length=1.5mm]}, semithick},
+  darr/.style={{Stealth[length=1.5mm]}-{Stealth[length=1.5mm]}, semithick}]
 
-% Row 1: user-facing
-\node[box, minimum width=2.0cm] (ui) {Desktop UI\\(React/Tauri)};
-\node[box, right=of ui, minimum width=2.1cm] (api) {Task API\\(FastAPI, loopback)};
-\node[box, right=of api, minimum width=1.7cm] (obs) {Observatory\\(separate process)};
+% machine boundary
+\draw[dashed, rounded corners=3pt, gray] (-0.05,0.5) rectangle (8.45,-4.2);
+\node[font=\tiny, gray, anchor=south west] at (-0.02,-4.2) {user's machine};
 
-% Row 2: runner + agent
-\node[box, below=0.45cm of api, minimum width=5.6cm, minimum height=0.95cm] (agent) {};
-\node[anchor=north, font=\scriptsize\bfseries] at (agent.north) {LangGraph agent (Fig.~\ref{fig:graph})};
-\node[box, font=\tiny, anchor=south west, minimum width=1.25cm] (plan) at ($(agent.south west)+(0.08,0.07)$) {plan / ground};
-\node[box, font=\tiny, right=0.08cm of plan, minimum width=0.95cm] (exec) {execute};
-\node[box, font=\tiny, right=0.08cm of exec, minimum width=0.95cm] (ver) {verify $\Phi$};
-\node[box, font=\tiny, right=0.08cm of ver, minimum width=1.05cm] (rec) {recover};
+% row 1
+\node[box, minimum width=1.6cm] (ui)  at (0.95, 0) {Desktop UI\\React/Tauri};
+\node[box, minimum width=2.2cm] (api) at (3.9, 0)  {Task API\\FastAPI, loopback only};
+\node[box, minimum width=1.85cm] (obs) at (7.3, 0) {Observatory\\dashboard};
 
-\node[box, left=0.25cm of agent, minimum width=1.2cm] (runner) {Task runner\\checkpoints};
+% row 2: runner + agent
+\node[box, minimum width=1.4cm] (run) at (0.85,-1.3) {Task runner\\checkpoints};
+\node[draw, rounded corners=2pt, minimum width=6.35cm, minimum height=1.0cm, fill=gray!6] (agent) at (5.05,-1.3) {};
+\node[font=\tiny\bfseries, anchor=north] at (agent.north) {LangGraph agent (Fig.~\ref{fig:graph})};
+\node[sub] (s1) at (2.45,-1.42) {risk gate};
+\node[sub] (s2) at (3.72,-1.42) {plan + sanitize};
+\node[sub] (s3) at (4.99,-1.42) {execute};
+\node[sub, fill=gray!20] (s4) at (6.26,-1.42) {verify $\Phi$};
+\node[sub] (s5) at (7.53,-1.42) {recover};
 
-% Row 3: services
-\node[box, below=0.5cm of agent.south west, anchor=north west, minimum width=1.7cm] (router) {Model router};
-\node[box, right=0.2cm of router, minimum width=1.75cm] (sec) {Sanitizer,\\approval gate};
-\node[box, right=0.2cm of sec, minimum width=1.7cm] (pool) {Browser pool\\(Playwright)};
+% row 3
+\node[box, minimum width=1.6cm] (router) at (3.4,-2.55) {Model router};
+\node[box, minimum width=1.6cm] (pool)   at (7.4,-2.55) {Browser pool\\Playwright};
 
-% Row 4: local resources
-\node[box, below=0.35cm of router, minimum width=1.7cm, fill=gray!8] (ollama) {Ollama (local)\\text + vision};
-\node[store, below=0.35cm of sec] (db) {SQLite\\tasks, events};
-\node[store, right=0.12cm of db] (ev) {Evidence\\PNG, JSON};
-\node[store, left=0.12cm of db] (chroma) {Chroma};
-\node[box, below=0.35cm of pool, minimum width=1.7cm, fill=red!6, xshift=0.45cm] (web) {Web pages\\(untrusted)};
+% row 4
+\node[store] (chroma) at (0.95,-3.55) {Chroma};
+\node[box, minimum width=1.6cm, fill=gray!12] (oll) at (3.4,-3.55) {Ollama (local)\\text + vision};
+\node[store] (db)  at (5.05,-3.55) {SQLite};
+\node[store] (ev)  at (6.3,-3.55)  {Evidence};
 
-% Edges
+% outside
+\node[box, minimum width=1.6cm, fill=red!8] (web) at (7.4,-4.85) {Web pages (untrusted)};
+
+% edges
 \draw[darr] (ui) -- (api);
-\draw[arr] (api) -- (agent.north -| api);
-\draw[arr] (api.south west) ++(0,0) -- (runner.north);
-\draw[arr] (runner) -- (agent);
+\draw[arr] ($(api.south)+(-0.7,0)$) |- (0.85,-0.62) -- (run.north);
+\draw[arr] (run) -- (agent);
 \draw[darr] (router.north) -- (router.north |- agent.south);
-\draw[darr] (router) -- (ollama);
-\draw[arr] (sec.north) -- (sec.north |- agent.south);
+\draw[darr] (router) -- (oll);
 \draw[darr] (pool.north) -- (pool.north |- agent.south);
 \draw[darr] (pool) -- (web);
-\draw[arr] (agent.south) ++(0.3,0) -- ++(0,-0.25) -| (ev.north);
-\draw[arr, dashed] (db.east) ++(0,0.1) -- ++(0.12,0) |- (obs.south);
-\draw[arr, dashed] (api.east) -- (obs.west);
-
-% Trust boundary: everything except the web runs on the user's machine
-\begin{scope}[on background layer]
-\node[draw, dashed, rounded corners=3pt, inner sep=3pt, fit=(ui)(obs)(runner)(ollama)(chroma)(ev)(pool), label={[font=\tiny, anchor=south east, inner sep=1pt]south east:user's machine}] {};
-\end{scope}
+\draw[arr] (db.north |- agent.south) -- (db.north);
+\draw[arr] (ev.north |- agent.south) -- (ev.north);
+\draw[arr] (2.25,-1.8) -- (2.25,-3.55) -- (chroma.east);
+\draw[arr, dashed] (api) -- node[font=\tiny, above] {events} (obs);
 \end{tikzpicture}
-\caption{Components of Agentic Pilot. Everything inside the dashed boundary runs on the user's machine; model inference goes to a local Ollama server. Web pages are the main untrusted input. Dashed arrows are the telemetry feed read by the Observatory.}
+\caption{Components of Agentic Pilot. Everything inside the dashed boundary runs on the user's machine, including model inference. Web pages are the main untrusted input, and browsing is the main outbound traffic. The Observatory also reads the task database and evidence files.}
 \label{fig:arch}
 \end{figure}

@@ -1,0 +1,181 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{he2024webvoyager,zheng2024seeact,zhang2025ufo,zhang2025appagent}
+\citation{lukas2023pii}
+\citation{zhou2024webarena,xie2024osworld}
+\citation{huang2024cannot}
+\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{section.1}\protected@file@percent }
+\newlabel{sec:intro}{{I}{1}{Introduction}{section.1}{}}
+\citation{yao2023react}
+\citation{wei2022chain}
+\citation{schick2023toolformer}
+\citation{shinn2023reflexion}
+\citation{kim2023rci}
+\citation{wang2024voyager}
+\citation{huang2024cannot}
+\citation{shi2017wob}
+\citation{deng2023mind2web}
+\citation{zhou2024webarena}
+\citation{he2024webvoyager}
+\citation{xie2024osworld}
+\citation{zhang2025ufo}
+\citation{zhang2025appagent}
+\citation{liu2024gptdroid,liu2023qtypist}
+\citation{zheng2024seeact,yang2023som}
+\citation{hong2024cogagent,cheng2024seeclick}
+\citation{lu2024omniparser}
+\citation{lewis2020rag}
+\citation{reimers2019sbert}
+\citation{park2023generative}
+\citation{packer2023memgpt}
+\citation{greshake2023indirect}
+\citation{liu2024formalizing}
+\citation{zhan2024injecagent,debenedetti2024agentdojo}
+\citation{yang2024qwen25,wang2024qwen2vl}
+\citation{lin2024awq}
+\citation{wang2024survey,xi2025rise}
+\citation{yao2023react}
+\citation{shinn2023reflexion}
+\citation{zhou2024webarena}
+\citation{deng2023mind2web}
+\citation{he2024webvoyager}
+\citation{zheng2024seeact}
+\citation{xie2024osworld}
+\citation{zhang2025ufo}
+\citation{zhang2025appagent}
+\citation{hong2024cogagent}
+\citation{packer2023memgpt}
+\citation{debenedetti2024agentdojo}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{2}{section.2}\protected@file@percent }
+\newlabel{sec:related}{{II}{2}{Related Work}{section.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-A}}Reasoning-and-acting agents}{2}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-B}}Web agents and benchmarks}{2}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-C}}Desktop, OS and mobile GUI agents}{2}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-D}}Visual grounding for GUI interaction}{2}{subsection.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-E}}Agent memory and retrieval}{2}{subsection.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-F}}Security of LLM agents}{2}{subsection.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-G}}Local and on-device inference}{2}{subsection.2.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {III}System Architecture}{2}{section.3}\protected@file@percent }
+\newlabel{sec:arch}{{III}{2}{System Architecture}{section.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Capabilities reported by representative systems. Loc: runs on open or locally hostable models; Web/Desk: target environment; Gate: completion gated at run time by an in-agent environment check; Evid: persists state artifacts; Mem: cross-step or cross-episode memory; Inj: prompt-injection defense; Appr: human approval for risky actions. \textbf  {Y} reported, \textbf  {P} partial or weaker form, \textbf  {N} not supported, -- not reported. The last row reflects the audited code (Section~\ref {sec:impl}).}}{3}{table.1}\protected@file@percent }
+\newlabel{tab:related}{{I}{3}{Capabilities reported by representative systems. Loc: runs on open or locally hostable models; Web/Desk: target environment; Gate: completion gated at run time by an in-agent environment check; Evid: persists state artifacts; Mem: cross-step or cross-episode memory; Inj: prompt-injection defense; Appr: human approval for risky actions. \textbf {Y} reported, \textbf {P} partial or weaker form, \textbf {N} not supported, -- not reported. The last row reflects the audited code (Section~\ref {sec:impl})}{table.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Components of Agentic Pilot. Everything inside the dashed boundary runs on the user's machine, including model inference. Web pages are the main untrusted input, and browsing is the main outbound traffic. The Observatory also reads the task database and evidence files.}}{3}{figure.1}\protected@file@percent }
+\newlabel{fig:arch}{{1}{3}{Components of Agentic Pilot. Everything inside the dashed boundary runs on the user's machine, including model inference. Web pages are the main untrusted input, and browsing is the main outbound traffic. The Observatory also reads the task database and evidence files}{figure.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Execution graph compiled in \texttt  {graph.py}. Only the shaded \texttt  {verify} node can end a task as \textsc  {Completed}, and only when $\Phi $ holds. A CAPTCHA seen during observation ends it as \textsc  {Blocked}. Not drawn: failures in \texttt  {parse\_intent} and \texttt  {navigate} also route to \texttt  {recovery}.}}{3}{figure.2}\protected@file@percent }
+\newlabel{fig:graph}{{2}{3}{Execution graph compiled in \texttt {graph.py}. Only the shaded \texttt {verify} node can end a task as \textsc {Completed}, and only when $\Phi $ holds. A CAPTCHA seen during observation ends it as \textsc {Blocked}. Not drawn: failures in \texttt {parse\_intent} and \texttt {navigate} also route to \texttt {recovery}}{figure.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Methodology}{3}{section.4}\protected@file@percent }
+\newlabel{sec:method}{{IV}{3}{Methodology}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}Task Decomposition and Planning}{3}{subsection.4.1}\protected@file@percent }
+\newlabel{sec:planning}{{\mbox  {IV-A}}{3}{Task Decomposition and Planning}{subsection.4.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Grounding: DOM First, Vision on Demand}{3}{subsection.4.2}\protected@file@percent }
+\newlabel{sec:grounding}{{\mbox  {IV-B}}{3}{Grounding: DOM First, Vision on Demand}{subsection.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Evidence-Gated Verification Model}{4}{subsection.4.3}\protected@file@percent }
+\newlabel{sec:formal}{{\mbox  {IV-C}}{4}{Evidence-Gated Verification Model}{subsection.4.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {IV-C}0a}Blocking predicate}{4}{paragraph.4.3.0.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {IV-C}0b}Step predicates}{4}{paragraph.4.3.0.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {IV-C}0c}Task predicate}{4}{paragraph.4.3.0.3}\protected@file@percent }
+\newlabel{eq:phi}{{1}{4}{Task predicate}{equation.4.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {IV-C}0d}Completion rule}{4}{paragraph.4.3.0.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {IV-C}0e}Property}{4}{paragraph.4.3.0.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {IV-C}0f}False completion rate}{4}{paragraph.4.3.0.6}\protected@file@percent }
+\newlabel{eq:fcr}{{3}{4}{False completion rate}{equation.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Failure Classification and Recovery}{4}{subsection.4.4}\protected@file@percent }
+\newlabel{sec:recovery}{{\mbox  {IV-D}}{4}{Failure Classification and Recovery}{subsection.4.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-E}}Role-Based Local Model Routing}{4}{subsection.4.5}\protected@file@percent }
+\newlabel{sec:routing}{{\mbox  {IV-E}}{4}{Role-Based Local Model Routing}{subsection.4.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-F}}Episodic Memory}{4}{subsection.4.6}\protected@file@percent }
+\newlabel{sec:memory}{{\mbox  {IV-F}}{4}{Episodic Memory}{subsection.4.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Default role configuration of the model router (Ollama tags, in preference order). The router uses the first candidate that is installed. The launcher installs only \texttt  {qwen2.5:1.5b} and one vision model by default, in which case every text role resolves to \texttt  {qwen2.5:1.5b}.}}{5}{table.2}\protected@file@percent }
+\newlabel{tab:routing}{{II}{5}{Default role configuration of the model router (Ollama tags, in preference order). The router uses the first candidate that is installed. The launcher installs only \texttt {qwen2.5:1.5b} and one vision model by default, in which case every text role resolves to \texttt {qwen2.5:1.5b}}{table.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-G}}Extension to Local System Access}{5}{subsection.4.7}\protected@file@percent }
+\newlabel{sec:desktop}{{\mbox  {IV-G}}{5}{Extension to Local System Access}{subsection.4.7}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {IV-G}0a}Actions and grounding}{5}{paragraph.4.7.0.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {IV-G}0b}Verification}{5}{paragraph.4.7.0.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces Proposed desktop postconditions and default permission tiers (design, not implemented). $h_0$, $t_0$: values captured before the action; $(\mathit  {pid}, t_c)$: process ID and creation time.}}{5}{table.3}\protected@file@percent }
+\newlabel{tab:desktop}{{III}{5}{Proposed desktop postconditions and default permission tiers (design, not implemented). $h_0$, $t_0$: values captured before the action; $(\mathit {pid}, t_c)$: process ID and creation time}{table.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {IV-G}0c}Permission tiers and enforcement}{5}{paragraph.4.7.0.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {V}Implementation}{5}{section.5}\protected@file@percent }
+\newlabel{sec:impl}{{V}{5}{Implementation}{section.5}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {V-}0a}Design decisions}{6}{paragraph.5.0.0.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {V-}0b}Evidence}{6}{paragraph.5.0.0.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {V-}0c}Status audit}{6}{paragraph.5.0.0.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Experimental Setup}{6}{section.6}\protected@file@percent }
+\newlabel{sec:setup}{{VI}{6}{Experimental Setup}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-A}}Component Studies}{6}{subsection.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VI-A}0a}Environment}{6}{paragraph.6.1.0.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VI-A}0b}Gate study}{6}{paragraph.6.1.0.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {IV}{\ignorespaces Status of each mechanism at commit \texttt  {2361d50}, traced through the code. I+T: implemented and unit-tested; I: implemented, untested; P: proposed or partial. Live: affects the default execution path.}}{6}{table.4}\protected@file@percent }
+\newlabel{tab:status}{{IV}{6}{Status of each mechanism at commit \texttt {2361d50}, traced through the code. I+T: implemented and unit-tested; I: implemented, untested; P: proposed or partial. Live: affects the default execution path}{table.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VI-A}0c}Routing study}{6}{paragraph.6.1.0.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-B}}End-to-End Protocol}{6}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VI-B}0a}Hardware and models}{6}{paragraph.6.2.0.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VI-B}0b}Task suite}{6}{paragraph.6.2.0.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VI-B}0c}Configurations}{7}{paragraph.6.2.0.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VI-B}0d}Metrics}{7}{paragraph.6.2.0.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Results and Discussion}{7}{section.7}\protected@file@percent }
+\newlabel{sec:results}{{VII}{7}{Results and Discussion}{section.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VII-A}}Completion Gate on Constructed End States}{7}{subsection.7.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {V}{\ignorespaces Completion decisions on 35 constructed end states. $n^{+}$/$n^{-}$: cases whose goal is / is not satisfied by the oracle. Rep.: cases reported complete. FC: false completions (reported complete, goal not satisfied). FR: false rejections (goal satisfied, not reported complete). Dispatch-only reports every case complete. Source: \texttt  {verification\_gate\_summary.csv}.}}{7}{table.5}\protected@file@percent }
+\newlabel{tab:gate}{{V}{7}{Completion decisions on 35 constructed end states. $n^{+}$/$n^{-}$: cases whose goal is / is not satisfied by the oracle. Rep.: cases reported complete. FC: false completions (reported complete, goal not satisfied). FR: false rejections (goal satisfied, not reported complete). Dispatch-only reports every case complete. Source: \texttt {verification\_gate\_summary.csv}}{table.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VII-B}}Routing Behavior}{7}{subsection.7.2}\protected@file@percent }
+\citation{greshake2023indirect}
+\citation{liu2024formalizing}
+\@writefile{lot}{\contentsline {table}{\numberline {VI}{\ignorespaces Model selected by the router per call type (no inference performed). Default: \texttt  {qwen2.5:1.5b} and \texttt  {moondream} installed. Full: all configured models installed. Isolated: each call routed with no active model. Agent order: calls routed in graph order with the previous selection as the active model. $^{f}$Selected by the fallback chain. Source: \texttt  {routing\_resolution.csv}.}}{8}{table.6}\protected@file@percent }
+\newlabel{tab:route}{{VI}{8}{Model selected by the router per call type (no inference performed). Default: \texttt {qwen2.5:1.5b} and \texttt {moondream} installed. Full: all configured models installed. Isolated: each call routed with no active model. Agent order: calls routed in graph order with the previous selection as the active model. $^{f}$Selected by the fallback chain. Source: \texttt {routing\_resolution.csv}}{table.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VII-C}}Test Suite}{8}{subsection.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VII-D}}End-to-End Evaluation}{8}{subsection.7.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VIII}Security, Privacy and Ethical Considerations}{8}{section.8}\protected@file@percent }
+\newlabel{sec:security}{{VIII}{8}{Security, Privacy and Ethical Considerations}{section.8}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VIII-}0a}Threat model}{8}{paragraph.8.0.0.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VIII-}0b}Current mitigations}{8}{paragraph.8.0.0.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VIII-}0c}Gaps}{8}{paragraph.8.0.0.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {VIII-}0d}CAPTCHAs and automation etiquette}{8}{paragraph.8.0.0.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {IX}Limitations and Future Work}{8}{section.9}\protected@file@percent }
+\newlabel{sec:limits}{{IX}{8}{Limitations and Future Work}{section.9}{}}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {IX-}0a}Evidence}{8}{paragraph.9.0.0.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {IX-}0b}Rule-based verification}{8}{paragraph.9.0.0.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {IX-}0c}Small models and hand-written rules}{8}{paragraph.9.0.0.3}\protected@file@percent }
+\bibstyle{IEEEtran}
+\bibdata{references}
+\bibcite{he2024webvoyager}{1}
+\bibcite{zheng2024seeact}{2}
+\bibcite{zhang2025ufo}{3}
+\bibcite{zhang2025appagent}{4}
+\bibcite{lukas2023pii}{5}
+\bibcite{zhou2024webarena}{6}
+\bibcite{xie2024osworld}{7}
+\bibcite{huang2024cannot}{8}
+\bibcite{yao2023react}{9}
+\bibcite{wei2022chain}{10}
+\bibcite{schick2023toolformer}{11}
+\bibcite{shinn2023reflexion}{12}
+\bibcite{kim2023rci}{13}
+\bibcite{wang2024voyager}{14}
+\bibcite{shi2017wob}{15}
+\bibcite{deng2023mind2web}{16}
+\bibcite{liu2024gptdroid}{17}
+\bibcite{liu2023qtypist}{18}
+\bibcite{yang2023som}{19}
+\bibcite{hong2024cogagent}{20}
+\bibcite{cheng2024seeclick}{21}
+\bibcite{lu2024omniparser}{22}
+\bibcite{lewis2020rag}{23}
+\bibcite{reimers2019sbert}{24}
+\bibcite{park2023generative}{25}
+\bibcite{packer2023memgpt}{26}
+\bibcite{greshake2023indirect}{27}
+\@writefile{toc}{\contentsline {paragraph}{\numberline {\mbox  {IX-}0d}Inactive mechanisms and roadmap}{9}{paragraph.9.0.0.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {X}Conclusion}{9}{section.10}\protected@file@percent }
+\newlabel{sec:conclusion}{{X}{9}{Conclusion}{section.10}{}}
+\@writefile{toc}{\contentsline {section}{References}{9}{section*.2}\protected@file@percent }
+\bibcite{liu2024formalizing}{28}
+\bibcite{zhan2024injecagent}{29}
+\bibcite{debenedetti2024agentdojo}{30}
+\bibcite{yang2024qwen25}{31}
+\bibcite{wang2024qwen2vl}{32}
+\bibcite{lin2024awq}{33}
+\bibcite{wang2024survey}{34}
+\bibcite{xi2025rise}{35}
+\gdef \@abspage@last{10}

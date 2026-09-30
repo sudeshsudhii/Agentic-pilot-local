@@ -1,25 +1,25 @@
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[
+  x=0.94cm,
   font=\scriptsize,
-  n/.style={draw, rounded corners=2pt, minimum height=0.5cm, minimum width=1.25cm, inner sep=2pt, fill=white},
-  g/.style={n, fill=gray!12, very thick},
-  t/.style={n, fill=black!4, rounded corners=6pt},
+  n/.style={draw, rounded corners=2pt, minimum height=0.48cm, minimum width=1.45cm, inner sep=1.5pt, fill=white},
+  g/.style={n, fill=gray!15, very thick},
+  t/.style={n, fill=black!5, rounded corners=6pt},
   arr/.style={-{Stealth[length=1.5mm]}, semithick},
-  lab/.style={font=\tiny, inner sep=1pt, fill=white},
-  node distance=0.36cm and 0.42cm]
+  lab/.style={font=\tiny, inner sep=1pt}]
 
-\node[n] (parse) {parse\_intent};
-\node[n, right=of parse] (risk) {risk\_check};
-\node[n, right=of risk] (auth) {auth\_check};
-\node[n, below=of auth] (nav) {navigate};
-\node[n, below=of nav] (dom) {extract\_dom};
-\node[n, left=of dom] (ctx) {retrieve\_ctx};
-\node[n, left=of ctx] (plan) {plan\_action};
-\node[n, below=of plan] (exec) {execute};
-\node[g, right=of exec] (ver) {verify ($\Phi$)};
-\node[n, right=of ver] (recv) {recovery};
-\node[t, below=0.45cm of ver] (done) {complete};
+\node[n] (parse) at (1.0, 0)    {parse\_intent};
+\node[n] (risk)  at (3.1, 0)    {risk\_check};
+\node[n] (auth)  at (5.2, 0)    {auth\_check};
+\node[n] (nav)   at (7.3, 0)    {navigate};
+\node[n] (plan)  at (3.1,-1.2)  {plan\_action};
+\node[n] (ctx)   at (5.2,-1.2)  {retrieve\_ctx};
+\node[n] (dom)   at (7.3,-1.2)  {extract\_dom};
+\node[n] (exec)  at (3.1,-2.4)  {execute};
+\node[g] (ver)   at (5.2,-2.4)  {verify ($\Phi$)};
+\node[n] (rec)   at (7.3,-2.4)  {recovery};
+\node[t] (done)  at (5.2,-3.55) {complete};
 
 \draw[arr] (parse) -- (risk);
 \draw[arr] (risk) -- (auth);
@@ -29,16 +29,19 @@
 \draw[arr] (ctx) -- (plan);
 \draw[arr] (plan) -- (exec);
 \draw[arr] (exec) -- (ver);
-\draw[arr] (ver) -- node[lab, above] {failed} (recv);
-\draw[arr] (ver) -- node[lab, right] {done / blocked / approval} (done);
-\draw[arr] (ver.north) -- node[lab, left, pos=0.35] {running} (ver.north |- dom.south) ;
-\draw[arr] (recv.north) -- node[lab, right, pos=0.4] {retry} (recv.north |- dom.south);
-\draw[arr] (recv.south) |- node[lab, pos=0.25, right] {exhausted} (done.east);
-\draw[arr] (nav.east) -- ++(0.35,0) |- node[lab, pos=0.2, right] {fail} (recv.east);
-\draw[arr] (parse.south) -- ++(0,-0.2) -| node[lab, pos=0.1, below] {fail} ($(recv.north)+(0.35,0)$);
-\draw[arr] (risk.south) |- node[lab, pos=0.15, left] {needs approval} ($(plan.west)+(-0.25,0.35)$) |- (done.west);
-\draw[arr, dashed] (dom.east) -- ++(0.55,0) |- node[lab, pos=0.9, above] {CAPTCHA} ($(done.east)+(0,0.1)$);
+\draw[arr] (ver) -- node[lab, above] {failed} (rec);
+\draw[arr] (ver) -- node[lab, right] {completed / blocked / approval} (done);
+% verify -> extract_dom (continue)
+\draw[arr] ($(ver.north)+(0.35,0)$) |- ($(dom.south)+(-0.35,-0.42)$) node[lab, pos=0.75, above] {running} -- ($(dom.south)+(-0.35,0)$);
+% recovery -> extract_dom (retry)
+\draw[arr] ($(rec.north)+(0.35,0)$) -- node[lab, right] {retry} ($(dom.south)+(0.35,0)$);
+% recovery -> complete (exhausted / blocked)
+\draw[arr] (rec.south) |- node[lab, pos=0.75, below] {exhausted} ($(done.east)+(0,-0.07)$);
+% risk -> complete (needs approval)
+\draw[arr] ($(risk.south)+(-0.45,0)$) -- ++(0,-0.35) -| (1.0,-3.55) node[lab, pos=0.75, right, align=left] {needs\\approval} -- (done.west);
+% CAPTCHA at observation -> complete (blocked)
+\draw[arr, dashed] (dom.east) -- ++(0.35,0) |- node[lab, pos=0.3, right] {CAPTCHA} ($(done.east)+(0,0.1)$);
 \end{tikzpicture}
-\caption{Execution graph as compiled in \texttt{graph.py}. Only the shaded \texttt{verify} node may route to \texttt{complete} with status \textsc{Completed}; it does so when the completion predicate $\Phi$ holds. A detected CAPTCHA routes to \texttt{complete} with status \textsc{Blocked}.}
+\caption{Execution graph compiled in \texttt{graph.py}. Only the shaded \texttt{verify} node can end a task as \textsc{Completed}, and only when $\Phi$ holds. A CAPTCHA seen during observation ends it as \textsc{Blocked}. Not drawn: failures in \texttt{parse\_intent} and \texttt{navigate} also route to \texttt{recovery}.}
 \label{fig:graph}
 \end{figure}

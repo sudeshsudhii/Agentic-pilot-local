@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering
+\caption{Model selected by the router per call type (no inference performed). Default: \texttt{qwen2.5:1.5b} and \texttt{moondream} installed. Full: all configured models installed. Isolated: each call routed with no active model. Agent order: calls routed in graph order with the previous selection as the active model. $^{f}$Selected by the fallback chain. Source: \texttt{routing\_resolution.csv}.}
+\label{tab:route}
+\footnotesize
+\setlength{\tabcolsep}{1.5pt}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Call (role) & Default & Full, isolated & Full, agent order \\
+\midrule
+Intent parsing (light.) & qwen2.5:1.5b & deepseek-r1:1.5b & deepseek-r1:1.5b \\
+Decompose (planner) & qwen2.5:1.5b$^{f}$ & qwen3.5:2b & deepseek-r1:1.5b \\
+1-step act.\ (light.) & qwen2.5:1.5b & deepseek-r1:1.5b & deepseek-r1:1.5b \\
+Multi-step act.\ (planner) & qwen2.5:1.5b$^{f}$ & qwen3.5:2b & deepseek-r1:1.5b \\
+Recovery (recovery) & qwen2.5:1.5b$^{f}$ & qwen2.5:7b & qwen2.5:7b \\
+Image input (vision) & moondream & qwen3-vl:2b & qwen3-vl:2b \\
+\bottomrule
+\end{tabular}
+\end{table}

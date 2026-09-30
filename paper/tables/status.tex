@@ -1,34 +1,28 @@
 \begin{table}[t]
 \centering
-\caption{Implementation status of each mechanism, from a reading of the code at commit \texttt{2361d50}. Status: I+T implemented and unit-tested; I implemented, not tested; P proposed or partial. Live: whether the mechanism affects the default execution path.}
+\caption{Status of each mechanism at commit \texttt{2361d50}, traced through the code. I+T: implemented and unit-tested; I: implemented, untested; P: proposed or partial. Live: affects the default execution path.}
 \label{tab:status}
 \footnotesize
 \setlength{\tabcolsep}{2.5pt}
-\begin{tabular}{@{}p{3.0cm}ccp{3.35cm}@{}}
+\begin{tabular}{@{}p{3.05cm}ccp{3.3cm}@{}}
 \toprule
 Mechanism & Status & Live & Note \\
 \midrule
-Graph, checkpoint, resume & I+T & yes & no test runs the compiled graph \\
-Completion predicate $\Phi$ & I+T & yes & rule-based; studied in Sec.~\ref{sec:results} \\
-Navigation proof at \texttt{complete} & I & yes & site intents only \\
-Per-step predicates $\phi_i$ & P & -- & step advances on dispatch \\
-Click effect check & P & -- & DOM-change check always passes \\
+Graph, checkpoints, resume & I+T & yes & compiled graph not tested \\
+Completion predicate $\Phi$ & I+T & yes & rule-based (Sec.~\ref{sec:results}) \\
+Per-step predicates, click check & P & -- & steps advance on dispatch \\
 CAPTCHA halt, resume, fallback & I+T & yes & no solver \\
-DOM-first grounding & I+T & yes & 50-element manifest \\
-Vision fallback & I+T & yes & on \texttt{need\_help} only \\
-Failure classification, bounds & I+T & yes & 7 types, 6 attempts \\
+DOM grounding, vision fallback & I+T & yes & vision on \texttt{need\_help} only \\
+Failure classes, retry bounds & I+T & yes & 7 types, 6 attempts \\
 Strategy-specific recovery & P & no & strategy label dropped \\
-Role-based routing, stickiness & I+T & yes & cool-down not read \\
-Outcome memory (write) & I & yes & SQLite and Chroma \\
-Memory/RAG retrieval & I+T & no & bypassed by empty initial state \\
-Element-text sanitizer & I+T & yes & title, URL not filtered \\
-Task-level approval gate & I & yes & LLM-assigned risk \\
-Model-call audit log & I+T & yes & browser traffic not logged \\
-Keyring credential store & I & no & not referenced \\
-Evidence store & I+T & yes & some files overwritten per step \\
-Ablation flags & I & partial & verification flag not read \\
-Desktop executor & I & no & not wired; interface test only \\
-Local-system extension & P & no & Section~\ref{sec:desktop} \\
+Role routing, stickiness & I+T & yes & cool-down not read \\
+Memory write / retrieval & I / I+T & yes / no & retrieval bypassed \\
+Sanitizer on element text & I+T & yes & title, URL unfiltered \\
+Task-level approval gate & I & yes & model-assigned risk \\
+Model-call audit log & I+T & yes & browsing not logged \\
+Evidence store & I+T & yes & some files overwritten \\
+Ablation flags & I & partial & verification flag unread \\
+Desktop executor / extension & I / P & no & not wired (Sec.~\ref{sec:desktop}) \\
 \bottomrule
 \end{tabular}
 \end{table}
