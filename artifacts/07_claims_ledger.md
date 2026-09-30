@@ -1,0 +1,94 @@
+# 07 — Claims Ledger (C2)
+
+Every factual statement in the paper about the system, a number, or other work, with its source. Code references are at commit `2361d50` (unchanged in this branch).
+
+- **Type:** code / experiment / citation / repo-record.
+- **Status:** `verified` means checked first-hand in this session, or by a Phase A agent and spot-checked by the Lead Editor. `todo` means it appears in the PDF as a visible `\todo{}`.
+
+## Numbers
+
+| ID | Section | Claim | Type | Source | Status |
+|---|---|---|---|---|---|
+| N1 | Abstract, §VII, Tab. IV | 35 constructed end states; 22 unsatisfied, 13 satisfied | experiment | `artifacts/results/verification_gate_summary.csv` row `all` | verified |
+| N2 | Abstract, §VII | Gate withheld completion in 15 of 22 unsatisfied states; dispatch-only accepts all 22 | experiment | same CSV: false_completions 7 of 22 (so 15 caught); dispatch rule reported_complete = 35 | verified |
+| N3 | Abstract, §VII | Rejected 1 of 13 satisfied states (X6) | experiment | `verification_gate_cases.csv` X6: oracle 1, decision rejected | verified |
+| N4 | Tab. IV | Per-category counts and FCR 0.629 / 0.368 | experiment | `verification_gate_summary.csv` | verified |
+| N5 | Abstract, §VII | Median 33.8 ms per decision; max per-case median 52.5 ms; URL-level CAPTCHA stops < 8 ms | experiment | `verification_gate_cases.csv` `gate_ms_median`: median of 35 = 33.78, max 52.54, blocked cases 0.00 / 5.77 / 7.06 (computed this session) | verified |
+| N6 | §VI | 20 repetitions after a warm-up call | code | `artifacts/experiments/verification_gate_study.py` (`--reps 20`; the first `gate_decision` call is untimed) | verified |
+| N7 | §VI, §VII | 4-core Xeon 2.8 GHz, 15 GiB, no GPU; Python 3.11.15; Playwright 1.56.0; Chromium 141.0.7390.37; LangGraph 1.2.12 | experiment | `lscpu`, `free -h`, `importlib.metadata`, `browser.version` run this session; also `04_results_raw.md` §environment | verified |
+| N8 | Tab. V, §VII | Router selections per call type and scenario; 3 fallbacks in the default install | experiment | `artifacts/results/routing_resolution.csv` (`artifacts/experiments/routing_default_install.py`) | verified |
+| N9 | Tab. VI, §VII | 108 collected, 104 passed, 4 failed, 1 collection error; Observatory 20/20; 62.0% line coverage | experiment | `results/junit.xml` (109 entries including the error), `tests_by_file.csv`, `junit_observatory.xml`, `coverage_by_subsystem.csv`. Run by A4; the Lead Editor re-parsed the XML and CSVs. | verified |
+| N10 | §VII | Failure causes: 2 need Ollama, 1 timeout, 1 needs `scratch/`; collection error is a missing import on Py 3.11 | experiment | `04_results_raw.md` "Failures in the canonical run 4" | verified |
+| N11 | §V | 10,755 backend lines, 1,682 in `nodes.py` | code | `wc -l` (A1 §15); `nodes.py` confirmed 1,682 by the Lead Editor | verified |
+| N12 | §IV-C, Eq. (1) | Answer-length threshold 40 chars; budget K = 15 model calls | code | `verification/manager.py:270-272`; `agent/nodes.py:1469,1509` | verified |
+| N13 | §IV-D | 3 verify-node retries; 7 failure types; 2 attempts per ladder level; fail after 6 | code | `nodes.py:1369-1373`; `recovery/engine.py:33-41,45-50,61,98-102` | verified |
+| N14 | §IV-B | 120 chars per element; ≤ 5 links; cap 50; 1280×800 viewport | code | `browser/dom.py:153-172,195-198,206-207`; `browser/pool.py:128` | verified (A1 §7) |
+| N15 | §IV-E | Probe refresh 300 s | code | `llm/registry.py:178,251` | verified |
+| N16 | §IV-F | Context budget 3,500 tokens | code | `config.py:62`; `rag/context_builder.py:75,104-105` | verified (A1 §9) |
+| N17 | §III | Wall-clock limit 5 min | code | `config.py:28`; `agent/runner.py:364-372` | verified |
+| N18 | §VIII | Sanitizer has 17 patterns | code | `security/sanitizer.py:16-38` | verified (A1 §10) |
+| N19 | §VII | 12 challenge phrases | code | `browser/dom.py:32-45` (the Lead Editor counted 12) | verified |
+| N20 | §VI | Repo benchmark list: 8 tasks, 4 without a checkable criterion | code | `experiment/config.py:204-218` | verified |
+| N21 | §I, §VI | 30-task, 6-category proposed suite | proposal | §VI protocol (a design, not a result) | n/a |
+| N22 | §VII | End-to-end success, FCR, latency, recovery, vision rate, evidence completeness | experiment | **not measured** (no Ollama or live web in this environment) | **todo** (visible `\todo{MEASURE}`) |
+| N23 | §VI | Hardware, OS, Ollama version, model digests for end-to-end runs | experiment | not measured | **todo** |
+| N24 | §VII | Qualitative case study screenshots | experiment | not measured | **todo** |
+
+## System descriptions (code)
+
+| ID | Section | Claim | Source | Status |
+|---|---|---|---|---|
+| S1 | §III, Fig. 2 | 11 nodes; router conditions as drawn | `agent/graph.py:18-84` | verified |
+| S2 | Fig. 2 caption, §V | Only `verify` can end a task as Completed | `graph.py` routers; `nodes.py:947-966` (a `complete` action leaves status unchanged); `nodes.py:1478-1506` | verified |
+| S3 | §V | Terminal guard downgrades a completion when navigation is unverified | `nodes.py:1593-1602` | verified |
+| S4 | §III, §V | Checkpoint after every node; resume skips intent parsing | `runner.py:275-306`; `nodes.py:67-75` | verified |
+| S5 | §III | API binds loopback; CORS localhost only | `backend/main.py:78-91,149` | verified (A1 §10) |
+| S6 | §IV-A | Multi-step trigger: connective or more than 8 words; exact-text plan override | `nodes.py:119,151-171` | verified |
+| S7 | §IV-A | Action vocabulary of 8 types | `agent/prompts.py:28-35` | verified |
+| S8 | §IV-A | Deterministic overrides, including Google-specific typing | `nodes.py:697-902` | verified |
+| S9 | §IV-B | Vision only on `need_help`; viewport fractions; no per-action check; cache | `nodes.py:733-817,1020-1034`; `vision/fallback.py:47-56` | verified |
+| S10 | §IV-C | $\Phi$ conjuncts H, T, X, R and error/bot vocabulary | `verification/manager.py:173-292` | verified |
+| S11 | §IV-C | Step predicate is dispatch success | `nodes.py:1393-1426` | verified |
+| S12 | §IV-C | CAPTCHA pre-check before $\Phi$ → Blocked | `nodes.py:1332-1357` | verified |
+| S13 | §IV-D, Tab. III | Strategy label dropped; recovery always re-observes | `recovery/engine.py:198`; `state.py:10-47` (no key); `graph.py:75-80`; A1 ran it to confirm | verified |
+| S14 | §IV-E | Deterministic analyzer roles | `llm/analyzer.py:60-189` | verified (A1 §4) |
+| S15 | §IV-E, §VII | Stickiness except recovery; fallback chain | `llm/router.py:121-135,163-182` | verified (plus experiment N8) |
+| S16 | §IV-E, Tab. III | Cool-down configured but unread | `config.py:49`; grep finds no reader | verified |
+| S17 | §IV-E | Default candidate models per role | `config.py:50-61` | verified |
+| S18 | §IV-F, Tab. III | Memory write contents; retrieval bypassed by `[]` initial state | `nodes.py:1629-1654`; `runner.py:265-266`; `rag/router.py:71-77` (the Lead Editor read all three) | verified |
+| S19 | §IV-G | Desktop executor wraps PyAutoGUI and psutil; not wired; interface-only test; headless fallback returns fixed size and empty screenshot | `desktop/executor.py:23-233`; grep shows only `tests/test_case_study_enhancements.py:27` imports it | verified |
+| S20 | §IV-G | File helper not confined to workspace | `agent/code_executor.py:25-30` (read by the Lead Editor) | verified |
+| S21 | §IV-G, Tab. II | Everything else in IV-G is a design | `02_local_system_extension.md` Part 2 | verified (labelled Proposed) |
+| S22 | §V, Tab. III | `enable_verification` unread | grep: only `api/health.py:48`, `experiment/runner.py:52` | verified |
+| S23 | §V | `--eval` runs absent `scratch/` scripts; ablation runner imports a missing function | `main.py:608-622`; `experiment/runner.py:82-83` vs `graph.py:9` | verified |
+| S24 | §V | Certification PASS criterion | `scripts/certify.py:40-44` | verified |
+| S25 | §V | Evidence layout; overwrite on retry; no integrity protection | `evidence/manager.py`; `nodes.py:986-991,1170-1174` | verified (A1 §8) |
+| S26 | §VIII | Approval triggers; re-check at completion; one approval covers the task | `security/approval.py:5-16`; `nodes.py:1499`; `runner.py:85` | verified |
+| S27 | §VIII | Audit logs model calls only; locality logged, not enforced | `security/audit.py:51-106`; `llm/gateway.py:113-120` | verified (A1 §10) |
+| S28 | §VIII | Title, URL, screenshots not sanitized | `nodes.py:654-677` | verified (A1 §10) |
+| S29 | §VIII | Browser flags: automation-detection disabled, UA spoofed, webdriver hidden, `--no-sandbox` | `browser/pool.py:90-93,127,138` | verified (A1 §10) |
+| S30 | §VIII | CAPTCHA resume refused while present; fallback engines; no solver | `runner.py:106-189` | verified (A1 §10) |
+| S31 | §III | One-time downloads include the vector store's default embedding model on first use | chromadb library default embedding function (not in repo code; no `embedding_function` passed at `memory/provider.py:61`) | verified as library behaviour, **author to confirm** for the installed chromadb version |
+| S32 | §III | Observatory issues only reads; no command channel | `observatory/backend/storage.py:32-52`; `backend/api/observability.py:95-100` | verified (A1 §11) |
+| S33 | Tab. I (ours) | Loc Y, Web Y, Desk P, Gate Y, Evid Y, Mem P, Inj P, Appr P | S13–S30 above | verified |
+| S34 | §VI | Ollama called without temperature or seed | grep `temperature\|seed` in `llm/gateway.py`: no match | verified |
+| S35 | §IX | Case-study-specific extraction code | `nodes.py:1100-1142` (read by the Lead Editor) | verified; **author action** (`\todo`) |
+
+## Claims about other work
+
+See `06_citation_audit.md` (32 rows). All citations are verified at abstract or venue level; four are flagged for a full-PDF re-read.
+
+## Removed or softened during drafting (unsupported)
+
+- README claims **not used**:
+  - "zero exfiltration";
+  - "PrivacyAuditor logs outbound requests";
+  - "anti-thrashing cooldown";
+  - "episodic strategy learning informs planning";
+  - "immutable evidence";
+  - "desktop task automation" (as implemented);
+  - "cryptographic audit trails".
+- Repo result files **not used**: `CERTIFICATION_REPORT.md` (committed as 1/5 PASS in `6a47c8b`, then 5/5 in `e812a71`, with no run log), `VISION_VALIDATION.md` (hard-coded text), the `benchmarks/run.py` template (hard-coded "Simulated" figures), and `MEMORY_VALIDATION.md` (a one-document store).
+- Intro: "Most assistants send each observation to a hosted model" became "Several of the agents reviewed … [4 cites]".
+- Architecture: "the only outbound traffic" became "apart from one-time weight downloads, outbound traffic consists of …".
+- Routing: the inference "every text role resolves to `qwen2.5:1.5b`" was **replaced by a measurement** (N8).
