@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\caption{Default role configuration of the model router (Ollama tags, in preference order). The router uses the first candidate that is installed. The launcher installs only \texttt{qwen2.5:1.5b} and one vision model by default, in which case every text role resolves to \texttt{qwen2.5:1.5b}.}
+\label{tab:routing}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lp{3.05cm}p{2.85cm}@{}}
+\toprule
+Role & Selected when & Candidates \\
+\midrule
+Lightweight & intent parsing; simple navigation & \texttt{deepseek-r1:1.5b}, \texttt{qwen3.5:2b}, \texttt{qwen2.5:1.5b} \\
+Planner & decomposition; multi-clause or long requests & \texttt{qwen3.5:2b}, \texttt{qwen2.5:7b}, \texttt{deepseek-r1:1.5b} \\
+Vision & image input or screen keywords & \texttt{qwen3-vl:2b}, \texttt{moondream} \\
+Coder & coding keywords & \texttt{qwen2.5-coder:3b}, \texttt{qwen2.5-coder:1.5b} \\
+Recovery & error recovery & \texttt{qwen2.5:7b}, \texttt{qwen3.5:2b} \\
+General & otherwise & \texttt{qwen2.5:1.5b}, \texttt{qwen2.5:7b} \\
+Fallback & no candidate installed & \texttt{qwen2.5:1.5b} \\
+\bottomrule
+\end{tabular}
+\end{table}

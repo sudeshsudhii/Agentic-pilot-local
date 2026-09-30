@@ -1,0 +1,44 @@
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  font=\scriptsize,
+  n/.style={draw, rounded corners=2pt, minimum height=0.5cm, minimum width=1.25cm, inner sep=2pt, fill=white},
+  g/.style={n, fill=gray!12, very thick},
+  t/.style={n, fill=black!4, rounded corners=6pt},
+  arr/.style={-{Stealth[length=1.5mm]}, semithick},
+  lab/.style={font=\tiny, inner sep=1pt, fill=white},
+  node distance=0.36cm and 0.42cm]
+
+\node[n] (parse) {parse\_intent};
+\node[n, right=of parse] (risk) {risk\_check};
+\node[n, right=of risk] (auth) {auth\_check};
+\node[n, below=of auth] (nav) {navigate};
+\node[n, below=of nav] (dom) {extract\_dom};
+\node[n, left=of dom] (ctx) {retrieve\_ctx};
+\node[n, left=of ctx] (plan) {plan\_action};
+\node[n, below=of plan] (exec) {execute};
+\node[g, right=of exec] (ver) {verify ($\Phi$)};
+\node[n, right=of ver] (recv) {recovery};
+\node[t, below=0.45cm of ver] (done) {complete};
+
+\draw[arr] (parse) -- (risk);
+\draw[arr] (risk) -- (auth);
+\draw[arr] (auth) -- (nav);
+\draw[arr] (nav) -- node[lab, right] {ok} (dom);
+\draw[arr] (dom) -- (ctx);
+\draw[arr] (ctx) -- (plan);
+\draw[arr] (plan) -- (exec);
+\draw[arr] (exec) -- (ver);
+\draw[arr] (ver) -- node[lab, above] {failed} (recv);
+\draw[arr] (ver) -- node[lab, right] {done / blocked / approval} (done);
+\draw[arr] (ver.north) -- node[lab, left, pos=0.35] {running} (ver.north |- dom.south) ;
+\draw[arr] (recv.north) -- node[lab, right, pos=0.4] {retry} (recv.north |- dom.south);
+\draw[arr] (recv.south) |- node[lab, pos=0.25, right] {exhausted} (done.east);
+\draw[arr] (nav.east) -- ++(0.35,0) |- node[lab, pos=0.2, right] {fail} (recv.east);
+\draw[arr] (parse.south) -- ++(0,-0.2) -| node[lab, pos=0.1, below] {fail} ($(recv.north)+(0.35,0)$);
+\draw[arr] (risk.south) |- node[lab, pos=0.15, left] {needs approval} ($(plan.west)+(-0.25,0.35)$) |- (done.west);
+\draw[arr, dashed] (dom.east) -- ++(0.55,0) |- node[lab, pos=0.9, above] {CAPTCHA} ($(done.east)+(0,0.1)$);
+\end{tikzpicture}
+\caption{Execution graph as compiled in \texttt{graph.py}. Only the shaded \texttt{verify} node may route to \texttt{complete} with status \textsc{Completed}; it does so when the completion predicate $\Phi$ holds. A detected CAPTCHA routes to \texttt{complete} with status \textsc{Blocked}.}
+\label{fig:graph}
+\end{figure}

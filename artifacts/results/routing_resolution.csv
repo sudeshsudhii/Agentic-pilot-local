@@ -1,0 +1,25 @@
+scenario,mode,installed,call,role,selected_model,fallback_used,reason
+launcher_default,isolated,qwen2.5:1.5b moondream:latest,intent_parsing (parse_intent),lightweight,qwen2.5:1.5b,False,Dynamic capability match: lightweight -> qwen2.5:1.5b
+launcher_default,isolated,qwen2.5:1.5b moondream:latest,decomposition (parse_intent),reasoning,qwen2.5:1.5b,True,Fallback to configured model_fallback 'qwen2.5:1.5b' (reasoning model unavailable)
+launcher_default,isolated,qwen2.5:1.5b moondream:latest,"action planning, 1-step (plan_action)",lightweight,qwen2.5:1.5b,False,Dynamic capability match: lightweight -> qwen2.5:1.5b
+launcher_default,isolated,qwen2.5:1.5b moondream:latest,"action planning, multi-step (plan_action)",reasoning,qwen2.5:1.5b,True,Fallback to configured model_fallback 'qwen2.5:1.5b' (reasoning model unavailable)
+launcher_default,isolated,qwen2.5:1.5b moondream:latest,recovery (error_recovery),recovery,qwen2.5:1.5b,True,Fallback to configured model_fallback 'qwen2.5:1.5b' (recovery model unavailable)
+launcher_default,isolated,qwen2.5:1.5b moondream:latest,image input,vision,moondream,False,Dynamic capability match: vision -> moondream
+launcher_default,sequence,qwen2.5:1.5b moondream:latest,intent_parsing (parse_intent),lightweight,qwen2.5:1.5b,False,Dynamic capability match: lightweight -> qwen2.5:1.5b
+launcher_default,sequence,qwen2.5:1.5b moondream:latest,decomposition (parse_intent),reasoning,qwen2.5:1.5b,True,Fallback to configured model_fallback 'qwen2.5:1.5b' (reasoning model unavailable)
+launcher_default,sequence,qwen2.5:1.5b moondream:latest,"action planning, 1-step (plan_action)",lightweight,qwen2.5:1.5b,False,Active model 'qwen2.5:1.5b' retained (stickiness: satisfies requirements)
+launcher_default,sequence,qwen2.5:1.5b moondream:latest,"action planning, multi-step (plan_action)",reasoning,qwen2.5:1.5b,True,Fallback to configured model_fallback 'qwen2.5:1.5b' (reasoning model unavailable)
+launcher_default,sequence,qwen2.5:1.5b moondream:latest,recovery (error_recovery),recovery,qwen2.5:1.5b,True,Fallback to configured model_fallback 'qwen2.5:1.5b' (recovery model unavailable)
+launcher_default,sequence,qwen2.5:1.5b moondream:latest,image input,vision,moondream,False,Dynamic capability match: vision -> moondream
+full_role_set,isolated,qwen2.5:1.5b qwen2.5:7b qwen3.5:2b deepseek-r1:1.5b qwen3-vl:2b moondream:latest qwen2.5-coder:3b,intent_parsing (parse_intent),lightweight,deepseek-r1:1.5b,False,Dynamic capability match: lightweight -> deepseek-r1:1.5b
+full_role_set,isolated,qwen2.5:1.5b qwen2.5:7b qwen3.5:2b deepseek-r1:1.5b qwen3-vl:2b moondream:latest qwen2.5-coder:3b,decomposition (parse_intent),reasoning,qwen3.5:2b,False,Dynamic capability match: reasoning -> qwen3.5:2b
+full_role_set,isolated,qwen2.5:1.5b qwen2.5:7b qwen3.5:2b deepseek-r1:1.5b qwen3-vl:2b moondream:latest qwen2.5-coder:3b,"action planning, 1-step (plan_action)",lightweight,deepseek-r1:1.5b,False,Dynamic capability match: lightweight -> deepseek-r1:1.5b
+full_role_set,isolated,qwen2.5:1.5b qwen2.5:7b qwen3.5:2b deepseek-r1:1.5b qwen3-vl:2b moondream:latest qwen2.5-coder:3b,"action planning, multi-step (plan_action)",reasoning,qwen3.5:2b,False,Dynamic capability match: reasoning -> qwen3.5:2b
+full_role_set,isolated,qwen2.5:1.5b qwen2.5:7b qwen3.5:2b deepseek-r1:1.5b qwen3-vl:2b moondream:latest qwen2.5-coder:3b,recovery (error_recovery),recovery,qwen2.5:7b,False,Dynamic capability match: recovery -> qwen2.5:7b
+full_role_set,isolated,qwen2.5:1.5b qwen2.5:7b qwen3.5:2b deepseek-r1:1.5b qwen3-vl:2b moondream:latest qwen2.5-coder:3b,image input,vision,qwen3-vl:2b,False,Dynamic capability match: vision -> qwen3-vl:2b
+full_role_set,sequence,qwen2.5:1.5b qwen2.5:7b qwen3.5:2b deepseek-r1:1.5b qwen3-vl:2b moondream:latest qwen2.5-coder:3b,intent_parsing (parse_intent),lightweight,deepseek-r1:1.5b,False,Dynamic capability match: lightweight -> deepseek-r1:1.5b
+full_role_set,sequence,qwen2.5:1.5b qwen2.5:7b qwen3.5:2b deepseek-r1:1.5b qwen3-vl:2b moondream:latest qwen2.5-coder:3b,decomposition (parse_intent),reasoning,deepseek-r1:1.5b,False,Active model 'deepseek-r1:1.5b' retained (stickiness: satisfies requirements)
+full_role_set,sequence,qwen2.5:1.5b qwen2.5:7b qwen3.5:2b deepseek-r1:1.5b qwen3-vl:2b moondream:latest qwen2.5-coder:3b,"action planning, 1-step (plan_action)",lightweight,deepseek-r1:1.5b,False,Active model 'deepseek-r1:1.5b' retained (stickiness: satisfies requirements)
+full_role_set,sequence,qwen2.5:1.5b qwen2.5:7b qwen3.5:2b deepseek-r1:1.5b qwen3-vl:2b moondream:latest qwen2.5-coder:3b,"action planning, multi-step (plan_action)",reasoning,deepseek-r1:1.5b,False,Active model 'deepseek-r1:1.5b' retained (stickiness: satisfies requirements)
+full_role_set,sequence,qwen2.5:1.5b qwen2.5:7b qwen3.5:2b deepseek-r1:1.5b qwen3-vl:2b moondream:latest qwen2.5-coder:3b,recovery (error_recovery),recovery,qwen2.5:7b,False,Dynamic capability match: recovery -> qwen2.5:7b
+full_role_set,sequence,qwen2.5:1.5b qwen2.5:7b qwen3.5:2b deepseek-r1:1.5b qwen3-vl:2b moondream:latest qwen2.5-coder:3b,image input,vision,qwen3-vl:2b,False,Dynamic capability match: vision -> qwen3-vl:2b

@@ -1,0 +1,7 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+Agentic Pilot runs a browser agent entirely against local models and refuses to report success until a check on the observed page passes, keeping the observations behind each decision on disk. Its architecture separates observation, planning, execution, verification and recovery into explicit graph nodes, which made it possible to state the completion rule formally and to test it in isolation. On constructed end states the rule removes most of the premature completions a dispatch-only agent would report, and its failures point to specific checks that are missing. The same structure carries over to files, processes and native applications once accessibility trees, typed postconditions and deterministic permission tiers take the place of the DOM, page checks and model-assigned risk. The remaining work is empirical: measuring the full system with local models on real tasks, and activating the recovery and memory paths that are designed but not yet live.
+
+\section*{Acknowledgment}
+\todo{AUTHOR: review and adapt.} An AI system (Anthropic's Claude) assisted with analyzing the source code, running the reported component experiments, searching and checking references, and drafting the text of this paper. The authors reviewed, verified and revised all content and take full responsibility for it.
