@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="5" skipped="0" tests="109" time="37.028" timestamp="2026-09-30T18:51:31.595209+00:00" hostname="vm"><testcase classname="" name="tests.test_task_runner" time="0.000"><error message="collection failure">tests/test_task_runner.py:103: in &lt;module&gt;
+    async def wait_for_status(db: Database, task_id: str, statuses: set[str]):
+                                  ^^^^^^^^
+E   NameError: name 'Database' is not defined</error></testcase><testcase classname="tests.e2e.test_certification" name="test_certification_suite" time="5.700"><failure message="AssertionError: Navigation failed: BrowserType.launch: Target page, context or browser has been closed&#10;  Browser logs:&#10;  &#10;  ╔════════════════════════════════════════════════════════════════════════════════════════════════╗&#10;  ║ Looks like you launched a headed browser without having a XServer running.                     ║&#10;  ║ Set either 'headless: true' or use 'xvfb-run &lt;your-playwright-app&gt;' before running Playwright. ║&#10;  ║                                                                                                ║&#10;  ║ &lt;3 Playwright Team                                                                             ║&#10;  ╚════════════════════════════════════════════════════════════════════════════════════════════════╝&#10;  Call log:&#10;    - &lt;launching&gt; /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-AdTGA7 --remote-debugging-pipe --no-startup-window&#10;    - &lt;launched&gt; pid=7226&#10;    - [pid=7226][err] [7226:7241:0930/185138.685087:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory&#10;    - [pid=7226][err] [7226:7226:0930/185138.700614:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY&#10;    - [pid=7226][err] [7226:7226:0930/185138.700674:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.&#10;    - [pid=7226] &lt;gracefully close start&gt;&#10;    - [pid=7226] &lt;kill&gt;&#10;    - [pid=7226] &lt;will force kill&gt;&#10;    - [pid=7226] &lt;process did exit: exitCode=1, signal=null&gt;&#10;    - [pid=7226] starting temporary directories cleanup&#10;    - [pid=7226] finished temporary directories cleanup&#10;    - [pid=7226] &lt;gracefully close end&gt;&#10;  &#10;assert 'failed' == 'completed'&#10;  &#10;  - completed&#10;  + failed">runner = &lt;backend.agent.runner.TaskRunner object at 0x7f07832df3d0&gt;
+setup_db = &lt;backend.db.database.Database object at 0x7f079d9df810&gt;
+
+    @pytest.mark.asyncio
+    async def test_certification_suite(runner, setup_db):
+        # 1. Navigation
+        task_id1 = await runner.submit("Navigate to example.com")
+        task1 = await wait_for_completion(setup_db, task_id1)
+&gt;       assert task1.status == "completed", f"Navigation failed: {task1.error}"
+E       AssertionError: Navigation failed: BrowserType.launch: Target page, context or browser has been closed
+E         Browser logs:
+E         
+E         ╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+E         ║ Looks like you launched a headed browser without having a XServer running.                     ║
+E         ║ Set either 'headless: true' or use 'xvfb-run &lt;your-playwright-app&gt;' before running Playwright. ║
+E         ║                                                                                                ║
+E         ║ &lt;3 Playwright Team                                                                             ║
+E         ╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+E         Call log:
+E           - &lt;launching&gt; /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-AdTGA7 --remote-debugging-pipe --no-startup-window
+E           - &lt;launched&gt; pid=7226
+E           - [pid=7226][err] [7226:7241:0930/185138.685087:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+E           - [pid=7226][err] [7226:7226:0930/185138.700614:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+E           - [pid=7226][err] [7226:7226:0930/185138.700674:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+E           - [pid=7226] &lt;gracefully close start&gt;
+E           - [pid=7226] &lt;kill&gt;
+E           - [pid=7226] &lt;will force kill&gt;
+E           - [pid=7226] &lt;process did exit: exitCode=1, signal=null&gt;
+E           - [pid=7226] starting temporary directories cleanup
+E           - [pid=7226] finished temporary directories cleanup
+E           - [pid=7226] &lt;gracefully close end&gt;
+E         
+E       assert 'failed' == 'completed'
+E         
+E         - completed
+E         + failed
+
+tests/e2e/test_certification.py:43: AssertionError</failure></testcase><testcase classname="tests.e2e.test_runner" name="test_runner_execution_flow" time="5.135" /><testcase classname="tests.e2e.test_runner" name="test_high_risk_approval_flow" time="15.184" /><testcase classname="tests.test_browser_agent_pipeline" name="test_opening_google_does_not_prematurely_complete_task" time="0.119" /><testcase classname="tests.test_browser_agent_pipeline" name="test_google_search_action_executes_and_continues" time="0.026" /><testcase classname="tests.test_browser_agent_pipeline" name="test_multistep_navigation_sequence" time="0.042" /><testcase classname="tests.test_browser_agent_pipeline" name="test_vision_unavailable_fails_explicitly" time="0.599"><failure message="playwright._impl._errors.TargetClosedError: BrowserType.launch: Target page, context or browser has been closed&#10;Browser logs:&#10;&#10;╔════════════════════════════════════════════════════════════════════════════════════════════════╗&#10;║ Looks like you launched a headed browser without having a XServer running.                     ║&#10;║ Set either 'headless: true' or use 'xvfb-run &lt;your-playwright-app&gt;' before running Playwright. ║&#10;║                                                                                                ║&#10;║ &lt;3 Playwright Team                                                                             ║&#10;╚════════════════════════════════════════════════════════════════════════════════════════════════╝&#10;Call log:&#10;  - &lt;launching&gt; /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-wWzvaL --remote-debugging-pipe --no-startup-window&#10;  - &lt;launched&gt; pid=7448&#10;  - [pid=7448][err] [7448:7462:0930/185159.882033:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory&#10;  - [pid=7448][err] [7448:7448:0930/185159.884372:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY&#10;  - [pid=7448][err] [7448:7448:0930/185159.884424:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.&#10;  - [pid=7448] &lt;gracefully close start&gt;&#10;  - [pid=7448] &lt;kill&gt;&#10;  - [pid=7448] &lt;will force kill&gt;&#10;  - [pid=7448] &lt;process did exit: exitCode=1, signal=null&gt;&#10;  - [pid=7448] starting temporary directories cleanup&#10;  - [pid=7448] finished temporary directories cleanup&#10;  - [pid=7448] &lt;gracefully close end&gt;">@pytest.mark.asyncio
+    async def test_vision_unavailable_fails_explicitly():
+        """When a model does not support multimodal vision and no vision model is available, fail with VISION_UNAVAILABLE."""
+        fallback = VisionFallback()
+    
+        # When Ollama returns no vision models or only text models
+        with patch("backend.llm.gateway.OllamaGateway.list_model_names", AsyncMock(return_value=["qwen2.5:1.5b"])):
+            avail, model = await fallback.check_vision_availability()
+            assert avail is False
+            assert model is None
+    
+            # Attempting fallback must raise VisionUnavailableError
+            with pytest.raises(VisionUnavailableError) as exc_info:
+                await fallback.plan_action(b"fake_screenshot", "click", "search box")
+            assert "VISION_UNAVAILABLE" in str(exc_info.value)
+    
+        # State machine must transition to failed with VISION_UNAVAILABLE
+        state = make_test_state(error="VISION_UNAVAILABLE")
+&gt;       res = await verify_node(state)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_browser_agent_pipeline.py:248: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+backend/agent/nodes.py:1332: in verify_node
+    page = await _get_task_page(state)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/agent/nodes.py:43: in _get_task_page
+    context = await browser_pool.get_task_context(task_id, session_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/browser/pool.py:180: in get_task_context
+    context = await self.acquire()
+              ^^^^^^^^^^^^^^^^^^^^
+backend/browser/pool.py:116: in acquire
+    await self.start()
+backend/browser/pool.py:90: in start
+    self._browser = await self._playwright.chromium.launch(
+.venv-eval/lib/python3.11/site-packages/playwright/async_api/_generated.py:14495: in launch
+    await self._impl_obj.launch(
+.venv-eval/lib/python3.11/site-packages/playwright/_impl/_browser_type.py:98: in launch
+    await self._channel.send(
+.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py:69: in send
+    return await self._connection.wrap_api_call(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;playwright._impl._connection.Connection object at 0x7f078039dcd0&gt;
+cb = &lt;function Channel.send.&lt;locals&gt;.&lt;lambda&gt; at 0x7f0780cf3b00&gt;
+is_internal = False, title = None
+
+    async def wrap_api_call(
+        self, cb: Callable[[], Any], is_internal: bool = False, title: str = None
+    ) -&gt; Any:
+        if self._api_zone.get():
+            return await cb()
+        task = asyncio.current_task(self._loop)
+        st: List[inspect.FrameInfo] = getattr(
+            task, "__pw_stack__", None
+        ) or inspect.stack(0)
+    
+        parsed_st = _extract_stack_trace_information_from_stack(st, is_internal, title)
+        self._api_zone.set(parsed_st)
+        try:
+            return await cb()
+        except Exception as error:
+&gt;           raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+E           playwright._impl._errors.TargetClosedError: BrowserType.launch: Target page, context or browser has been closed
+E           Browser logs:
+E           
+E           ╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+E           ║ Looks like you launched a headed browser without having a XServer running.                     ║
+E           ║ Set either 'headless: true' or use 'xvfb-run &lt;your-playwright-app&gt;' before running Playwright. ║
+E           ║                                                                                                ║
+E           ║ &lt;3 Playwright Team                                                                             ║
+E           ╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+E           Call log:
+E             - &lt;launching&gt; /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-wWzvaL --remote-debugging-pipe --no-startup-window
+E             - &lt;launched&gt; pid=7448
+E             - [pid=7448][err] [7448:7462:0930/185159.882033:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+E             - [pid=7448][err] [7448:7448:0930/185159.884372:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+E             - [pid=7448][err] [7448:7448:0930/185159.884424:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+E             - [pid=7448] &lt;gracefully close start&gt;
+E             - [pid=7448] &lt;kill&gt;
+E             - [pid=7448] &lt;will force kill&gt;
+E             - [pid=7448] &lt;process did exit: exitCode=1, signal=null&gt;
+E             - [pid=7448] starting temporary directories cleanup
+E             - [pid=7448] finished temporary directories cleanup
+E             - [pid=7448] &lt;gracefully close end&gt;
+
+.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py:559: TargetClosedError</failure></testcase><testcase classname="tests.test_browser_agent_pipeline" name="test_action_succeeds_but_task_remains_executing" time="0.029" /><testcase classname="tests.test_browser_agent_pipeline" name="test_all_task_requirements_satisfied_completes_task" time="0.034" /><testcase classname="tests.test_browser_agent_pipeline" name="test_action_failure_never_marks_completed" time="0.584"><failure message="playwright._impl._errors.TargetClosedError: BrowserType.launch: Target page, context or browser has been closed&#10;Browser logs:&#10;&#10;╔════════════════════════════════════════════════════════════════════════════════════════════════╗&#10;║ Looks like you launched a headed browser without having a XServer running.                     ║&#10;║ Set either 'headless: true' or use 'xvfb-run &lt;your-playwright-app&gt;' before running Playwright. ║&#10;║                                                                                                ║&#10;║ &lt;3 Playwright Team                                                                             ║&#10;╚════════════════════════════════════════════════════════════════════════════════════════════════╝&#10;Call log:&#10;  - &lt;launching&gt; /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-rTpEhH --remote-debugging-pipe --no-startup-window&#10;  - &lt;launched&gt; pid=7495&#10;  - [pid=7495][err] [7495:7509:0930/185200.938700:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory&#10;  - [pid=7495][err] [7495:7495:0930/185200.941297:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY&#10;  - [pid=7495][err] [7495:7495:0930/185200.941337:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.&#10;  - [pid=7495] &lt;gracefully close start&gt;&#10;  - [pid=7495] &lt;kill&gt;&#10;  - [pid=7495] &lt;will force kill&gt;&#10;  - [pid=7495] &lt;process did exit: exitCode=1, signal=null&gt;&#10;  - [pid=7495] starting temporary directories cleanup&#10;  - [pid=7495] finished temporary directories cleanup&#10;  - [pid=7495] &lt;gracefully close end&gt;">@pytest.mark.asyncio
+    async def test_action_failure_never_marks_completed():
+        """An execution error or verification failure must increment retry or fail, never complete."""
+        # Sub-case A: First failure triggers retry
+        state_retry = make_test_state(
+            retry_count=0,
+            error="Target element not found: search_input",
+        )
+&gt;       res_retry = await verify_node(state_retry)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_browser_agent_pipeline.py:343: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+backend/agent/nodes.py:1332: in verify_node
+    page = await _get_task_page(state)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/agent/nodes.py:43: in _get_task_page
+    context = await browser_pool.get_task_context(task_id, session_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/browser/pool.py:180: in get_task_context
+    context = await self.acquire()
+              ^^^^^^^^^^^^^^^^^^^^
+backend/browser/pool.py:116: in acquire
+    await self.start()
+backend/browser/pool.py:90: in start
+    self._browser = await self._playwright.chromium.launch(
+.venv-eval/lib/python3.11/site-packages/playwright/async_api/_generated.py:14495: in launch
+    await self._impl_obj.launch(
+.venv-eval/lib/python3.11/site-packages/playwright/_impl/_browser_type.py:98: in launch
+    await self._channel.send(
+.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py:69: in send
+    return await self._connection.wrap_api_call(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;playwright._impl._connection.Connection object at 0x7f07820edd10&gt;
+cb = &lt;function Channel.send.&lt;locals&gt;.&lt;lambda&gt; at 0x7f0780424360&gt;
+is_internal = False, title = None
+
+    async def wrap_api_call(
+        self, cb: Callable[[], Any], is_internal: bool = False, title: str = None
+    ) -&gt; Any:
+        if self._api_zone.get():
+            return await cb()
+        task = asyncio.current_task(self._loop)
+        st: List[inspect.FrameInfo] = getattr(
+            task, "__pw_stack__", None
+        ) or inspect.stack(0)
+    
+        parsed_st = _extract_stack_trace_information_from_stack(st, is_internal, title)
+        self._api_zone.set(parsed_st)
+        try:
+            return await cb()
+        except Exception as error:
+&gt;           raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+E           playwright._impl._errors.TargetClosedError: BrowserType.launch: Target page, context or browser has been closed
+E           Browser logs:
+E           
+E           ╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+E           ║ Looks like you launched a headed browser without having a XServer running.                     ║
+E           ║ Set either 'headless: true' or use 'xvfb-run &lt;your-playwright-app&gt;' before running Playwright. ║
+E           ║                                                                                                ║
+E           ║ &lt;3 Playwright Team                                                                             ║
+E           ╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+E           Call log:
+E             - &lt;launching&gt; /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-rTpEhH --remote-debugging-pipe --no-startup-window
+E             - &lt;launched&gt; pid=7495
+E             - [pid=7495][err] [7495:7509:0930/185200.938700:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+E             - [pid=7495][err] [7495:7495:0930/185200.941297:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+E             - [pid=7495][err] [7495:7495:0930/185200.941337:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+E             - [pid=7495] &lt;gracefully close start&gt;
+E             - [pid=7495] &lt;kill&gt;
+E             - [pid=7495] &lt;will force kill&gt;
+E             - [pid=7495] &lt;process did exit: exitCode=1, signal=null&gt;
+E             - [pid=7495] starting temporary directories cleanup
+E             - [pid=7495] finished temporary directories cleanup
+E             - [pid=7495] &lt;gracefully close end&gt;
+
+.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py:559: TargetClosedError</failure></testcase><testcase classname="tests.test_captcha_handling" name="test_1_normal_google_page_continues_normally" time="0.040" /><testcase classname="tests.test_captcha_handling" name="test_2_captcha_page_detected_as_blocked" time="0.046" /><testcase classname="tests.test_captcha_handling" name="test_3_captcha_detected_never_completed" time="0.028" /><testcase classname="tests.test_captcha_handling" name="test_4_user_clears_captcha_resumes_from_current_step" time="0.043" /><testcase classname="tests.test_captcha_handling" name="test_5_captcha_remains_no_infinite_retry_loop" time="0.035" /><testcase classname="tests.test_captcha_handling" name="test_6_fallback_provider_explicitly_recorded" time="0.035" /><testcase classname="tests.test_captcha_handling" name="test_7_no_fallback_available_maintains_blocked_state" time="0.018" /><testcase classname="tests.test_case_study_enhancements" name="test_config_ablation_flags" time="0.002" /><testcase classname="tests.test_case_study_enhancements" name="test_task_plan_models" time="0.001" /><testcase classname="tests.test_case_study_enhancements" name="test_execution_record_schema" time="0.002" /><testcase classname="tests.test_case_study_enhancements" name="test_verification_expected_vs_observed" time="0.002" /><testcase classname="tests.test_case_study_enhancements" name="test_verification_file_state" time="0.003" /><testcase classname="tests.test_case_study_enhancements" name="test_recovery_classification_and_escalation" time="0.001" /><testcase classname="tests.test_case_study_enhancements" name="test_input_sanitizer" time="0.001" /><testcase classname="tests.test_case_study_enhancements" name="test_privacy_auditor" time="0.002" /><testcase classname="tests.test_case_study_enhancements" name="test_desktop_executor" time="0.001" /><testcase classname="tests.test_case_study_enhancements" name="test_telemetry_metrics" time="0.002" /><testcase classname="tests.test_case_study_enhancements" name="test_ablation_presets" time="0.001" /><testcase classname="tests.test_checkpoint_and_optimization" name="test_checkpoint_save_and_load" time="0.002" /><testcase classname="tests.test_checkpoint_and_optimization" name="test_parse_intent_checkpoint_resumption" time="0.004" /><testcase classname="tests.test_checkpoint_and_optimization" name="test_context_router_single_fetch_reuse" time="0.003" /><testcase classname="tests.test_checkpoint_and_optimization" name="test_model_stickiness_preserves_active_model" time="0.001" /><testcase classname="tests.test_checkpoint_and_optimization" name="test_single_installed_model_bypass" time="0.001" /><testcase classname="tests.test_checkpoint_and_optimization" name="test_context_builder_deduplication_and_budgeting" time="0.001" /><testcase classname="tests.test_checkpoint_and_optimization" name="test_vision_fallback_screenshot_caching" time="0.104"><failure message="backend.vision.fallback.VisionUnavailableError: VISION_UNAVAILABLE: No compatible vision model installed in Ollama.">@pytest.mark.asyncio
+    async def test_vision_fallback_screenshot_caching():
+        """Verify VisionFallback reuses cached inference when screenshot hash is identical."""
+        vf = VisionFallback()
+        dummy_screenshot = b"test_image_bytes_12345"
+    
+        with patch("backend.vision.fallback.OllamaGateway.complete_structured", new_callable=AsyncMock) as mock_complete:
+            mock_complete.return_value = VisionAction(
+                action_type="click",
+                x_percent=0.5,
+                y_percent=0.5,
+                reasoning="Click center",
+            )
+    
+            # First call -&gt; computes inference
+&gt;           action1 = await vf.plan_action(dummy_screenshot, "find submit", "button")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_checkpoint_and_optimization.py:225: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;backend.vision.fallback.VisionFallback object at 0x7f078038a850&gt;
+screenshot_bytes = b'test_image_bytes_12345', goal = 'find submit'
+target = 'button'
+
+    async def plan_action(self, screenshot_bytes: bytes, goal: str, target: str | None) -&gt; VisionAction:
+        """Analyze the screenshot and return the next action, reusing cached inference if unchanged."""
+        config = get_config()
+        is_avail, selected_vision_model = await self.check_vision_availability()
+        if not is_avail or not selected_vision_model:
+            logger.error("[VISION]\ncalled=false\nmodel=none\nimage_attached=false\nerror=VISION_UNAVAILABLE")
+&gt;           raise VisionUnavailableError("VISION_UNAVAILABLE: No compatible vision model installed in Ollama.")
+E           backend.vision.fallback.VisionUnavailableError: VISION_UNAVAILABLE: No compatible vision model installed in Ollama.
+
+backend/vision/fallback.py:88: VisionUnavailableError</failure></testcase><testcase classname="tests.test_database" name="test_database_task_event_roundtrip" time="0.030" /><testcase classname="tests.test_launcher" name="test_orchestrator_initialization" time="0.001" /><testcase classname="tests.test_launcher" name="test_is_port_in_use_and_range_validation" time="0.001" /><testcase classname="tests.test_launcher" name="test_check_http_health_live_and_offline" time="0.002" /><testcase classname="tests.test_launcher" name="test_environment_verification" time="0.001" /><testcase classname="tests.test_launcher" name="test_free_ports_safe_execution" time="0.019" /><testcase classname="tests.test_launcher" name="test_cli_argument_parsing" time="0.002" /><testcase classname="tests.test_launcher" name="test_different_working_directory" time="0.002"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/home/user/Agentic-pilot-local/scratch'">def test_different_working_directory():
+        """Verify the launcher resolves paths correctly when run from another directory."""
+        scratch_dir = BASE_DIR / "scratch"
+&gt;       res = subprocess.run(
+            [sys.executable, str(BASE_DIR / "main.py"), "--help"],
+            cwd=str(scratch_dir),
+            capture_output=True,
+            text=True,
+        )
+
+tests/test_launcher.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/subprocess.py:548: in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/subprocess.py:1026: in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: 255 args: ['/home/user/Agentic-pilot-local/.venv-eval/bi...&gt;
+args = ['/home/user/Agentic-pilot-local/.venv-eval/bin/python', '/home/user/Agentic-pilot-local/main.py', '--help']
+executable = b'/home/user/Agentic-pilot-local/.venv-eval/bin/python'
+preexec_fn = None, close_fds = True, pass_fds = ()
+cwd = '/home/user/Agentic-pilot-local/scratch', env = None, startupinfo = None
+creationflags = 0, shell = False, p2cread = -1, p2cwrite = -1, c2pread = 19
+c2pwrite = 21, errread = 22, errwrite = 24, restore_signals = True, gid = None
+gids = None, uid = None, umask = -1, start_new_session = False
+process_group = -1
+
+    def _execute_child(self, args, executable, preexec_fn, close_fds,
+                       pass_fds, cwd, env,
+                       startupinfo, creationflags, shell,
+                       p2cread, p2cwrite,
+                       c2pread, c2pwrite,
+                       errread, errwrite,
+                       restore_signals,
+                       gid, gids, uid, umask,
+                       start_new_session, process_group):
+        """Execute program (POSIX version)"""
+    
+        if isinstance(args, (str, bytes)):
+            args = [args]
+        elif isinstance(args, os.PathLike):
+            if shell:
+                raise TypeError('path-like args is not allowed when '
+                                'shell is true')
+            args = [args]
+        else:
+            args = list(args)
+    
+        if shell:
+            # On Android the default shell is at '/system/bin/sh'.
+            unix_shell = ('/system/bin/sh' if
+                      hasattr(sys, 'getandroidapilevel') else '/bin/sh')
+            args = [unix_shell, "-c"] + args
+            if executable:
+                args[0] = executable
+    
+        if executable is None:
+            executable = args[0]
+    
+        sys.audit("subprocess.Popen", executable, args, cwd, env)
+    
+        if (_USE_POSIX_SPAWN
+                and os.path.dirname(executable)
+                and preexec_fn is None
+                and not close_fds
+                and not pass_fds
+                and cwd is None
+                and (p2cread == -1 or p2cread &gt; 2)
+                and (c2pwrite == -1 or c2pwrite &gt; 2)
+                and (errwrite == -1 or errwrite &gt; 2)
+                and not start_new_session
+                and process_group == -1
+                and gid is None
+                and gids is None
+                and uid is None
+                and umask &lt; 0):
+            self._posix_spawn(args, executable, env, restore_signals,
+                              p2cread, p2cwrite,
+                              c2pread, c2pwrite,
+                              errread, errwrite)
+            return
+    
+        orig_executable = executable
+    
+        # For transferring possible exec failure from child to parent.
+        # Data format: "exception name:hex errno:description"
+        # Pickle is not used; it is complex and involves memory allocation.
+        errpipe_read, errpipe_write = os.pipe()
+        # errpipe_write must not be in the standard io 0, 1, or 2 fd range.
+        low_fds_to_close = []
+        while errpipe_write &lt; 3:
+            low_fds_to_close.append(errpipe_write)
+            errpipe_write = os.dup(errpipe_write)
+        for low_fd in low_fds_to_close:
+            os.close(low_fd)
+        try:
+            try:
+                # We must avoid complex work that could involve
+                # malloc or free in the child process to avoid
+                # potential deadlocks, thus we do all this here.
+                # and pass it to fork_exec()
+    
+                if env is not None:
+                    env_list = []
+                    for k, v in env.items():
+                        k = os.fsencode(k)
+                        if b'=' in k:
+                            raise ValueError("illegal environment variable name")
+                        env_list.append(k + b'=' + os.fsencode(v))
+                else:
+                    env_list = None  # Use execv instead of execve.
+                executable = os.fsencode(executable)
+                if os.path.dirname(executable):
+                    executable_list = (executable,)
+                else:
+                    # This matches the behavior of os._execvpe().
+                    executable_list = tuple(
+                        os.path.join(os.fsencode(dir), executable)
+                        for dir in os.get_exec_path(env))
+                fds_to_keep = set(pass_fds)
+                fds_to_keep.add(errpipe_write)
+                self.pid = _fork_exec(
+                        args, executable_list,
+                        close_fds, tuple(sorted(map(int, fds_to_keep))),
+                        cwd, env_list,
+                        p2cread, p2cwrite, c2pread, c2pwrite,
+                        errread, errwrite,
+                        errpipe_read, errpipe_write,
+                        restore_signals, start_new_session,
+                        process_group, gid, gids, uid, umask,
+                        preexec_fn, _USE_VFORK)
+                self._child_created = True
+            finally:
+                # be sure the FD is closed no matter what
+                os.close(errpipe_write)
+    
+            self._close_pipe_fds(p2cread, p2cwrite,
+                                 c2pread, c2pwrite,
+                                 errread, errwrite)
+    
+            # Wait for exec to fail or succeed; possibly raising an
+            # exception (limited in size)
+            errpipe_data = bytearray()
+            while True:
+                part = os.read(errpipe_read, 50000)
+                errpipe_data += part
+                if not part or len(errpipe_data) &gt; 50000:
+                    break
+        finally:
+            # be sure the FD is closed no matter what
+            os.close(errpipe_read)
+    
+        if errpipe_data:
+            try:
+                pid, sts = os.waitpid(self.pid, 0)
+                if pid == self.pid:
+                    self._handle_exitstatus(sts)
+                else:
+                    self.returncode = sys.maxsize
+            except ChildProcessError:
+                pass
+    
+            try:
+                exception_name, hex_errno, err_msg = (
+                        errpipe_data.split(b':', 2))
+                # The encoding here should match the encoding
+                # written in by the subprocess implementations
+                # like _posixsubprocess
+                err_msg = err_msg.decode()
+            except ValueError:
+                exception_name = b'SubprocessError'
+                hex_errno = b'0'
+                err_msg = 'Bad exception data from child: {!r}'.format(
+                              bytes(errpipe_data))
+            child_exception_type = getattr(
+                    builtins, exception_name.decode('ascii'),
+                    SubprocessError)
+            if issubclass(child_exception_type, OSError) and hex_errno:
+                errno_num = int(hex_errno, 16)
+                if err_msg == "noexec:chdir":
+                    err_msg = ""
+                    # The error must be from chdir(cwd).
+                    err_filename = cwd
+                elif err_msg == "noexec":
+                    err_msg = ""
+                    err_filename = None
+                else:
+                    err_filename = orig_executable
+                if errno_num != 0:
+                    err_msg = os.strerror(errno_num)
+                if err_filename is not None:
+&gt;                   raise child_exception_type(errno_num, err_msg, err_filename)
+E                   FileNotFoundError: [Errno 2] No such file or directory: '/home/user/Agentic-pilot-local/scratch'
+
+/usr/lib/python3.11/subprocess.py:1955: FileNotFoundError</failure></testcase><testcase classname="tests.test_launcher" name="test_shutdown_process_tracking" time="0.020" /><testcase classname="tests.test_model_registry" name="test_model_capability_enum" time="0.001" /><testcase classname="tests.test_model_registry" name="test_model_metadata_capabilities" time="0.001" /><testcase classname="tests.test_model_registry" name="test_default_known_models_populated" time="0.001" /><testcase classname="tests.test_model_registry" name="test_dynamic_registration_and_unregistration" time="0.001" /><testcase classname="tests.test_model_registry" name="test_mark_installed" time="0.001" /><testcase classname="tests.test_model_registry" name="test_get_models_with_capability_priority" time="0.001" /><testcase classname="tests.test_model_registry" name="test_get_preferred_model_fallback" time="0.001" /><testcase classname="tests.test_model_router" name="test_single_model_mode" time="0.002" /><testcase classname="tests.test_model_router" name="test_dynamic_vision_routing" time="0.001" /><testcase classname="tests.test_model_router" name="test_dynamic_coding_routing" time="0.001" /><testcase classname="tests.test_model_router" name="test_dynamic_recovery_routing" time="0.001" /><testcase classname="tests.test_model_router" name="test_dynamic_intent_parsing_routing" time="0.001" /><testcase classname="tests.test_model_router" name="test_anti_thrashing_preserves_capable_active_model" time="0.001" /><testcase classname="tests.test_model_router" name="test_fallback_when_specialized_model_missing" time="0.001" /><testcase classname="tests.test_multi_model_integration" name="test_execution_record_model_provenance" time="0.003" /><testcase classname="tests.test_multi_model_integration" name="test_telemetry_tracer_multi_model_metrics" time="0.002" /><testcase classname="tests.test_multi_model_integration" name="test_code_executor_file_operations" time="0.003" /><testcase classname="tests.test_multi_model_integration" name="test_parse_intent_node_model_routing" time="0.076" /><testcase classname="tests.test_multi_model_integration" name="test_plan_action_node_model_routing" time="0.005" /><testcase classname="tests.test_multi_model_rag" name="test_build_planning_context_coding_role" time="0.001" /><testcase classname="tests.test_multi_model_rag" name="test_build_planning_context_vision_role" time="0.001" /><testcase classname="tests.test_multi_model_rag" name="test_build_planning_context_reasoning_role" time="0.001" /><testcase classname="tests.test_multi_model_rag" name="test_build_planning_context_lightweight_role" time="0.001" /><testcase classname="tests.test_multi_model_rag" name="test_build_planning_context_general_role" time="0.001" /><testcase classname="tests.test_multi_model_rag" name="test_security_boundaries_preserved_across_all_roles" time="0.001" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_1_successful_navigation_transitions_to_observation" time="0.063" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_2_navigation_is_not_repeated_indefinitely" time="0.052" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_3_input_field_is_identified" time="0.027" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_4_type_text_executes" time="0.065" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_5_screenshot_is_captured_after_typing" time="0.062" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_6_exact_text_verification_succeeds" time="0.034" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_7_task_completes_only_after_verification" time="0.054" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_8_task_does_not_complete_after_navigation_alone" time="0.030" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_9_task_does_not_complete_after_type_text_alone" time="0.044" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_10_vision_invocation_is_separately_verified_from_screenshot_capture" time="0.157" /><testcase classname="tests.test_parser" name="test_parse_model_response_strips_code_fences" time="0.001" /><testcase classname="tests.test_plugins" name="test_plugin_registry_exposes_three_builtins" time="0.001" /><testcase classname="tests.test_plugins" name="test_gmail_plugin_detects_send_email_risk" time="0.001" /><testcase classname="tests.test_rag_chunking" name="test_markdown_heading_chunking" time="0.001" /><testcase classname="tests.test_rag_chunking" name="test_plain_text_paragraph_chunking" time="0.001" /><testcase classname="tests.test_rag_chunking" name="test_empty_document_chunking" time="0.001" /><testcase classname="tests.test_rag_context" name="test_build_planning_context_separation" time="0.001" /><testcase classname="tests.test_rag_context" name="test_build_planning_context_none_handling" time="0.001" /><testcase classname="tests.test_rag_ingestion" name="test_document_loader_formats" time="0.004" /><testcase classname="tests.test_rag_ingestion" name="test_ingestion_pipeline_deduplication" time="0.556" /><testcase classname="tests.test_rag_ingestion" name="test_ingestion_delete_document" time="0.410" /><testcase classname="tests.test_rag_integration" name="test_retrieve_context_node_integration" time="0.815" /><testcase classname="tests.test_rag_integration" name="test_plan_action_node_with_retrieved_knowledge" time="0.003" /><testcase classname="tests.test_rag_integration" name="test_execute_action_attaches_knowledge_provenance" time="0.010" /><testcase classname="tests.test_rag_integration" name="test_rag_disabled_graceful_degradation" time="0.002" /><testcase classname="tests.test_rag_retrieval" name="test_retrieval_provenance_and_structure" time="1.022" /><testcase classname="tests.test_rag_retrieval" name="test_retrieval_query_cache" time="0.970" /><testcase classname="tests.test_rag_retrieval" name="test_retrieval_empty_when_no_matches" time="0.403" /><testcase classname="tests.test_rag_retrieval" name="test_hybrid_search_scoring" time="1.101" /><testcase classname="tests.test_rag_router" name="test_should_retrieve_knowledge_decisions" time="0.001" /><testcase classname="tests.test_rag_router" name="test_rag_disabled_flag" time="0.001" /><testcase classname="tests.test_rag_router" name="test_route_and_retrieve_execution" time="0.655" /><testcase classname="tests.test_rag_security" name="test_untrusted_knowledge_banner_presence" time="0.001" /><testcase classname="tests.test_rag_security" name="test_malicious_instruction_containment" time="0.001" /><testcase classname="tests.test_rag_security" name="test_empty_chunks_formatting" time="0.000" /><testcase classname="tests.test_recovery_engine" name="test_diagnose_with_none_error" time="0.001" /><testcase classname="tests.test_recovery_engine" name="test_handle_failure_with_none_error_in_state" time="0.001" /><testcase classname="tests.test_recovery_engine" name="test_checkpoint_with_none_session_id" time="0.001" /><testcase classname="tests.test_recovery_engine" name="test_browser_context_single_logging" time="0.003" /></testsuite></testsuites>

@@ -1,0 +1,89 @@
+{
+  "run_id": "exp_multi_model_dynamic_1790794341",
+  "preset": "multi_model_dynamic",
+  "description": "Multi-model architecture with dynamic 4-stage capability-aware routing",
+  "started_at": "2026-09-30T18:52:21.183633+00:00",
+  "completed_at": "2026-09-30T18:52:21.184031+00:00",
+  "config_overrides": {
+    "enable_multi_model": true,
+    "model_routing_strategy": "dynamic",
+    "enable_rag": true,
+    "enable_evidence": true,
+    "enable_verification": true,
+    "enable_recovery": true,
+    "enable_memory": true
+  },
+  "metrics": {
+    "total_tasks": 8,
+    "completed_tasks": 0,
+    "success_rate_percent": 0.0,
+    "average_duration_ms": 0.0,
+    "average_steps": 1.0
+  },
+  "task_records": [
+    {
+      "task_id": "45c9b4aa-028f-470e-b488-ac0cb11d8acc",
+      "task_text": "Navigate to wikipedia.org and search for Artificial Intelligence",
+      "status": "failed",
+      "duration_ms": 0,
+      "step_count": 1,
+      "error": "cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)"
+    },
+    {
+      "task_id": "c976fefc-5584-4bea-85cb-ad3bee74fb5c",
+      "task_text": "Go to news.ycombinator.com and view top stories",
+      "status": "failed",
+      "duration_ms": 0,
+      "step_count": 1,
+      "error": "cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)"
+    },
+    {
+      "task_id": "608c6a89-142f-49e4-883d-deb4e551391d",
+      "task_text": "Navigate to github.com and inspect explore page",
+      "status": "failed",
+      "duration_ms": 0,
+      "step_count": 1,
+      "error": "cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)"
+    },
+    {
+      "task_id": "0cd9101d-d2c5-4ff8-aea7-672a2f9b4de4",
+      "task_text": "Open google.com and search for local weather",
+      "status": "failed",
+      "duration_ms": 0,
+      "step_count": 1,
+      "error": "cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)"
+    },
+    {
+      "task_id": "8675b5de-abba-44c2-bc93-e94befc00ee6",
+      "task_text": "Analyze screenshot of the dashboard and locate the search button",
+      "status": "failed",
+      "duration_ms": 0,
+      "step_count": 1,
+      "error": "cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)"
+    },
+    {
+      "task_id": "08d4fa42-53c4-4ae7-bee2-f1b3d98055ba",
+      "task_text": "Write python script to calculate fibonacci numbers and check syntax",
+      "status": "failed",
+      "duration_ms": 0,
+      "step_count": 1,
+      "error": "cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)"
+    },
+    {
+      "task_id": "afb9f994-660d-463c-a76f-dd71ee3ae5d4",
+      "task_text": "Follow standard operating procedure guide to configure deployment pipeline",
+      "status": "failed",
+      "duration_ms": 0,
+      "step_count": 1,
+      "error": "cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)"
+    },
+    {
+      "task_id": "73412773-b29a-4eb1-b3f8-a8e0b819698a",
+      "task_text": "Recover from network timeout using alternative selector or replanning",
+      "status": "failed",
+      "duration_ms": 0,
+      "step_count": 1,
+      "error": "cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)"
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "comparison_id": "ablation_study_1790794340",
+  "timestamp": "2026-09-30T18:52:20.282931+00:00",
+  "presets_evaluated": [
+    "full_framework",
+    "single_model",
+    "multi_model_static",
+    "multi_model_dynamic",
+    "dynamic_routing_rag",
+    "no_rag",
+    "rag_only_no_memory",
+    "memory_only_no_rag",
+    "rag_hybrid",
+    "rag_with_reranking",
+    "no_evidence",
+    "no_verification",
+    "no_recovery",
+    "no_memory",
+    "baseline_direct"
+  ],
+  "results_by_preset": {
+    "full_framework": {
+      "total_tasks": 8,
+      "completed_tasks": 0,
+      "success_rate_percent": 0.0,
+      "average_duration_ms": 112.2,
+      "average_steps": 1.0
+    },
+    "single_model": {
+      "total_tasks": 8,
+      "completed_tasks": 0,
+      "success_rate_percent": 0.0,
+      "average_duration_ms": 0.0,
+      "average_steps": 1.0
+    },
+    "multi_model_static": {
+      "total_tasks": 8,
+      "completed_tasks": 0,
+      "success_rate_percent": 0.0,
+      "average_duration_ms": 0.0,
+      "average_steps": 1.0
+    },
+    "multi_model_dynamic": {
+      "total_tasks": 8,
+      "completed_tasks": 0,
+      "success_rate_percent": 0.0,
+      "average_duration_ms": 0.0,
+      "average_steps": 1.0
+    },
+    "dynamic_routing_rag": {
+      "total_tasks": 8,
+      "completed_tasks": 0,
+      "success_rate_percent": 0.0,
+      "average_duration_ms": 0.0,
+      "average_steps": 1.0
+    },
+    "no_rag": {
+      "total_tasks": 8,
+      "completed_tasks": 0,
+      "success_rate_percent": 0.0,
+      "average_duration_ms": 0.0,
+      "average_steps": 1.0
+    },
+    "rag_only_no_memory": {
+      "total_tasks": 8,
+      "completed_tasks": 0,
+      "success_rate_percent": 0.0,
+      "average_duration_ms": 0.0,
+      "average_steps": 1.0
+    },
+    "memory_only_no_rag": {
+      "total_tasks": 8,
+      "completed_tasks": 0,
+      "success_rate_percent": 0.0,
+      "average_duration_ms": 0.0,
+      "average_steps": 1.0
+    },
+    "rag_hybrid": {
+      "total_tasks": 8,
+      "completed_tasks": 0,
+      "success_rate_percent": 0.0,
+      "average_duration_ms": 0.0,
+      "average_steps": 1.0
+    },
+    "rag_with_reranking": {
+      "total_tasks": 8,
+      "completed_tasks": 0,
+      "success_rate_percent": 0.0,
+      "average_duration_ms": 0.0,
+      "average_steps": 1.0
+    },
+    "no_evidence": {
+      "total_tasks": 8,
+      "completed_tasks": 0,
+      "success_rate_percent": 0.0,
+      "average_duration_ms": 0.0,
+      "average_steps": 1.0
+    },
+    "no_verification": {
+      "total_tasks": 8,
+      "completed_tasks": 0,
+      "success_rate_percent": 0.0,
+      "average_duration_ms": 0.0,
+      "average_steps": 1.0
+    },
+    "no_recovery": {
+      "total_tasks": 8,
+      "completed_tasks": 0,
+      "success_rate_percent": 0.0,
+      "average_duration_ms": 0.0,
+      "average_steps": 1.0
+    },
+    "no_memory": {
+      "total_tasks": 8,
+      "completed_tasks": 0,
+      "success_rate_percent": 0.0,
+      "average_duration_ms": 0.0,
+      "average_steps": 1.0
+    },
+    "baseline_direct": {
+      "total_tasks": 8,
+      "completed_tasks": 0,
+      "success_rate_percent": 0.0,
+      "average_duration_ms": 0.1,
+      "average_steps": 1.0
+    }
+  }
+}

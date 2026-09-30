@@ -1,0 +1,10 @@
+### python main.py --eval  (timeout 300; 2026-09-30T18:52:01Z); scratch/ exists? no
+
+============================================================
+  Running Research Evaluation Benchmarks...
+============================================================
+
+18:52:01 [INFO] Stopping Pilot child processes...
+18:52:01 [INFO] All Pilot services stopped cleanly.
+exit=0
+wall_clock_seconds=.152556248

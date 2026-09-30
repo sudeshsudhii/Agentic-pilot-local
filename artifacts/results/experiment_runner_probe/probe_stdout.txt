@@ -1,0 +1,200 @@
+presets: ['full_framework', 'single_model', 'multi_model_static', 'multi_model_dynamic', 'dynamic_routing_rag', 'no_rag', 'rag_only_no_memory', 'memory_only_no_rag', 'rag_hybrid', 'rag_with_reranking', 'no_evidence', 'no_verification', 'no_recovery', 'no_memory', 'baseline_direct']
+Experiment task error task_id=dc2f666f-0b71-468f-bd8d-05c1c6d2a38b: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=2297a103-6a58-413e-b663-161db6bb794c: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=c9450203-83fb-4f6d-8fe5-93bb25e45cb3: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=a3131ae8-0792-4dd3-840b-f7a81c4f6daa: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=8552a2cd-2ce0-4981-a820-11237e5b2290: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=475b0713-af92-4438-a258-22ab1263787c: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=fd331dd8-f880-4be1-b37d-f8a8c973a18f: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=cbfc259c-3e9f-4710-8698-0767d1ac4e28: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=d9328107-dc12-41aa-b9d4-ab2b9888fa7d: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=52262a2e-4edf-4672-b188-453d83cbbb57: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=00ca5b11-6ad3-48cd-958a-5893afc998ed: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=88b32c59-d6aa-41d9-911e-2c191767e924: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=87246194-1b93-400a-8de1-ba3ee9362d14: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=7b534051-3bb7-422a-8302-f34e600b869e: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=35f3b8c2-4978-425a-bf2d-14a393b8e546: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=05579151-c9e8-4524-a00a-cc9e5ddbcea8: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=23a893ee-99a2-4bfa-a583-dc65cb471b61: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=97648636-c1a0-45b3-9859-6ef6beff4038: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=f3ebb09a-4479-4fac-9718-3f7f5d017af6: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=dfb7d2cc-cfae-4777-ae7f-3e88e4f54ea6: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=1e6a859b-00a4-4278-8416-1137e37174cc: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=25feceea-e99c-42a5-be87-0a4af8e47082: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=cc447e89-e73e-4c80-8e65-80fbe142c44e: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=5efe7e97-42c6-4b65-be8a-51f234a80709: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=45c9b4aa-028f-470e-b488-ac0cb11d8acc: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=c976fefc-5584-4bea-85cb-ad3bee74fb5c: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=608c6a89-142f-49e4-883d-deb4e551391d: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=0cd9101d-d2c5-4ff8-aea7-672a2f9b4de4: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=8675b5de-abba-44c2-bc93-e94befc00ee6: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=08d4fa42-53c4-4ae7-bee2-f1b3d98055ba: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=afb9f994-660d-463c-a76f-dd71ee3ae5d4: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=73412773-b29a-4eb1-b3f8-a8e0b819698a: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=09b99386-ee68-44c8-9589-5f8fcba8c8e2: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=9ba2d864-74bf-4958-b332-1809cf1f0a88: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=ecb6390e-1db3-4834-9595-f68f2d1f1ad5: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=61435d5d-2472-4643-b409-e81b87a47dac: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=320baaf4-0d4a-4762-827e-705342a4e079: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=12445ae9-52e5-41e0-9c96-c76a6e7e3e5f: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=b11b46b9-8b1f-448b-b1c1-414c2414d337: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=58bea13c-6861-4262-a0b0-e1d8fd82f804: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=714b3bd6-d93b-4ed7-883c-7c62a99c4842: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=5c4c3b71-cf0f-4d5c-bcad-f6e4ced17d09: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=d1afa617-3bc8-4368-96e6-f9dcebc38926: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=95d8e2c8-7038-4091-ae64-2a8b195f4ecf: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=45c6cacb-ec87-4532-b564-3337934d99f5: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=9c047d3e-063a-49e3-b1c2-bed94aa9ae1b: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=d3d731fd-f4f5-4848-bb3d-7f22f4d87c47: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=a952ad86-6cce-40da-8426-5b54f89c0eea: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=2f7af610-d00a-4f15-9e9c-eac02eb1db35: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=2b828635-d70d-4a7b-970f-2ebb412ba569: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=f6b6d388-b7fd-4ffd-91e0-c19174918a90: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=2f9cb3e1-06e0-42f1-891b-2cca294e0163: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=3f4c9080-1b4e-4427-965c-46bb2c6afa4f: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=e628c400-f70b-4d06-ab11-67955eea2e47: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=82f7d26d-8a9c-4471-b106-645c7d3f68e1: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=d2f47520-26f1-4e40-9ffc-877b8aa98e19: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=7ba72020-57ad-402a-b71f-3d84f7025e65: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=25a60366-8389-44e7-a0ef-3fc75ec88c56: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=7b70be2a-942a-4571-8e35-6740921b4766: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=781096ab-d45a-4493-9c5c-dfc026459e25: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=a7195ab6-cb3a-40bf-a60e-f4353c26668e: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=8a3f6125-f9b4-4ebb-8dd7-dc537b6cf928: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=d96415c2-9573-452a-9c6e-689ed646d2f3: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=83e75b27-2418-4544-b06e-0e01b61d04c6: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=0e2e8b77-1189-48ea-8b2d-3d5246e26a87: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=513f6371-2452-4809-8a1b-d65b79120efa: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=57706b42-42bb-424f-9df3-7d83cac7c9fd: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=5210739a-3fee-484f-87a1-38a7e298fda3: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=2311ffb8-993c-425a-b0e2-10e96c2dac63: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=95e82860-6aaa-4dcf-a8cf-387cab1ba37a: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=c18d2072-9ca5-49ef-809e-e0cb017e0a04: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=f2d00318-4ba0-4614-bcaf-76e4bcb5c86f: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=c078aec8-5980-4f57-b84b-ba56e1eae5f9: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=d4ab5125-2f81-4be9-ac35-aa4fda5be8b9: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=a0cef12a-1d2d-4c23-b053-16ae5efd431f: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=033a971a-f208-4f4e-a3ed-be9b8faec9a1: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=7d694367-5893-481d-bd9e-36287dc369da: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=f4e28763-81df-4d52-8841-276f43fa8614: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=f37e419b-754b-455b-8d48-ca4905d2f2ec: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=b501eb34-ea14-4e45-8a21-2a3d6a396104: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=e8f40fe2-470b-4e8f-bb5b-6151c3ba3ab3: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=c99b075f-f592-455a-9efd-c861fc60bc65: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=5147d8f5-116f-4375-8494-70744dceb19f: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=839bb334-ed03-4c78-87c2-560c12b9fbbc: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=69b41a38-347e-434d-82ed-71afe77abcdd: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=33415a97-78cd-43f9-a9a0-62ce8b057285: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=f193e6d3-ce4b-4c67-8110-0c5a81017d64: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=c651fcce-8085-4a9f-a2a2-2db744b95a56: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=59be3d61-612b-480e-9064-c1bbfd69ea9a: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=c7a708cb-44e9-40ad-8f2d-9115f4b5a259: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=66f4b226-ce2d-49b6-923c-5564470846b0: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=bf1a034b-f6d6-41f4-9c7e-be232917013c: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=8e66d5d7-a188-43e9-b200-49c3ee3973aa: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=7b2e9912-75a7-474d-b3f6-a067b5a4ad49: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=ca5004c3-92bc-4c2c-9a81-eda0ba45587a: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=72615616-462e-485d-afc5-22fd8da8062f: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=156cdb6c-eedb-4e20-9912-12b1d6f441e1: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=b9d635bb-7631-40da-8b85-690df9e64c73: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=c68e28ee-82ac-44d8-ab89-0cfa7c4f487c: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=f57e2730-cf84-44a0-835e-2722f48da887: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=0c5a5dcd-3acb-4cb0-9d9d-7aa3cb3601c6: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=be33ecb9-df74-449d-aaf5-9240560bfbeb: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=96c1a689-fa00-44d9-8dfa-1d571d363e6b: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=b88ba73c-c2fd-4574-b406-b0362d6453ec: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=c1422134-f2d5-4b01-be87-9a2a202cc1f5: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=1c1eb6f7-0c19-4289-95b1-9b1afc73e4f1: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=ff0644c3-644d-4971-88a9-d6e7aef22f0a: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=38afd9e8-0c18-4733-a80d-66f824b1353d: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=2263c013-9f93-4462-a025-4a879313b725: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=785d6684-afb2-4bdd-9c58-3096218c738b: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=18372ae5-8345-44dd-9f65-4a86f719f23e: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=47d5436f-0601-4476-917e-afb188d571e6: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=72207e7f-14a2-4301-9105-67f3125ca408: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=43c4d02f-2c46-497c-a4a2-5cde16501686: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=2a01a2de-7727-4bc0-8803-e97600c5ad85: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=5717b3e2-95d2-4850-b9d4-510aa4d58d13: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=b5aa1bcd-248f-4513-87a9-fe2d728ff120: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=3318cf5e-aea6-4d5e-a3c7-725a70153f71: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=1622080c-72e5-4eed-9e03-ab191b6d5969: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+Experiment task error task_id=9a857d5d-57a2-4467-a1f4-eef27f173fa4: cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)
+elapsed_s=0.912
+{
+ "full_framework": {
+  "total_tasks": 8,
+  "completed_tasks": 0,
+  "success_rate_percent": 0.0,
+  "average_duration_ms": 112.2,
+  "average_steps": 1.0
+ },
+ "single_model": {
+  "total_tasks": 8,
+  "completed_tasks": 0,
+  "success_rate_percent": 0.0,
+  "average_duration_ms": 0.0,
+  "average_steps": 1.0
+ },
+ "multi_model_static": {
+  "total_tasks": 8,
+  "completed_tasks": 0,
+  "success_rate_percent": 0.0,
+  "average_duration_ms": 0.0,
+  "average_steps": 1.0
+ },
+ "multi_model_dynamic": {
+  "total_tasks": 8,
+  "completed_tasks": 0,
+  "success_rate_percent": 0.0,
+  "average_duration_ms": 0.0,
+  "average_steps": 1.0
+ },
+ "dynamic_routing_rag": {
+  "total_tasks": 8,
+  "completed_tasks": 0,
+  "success_rate_percent": 0.0,
+  "average_duration_ms": 0.0,
+  "average_steps": 1.0
+ },
+ "no_rag": {
+  "total_tasks": 8,
+  "completed_tasks": 0,
+  "success_rate_percent": 0.0,
+  "average_duration_ms": 0.0,
+  "average_steps": 1.0
+ },
+ "rag_only_no_memory": {
+  "total_tasks": 8,
+  "completed_tasks": 0,
+  "success_rate_percent": 0.0,
+  "average_duration_ms": 0.0,
+  "average_steps": 1.0
+ },
+ "memory_only_no_rag": {
+  "total_tasks": 8,
+  "completed_tasks": 0,
+  "success_rate_percent": 0.0,
+  "average_duration_ms": 0.0,
+  "average_steps": 1.0
+ },
+ "rag_hybrid": {
+  "total_tasks": 8,
+  "completed_tasks": 0,
+  "success_rate_percent": 0.0,
+  "average_duration_ms": 0.0,
+  "average_steps": 1.0
+ },
+ "rag_with_reranking": {
+  "total_tasks": 8,
+  "completed_tasks": 0,
+  "success_rate_percent": 0.0,
+  "average_
+sample task record: {
+ "task_id": "dc2f666f-0b71-468f-bd8d-05c1c6d2a38b",
+ "task_text": "Navigate to wikipedia.org and search for Artificial Intelligence",
+ "status": "failed",
+ "duration_ms": 898,
+ "step_count": 1,
+ "error": "cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)"
+}
+distinct errors: {"cannot import name 'create_agent_graph' from 'backend.agent.graph' (/home/user/Agentic-pilot-local/backend/agent/graph.py)"}

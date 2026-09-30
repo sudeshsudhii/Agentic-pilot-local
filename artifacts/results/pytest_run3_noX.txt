@@ -1,0 +1,1397 @@
+### RUN 3 (canonical): python -m pytest -q -rA --continue-on-collection-errors --junitxml=artifacts/results/junit.xml --durations=25  (start 2026-09-30T18:51:30Z); playwright==1.56.0 pinned to match /opt/pw-browsers/chromium-1194; Ollama absent
+F.....F..F........................F.......F............................. [ 66%]
+....................................                                     [100%]
+==================================== ERRORS ====================================
+__________________ ERROR collecting tests/test_task_runner.py __________________
+tests/test_task_runner.py:103: in <module>
+    async def wait_for_status(db: Database, task_id: str, statuses: set[str]):
+                                  ^^^^^^^^
+E   NameError: name 'Database' is not defined
+=================================== FAILURES ===================================
+___________________________ test_certification_suite ___________________________
+
+runner = <backend.agent.runner.TaskRunner object at 0x7f07832df3d0>
+setup_db = <backend.db.database.Database object at 0x7f079d9df810>
+
+    @pytest.mark.asyncio
+    async def test_certification_suite(runner, setup_db):
+        # 1. Navigation
+        task_id1 = await runner.submit("Navigate to example.com")
+        task1 = await wait_for_completion(setup_db, task_id1)
+>       assert task1.status == "completed", f"Navigation failed: {task1.error}"
+E       AssertionError: Navigation failed: BrowserType.launch: Target page, context or browser has been closed
+E         Browser logs:
+E         
+E         ╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+E         ║ Looks like you launched a headed browser without having a XServer running.                     ║
+E         ║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+E         ║                                                                                                ║
+E         ║ <3 Playwright Team                                                                             ║
+E         ╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+E         Call log:
+E           - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-AdTGA7 --remote-debugging-pipe --no-startup-window
+E           - <launched> pid=7226
+E           - [pid=7226][err] [7226:7241:0930/185138.685087:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+E           - [pid=7226][err] [7226:7226:0930/185138.700614:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+E           - [pid=7226][err] [7226:7226:0930/185138.700674:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+E           - [pid=7226] <gracefully close start>
+E           - [pid=7226] <kill>
+E           - [pid=7226] <will force kill>
+E           - [pid=7226] <process did exit: exitCode=1, signal=null>
+E           - [pid=7226] starting temporary directories cleanup
+E           - [pid=7226] finished temporary directories cleanup
+E           - [pid=7226] <gracefully close end>
+E         
+E       assert 'failed' == 'completed'
+E         
+E         - completed
+E         + failed
+
+tests/e2e/test_certification.py:43: AssertionError
+------------------------------ Captured log setup ------------------------------
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=1/4 model=deepseek-r1:1.5b retryable=True backoff=0.25s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=70
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=2/4 model=deepseek-r1:1.5b retryable=True backoff=0.50s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=2
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=3/4 model=deepseek-r1:1.5b retryable=True backoff=1.00s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=1
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=4/4 model=deepseek-r1:1.5b retryable=True backoff=2.00s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=2
+CRITICAL pilot.llm:gateway.py:146 OLLAMA_EXHAUSTED model=deepseek-r1:1.5b retries=4 last_error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:107 NODE=parse_intent FAILED task_id=bd25dadb-a1c3-4c9e-b01f-0185ff735ecc error=Ollama completion failed after 4 attempts: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download error_type=RuntimeError duration_ms=3938
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 96, in complete
+    response = await self._client_instance().chat(**request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 1047, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 819, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 765, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 94, in parse_intent_node
+    parsed = await gateway.complete_structured(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 177, in complete_structured
+    raw = await self.complete(system_with_schema, prompt, json_mode=True, image_bytes=image_bytes, model_override=model_override)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 150, in complete
+    raise RuntimeError(f"Ollama completion failed after {self.config.max_retry_count + 1} attempts: {last_error}") from last_error
+RuntimeError: Ollama completion failed after 4 attempts: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:48 BROWSER context_acquisition_failed task_id=bd25dadb-a1c3-4c9e-b01f-0185ff735ecc error=BrowserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ Looks like you launched a headed browser without having a XServer running.                     ║
+║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+║                                                                                                ║
+║ <3 Playwright Team                                                                             ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+Call log:
+  - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-AdTGA7 --remote-debugging-pipe --no-startup-window
+  - <launched> pid=7226
+  - [pid=7226][err] [7226:7241:0930/185138.685087:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+  - [pid=7226][err] [7226:7226:0930/185138.700614:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+  - [pid=7226][err] [7226:7226:0930/185138.700674:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+  - [pid=7226] <gracefully close start>
+  - [pid=7226] <kill>
+  - [pid=7226] <will force kill>
+  - [pid=7226] <process did exit: exitCode=1, signal=null>
+  - [pid=7226] starting temporary directories cleanup
+  - [pid=7226] finished temporary directories cleanup
+  - [pid=7226] <gracefully close end>
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 43, in _get_task_page
+    context = await browser_pool.get_task_context(task_id, session_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 180, in get_task_context
+    context = await self.acquire()
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 116, in acquire
+    await self.start()
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 90, in start
+    self._browser = await self._playwright.chromium.launch(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 14495, in launch
+    await self._impl_obj.launch(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_browser_type.py", line 98, in launch
+    await self._channel.send(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: BrowserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ Looks like you launched a headed browser without having a XServer running.                     ║
+║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+║                                                                                                ║
+║ <3 Playwright Team                                                                             ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+Call log:
+  - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-AdTGA7 --remote-debugging-pipe --no-startup-window
+  - <launched> pid=7226
+  - [pid=7226][err] [7226:7241:0930/185138.685087:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+  - [pid=7226][err] [7226:7226:0930/185138.700614:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+  - [pid=7226][err] [7226:7226:0930/185138.700674:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+  - [pid=7226] <gracefully close start>
+  - [pid=7226] <kill>
+  - [pid=7226] <will force kill>
+  - [pid=7226] <process did exit: exitCode=1, signal=null>
+  - [pid=7226] starting temporary directories cleanup
+  - [pid=7226] finished temporary directories cleanup
+  - [pid=7226] <gracefully close end>
+
+ERROR    pilot.agent.runner:runner.py:347 RUNNER task_failed task_id=bd25dadb-a1c3-4c9e-b01f-0185ff735ecc error=BrowserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ Looks like you launched a headed browser without having a XServer running.                     ║
+║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+║                                                                                                ║
+║ <3 Playwright Team                                                                             ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+Call log:
+  - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-AdTGA7 --remote-debugging-pipe --no-startup-window
+  - <launched> pid=7226
+  - [pid=7226][err] [7226:7241:0930/185138.685087:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+  - [pid=7226][err] [7226:7226:0930/185138.700614:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+  - [pid=7226][err] [7226:7226:0930/185138.700674:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+  - [pid=7226] <gracefully close start>
+  - [pid=7226] <kill>
+  - [pid=7226] <will force kill>
+  - [pid=7226] <process did exit: exitCode=1, signal=null>
+  - [pid=7226] starting temporary directories cleanup
+  - [pid=7226] finished temporary directories cleanup
+  - [pid=7226] <gracefully close end>
+ error_type=TargetClosedError
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/agent/runner.py", line 274, in _run
+    async for event in graph.astream(state):
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/langgraph/pregel/main.py", line 3440, in astream
+    async for _ in runner.atick(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/langgraph/pregel/_runner.py", line 396, in atick
+    await arun_with_retry(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/langgraph/pregel/_retry.py", line 744, in arun_with_retry
+    return await task.proc.ainvoke(task.input, config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/langgraph/_internal/_runnable.py", line 756, in ainvoke
+    input = await asyncio.create_task(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/langgraph/_internal/_runnable.py", line 522, in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 430, in extract_dom_node
+    page = await _get_task_page(state)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 43, in _get_task_page
+    context = await browser_pool.get_task_context(task_id, session_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 180, in get_task_context
+    context = await self.acquire()
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 116, in acquire
+    await self.start()
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 90, in start
+    self._browser = await self._playwright.chromium.launch(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 14495, in launch
+    await self._impl_obj.launch(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_browser_type.py", line 98, in launch
+    await self._channel.send(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: BrowserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ Looks like you launched a headed browser without having a XServer running.                     ║
+║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+║                                                                                                ║
+║ <3 Playwright Team                                                                             ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+Call log:
+  - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-AdTGA7 --remote-debugging-pipe --no-startup-window
+  - <launched> pid=7226
+  - [pid=7226][err] [7226:7241:0930/185138.685087:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+  - [pid=7226][err] [7226:7226:0930/185138.700614:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+  - [pid=7226][err] [7226:7226:0930/185138.700674:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+  - [pid=7226] <gracefully close start>
+  - [pid=7226] <kill>
+  - [pid=7226] <will force kill>
+  - [pid=7226] <process did exit: exitCode=1, signal=null>
+  - [pid=7226] starting temporary directories cleanup
+  - [pid=7226] finished temporary directories cleanup
+  - [pid=7226] <gracefully close end>
+
+During task with name 'extract_dom' and id '92956606-b772-1918-e833-0c0adfcb4019'
+___________________ test_vision_unavailable_fails_explicitly ___________________
+
+    @pytest.mark.asyncio
+    async def test_vision_unavailable_fails_explicitly():
+        """When a model does not support multimodal vision and no vision model is available, fail with VISION_UNAVAILABLE."""
+        fallback = VisionFallback()
+    
+        # When Ollama returns no vision models or only text models
+        with patch("backend.llm.gateway.OllamaGateway.list_model_names", AsyncMock(return_value=["qwen2.5:1.5b"])):
+            avail, model = await fallback.check_vision_availability()
+            assert avail is False
+            assert model is None
+    
+            # Attempting fallback must raise VisionUnavailableError
+            with pytest.raises(VisionUnavailableError) as exc_info:
+                await fallback.plan_action(b"fake_screenshot", "click", "search box")
+            assert "VISION_UNAVAILABLE" in str(exc_info.value)
+    
+        # State machine must transition to failed with VISION_UNAVAILABLE
+        state = make_test_state(error="VISION_UNAVAILABLE")
+>       res = await verify_node(state)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_browser_agent_pipeline.py:248: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+backend/agent/nodes.py:1332: in verify_node
+    page = await _get_task_page(state)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/agent/nodes.py:43: in _get_task_page
+    context = await browser_pool.get_task_context(task_id, session_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/browser/pool.py:180: in get_task_context
+    context = await self.acquire()
+              ^^^^^^^^^^^^^^^^^^^^
+backend/browser/pool.py:116: in acquire
+    await self.start()
+backend/browser/pool.py:90: in start
+    self._browser = await self._playwright.chromium.launch(
+.venv-eval/lib/python3.11/site-packages/playwright/async_api/_generated.py:14495: in launch
+    await self._impl_obj.launch(
+.venv-eval/lib/python3.11/site-packages/playwright/_impl/_browser_type.py:98: in launch
+    await self._channel.send(
+.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py:69: in send
+    return await self._connection.wrap_api_call(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <playwright._impl._connection.Connection object at 0x7f078039dcd0>
+cb = <function Channel.send.<locals>.<lambda> at 0x7f0780cf3b00>
+is_internal = False, title = None
+
+    async def wrap_api_call(
+        self, cb: Callable[[], Any], is_internal: bool = False, title: str = None
+    ) -> Any:
+        if self._api_zone.get():
+            return await cb()
+        task = asyncio.current_task(self._loop)
+        st: List[inspect.FrameInfo] = getattr(
+            task, "__pw_stack__", None
+        ) or inspect.stack(0)
+    
+        parsed_st = _extract_stack_trace_information_from_stack(st, is_internal, title)
+        self._api_zone.set(parsed_st)
+        try:
+            return await cb()
+        except Exception as error:
+>           raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+E           playwright._impl._errors.TargetClosedError: BrowserType.launch: Target page, context or browser has been closed
+E           Browser logs:
+E           
+E           ╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+E           ║ Looks like you launched a headed browser without having a XServer running.                     ║
+E           ║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+E           ║                                                                                                ║
+E           ║ <3 Playwright Team                                                                             ║
+E           ╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+E           Call log:
+E             - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-wWzvaL --remote-debugging-pipe --no-startup-window
+E             - <launched> pid=7448
+E             - [pid=7448][err] [7448:7462:0930/185159.882033:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+E             - [pid=7448][err] [7448:7448:0930/185159.884372:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+E             - [pid=7448][err] [7448:7448:0930/185159.884424:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+E             - [pid=7448] <gracefully close start>
+E             - [pid=7448] <kill>
+E             - [pid=7448] <will force kill>
+E             - [pid=7448] <process did exit: exitCode=1, signal=null>
+E             - [pid=7448] starting temporary directories cleanup
+E             - [pid=7448] finished temporary directories cleanup
+E             - [pid=7448] <gracefully close end>
+
+.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py:559: TargetClosedError
+------------------------------ Captured log call -------------------------------
+ERROR    pilot.vision.fallback:fallback.py:87 [VISION]
+called=false
+model=none
+image_attached=false
+error=VISION_UNAVAILABLE
+ERROR    pilot.agent.nodes:nodes.py:48 BROWSER context_acquisition_failed task_id=test-task-123 error=BrowserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ Looks like you launched a headed browser without having a XServer running.                     ║
+║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+║                                                                                                ║
+║ <3 Playwright Team                                                                             ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+Call log:
+  - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-wWzvaL --remote-debugging-pipe --no-startup-window
+  - <launched> pid=7448
+  - [pid=7448][err] [7448:7462:0930/185159.882033:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+  - [pid=7448][err] [7448:7448:0930/185159.884372:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+  - [pid=7448][err] [7448:7448:0930/185159.884424:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+  - [pid=7448] <gracefully close start>
+  - [pid=7448] <kill>
+  - [pid=7448] <will force kill>
+  - [pid=7448] <process did exit: exitCode=1, signal=null>
+  - [pid=7448] starting temporary directories cleanup
+  - [pid=7448] finished temporary directories cleanup
+  - [pid=7448] <gracefully close end>
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 43, in _get_task_page
+    context = await browser_pool.get_task_context(task_id, session_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 180, in get_task_context
+    context = await self.acquire()
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 116, in acquire
+    await self.start()
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 90, in start
+    self._browser = await self._playwright.chromium.launch(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 14495, in launch
+    await self._impl_obj.launch(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_browser_type.py", line 98, in launch
+    await self._channel.send(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: BrowserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ Looks like you launched a headed browser without having a XServer running.                     ║
+║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+║                                                                                                ║
+║ <3 Playwright Team                                                                             ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+Call log:
+  - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-wWzvaL --remote-debugging-pipe --no-startup-window
+  - <launched> pid=7448
+  - [pid=7448][err] [7448:7462:0930/185159.882033:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+  - [pid=7448][err] [7448:7448:0930/185159.884372:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+  - [pid=7448][err] [7448:7448:0930/185159.884424:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+  - [pid=7448] <gracefully close start>
+  - [pid=7448] <kill>
+  - [pid=7448] <will force kill>
+  - [pid=7448] <process did exit: exitCode=1, signal=null>
+  - [pid=7448] starting temporary directories cleanup
+  - [pid=7448] finished temporary directories cleanup
+  - [pid=7448] <gracefully close end>
+__________________ test_action_failure_never_marks_completed ___________________
+
+    @pytest.mark.asyncio
+    async def test_action_failure_never_marks_completed():
+        """An execution error or verification failure must increment retry or fail, never complete."""
+        # Sub-case A: First failure triggers retry
+        state_retry = make_test_state(
+            retry_count=0,
+            error="Target element not found: search_input",
+        )
+>       res_retry = await verify_node(state_retry)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_browser_agent_pipeline.py:343: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+backend/agent/nodes.py:1332: in verify_node
+    page = await _get_task_page(state)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/agent/nodes.py:43: in _get_task_page
+    context = await browser_pool.get_task_context(task_id, session_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/browser/pool.py:180: in get_task_context
+    context = await self.acquire()
+              ^^^^^^^^^^^^^^^^^^^^
+backend/browser/pool.py:116: in acquire
+    await self.start()
+backend/browser/pool.py:90: in start
+    self._browser = await self._playwright.chromium.launch(
+.venv-eval/lib/python3.11/site-packages/playwright/async_api/_generated.py:14495: in launch
+    await self._impl_obj.launch(
+.venv-eval/lib/python3.11/site-packages/playwright/_impl/_browser_type.py:98: in launch
+    await self._channel.send(
+.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py:69: in send
+    return await self._connection.wrap_api_call(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <playwright._impl._connection.Connection object at 0x7f07820edd10>
+cb = <function Channel.send.<locals>.<lambda> at 0x7f0780424360>
+is_internal = False, title = None
+
+    async def wrap_api_call(
+        self, cb: Callable[[], Any], is_internal: bool = False, title: str = None
+    ) -> Any:
+        if self._api_zone.get():
+            return await cb()
+        task = asyncio.current_task(self._loop)
+        st: List[inspect.FrameInfo] = getattr(
+            task, "__pw_stack__", None
+        ) or inspect.stack(0)
+    
+        parsed_st = _extract_stack_trace_information_from_stack(st, is_internal, title)
+        self._api_zone.set(parsed_st)
+        try:
+            return await cb()
+        except Exception as error:
+>           raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+E           playwright._impl._errors.TargetClosedError: BrowserType.launch: Target page, context or browser has been closed
+E           Browser logs:
+E           
+E           ╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+E           ║ Looks like you launched a headed browser without having a XServer running.                     ║
+E           ║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+E           ║                                                                                                ║
+E           ║ <3 Playwright Team                                                                             ║
+E           ╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+E           Call log:
+E             - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-rTpEhH --remote-debugging-pipe --no-startup-window
+E             - <launched> pid=7495
+E             - [pid=7495][err] [7495:7509:0930/185200.938700:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+E             - [pid=7495][err] [7495:7495:0930/185200.941297:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+E             - [pid=7495][err] [7495:7495:0930/185200.941337:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+E             - [pid=7495] <gracefully close start>
+E             - [pid=7495] <kill>
+E             - [pid=7495] <will force kill>
+E             - [pid=7495] <process did exit: exitCode=1, signal=null>
+E             - [pid=7495] starting temporary directories cleanup
+E             - [pid=7495] finished temporary directories cleanup
+E             - [pid=7495] <gracefully close end>
+
+.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py:559: TargetClosedError
+------------------------------ Captured log call -------------------------------
+ERROR    pilot.agent.nodes:nodes.py:48 BROWSER context_acquisition_failed task_id=test-task-123 error=BrowserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ Looks like you launched a headed browser without having a XServer running.                     ║
+║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+║                                                                                                ║
+║ <3 Playwright Team                                                                             ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+Call log:
+  - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-rTpEhH --remote-debugging-pipe --no-startup-window
+  - <launched> pid=7495
+  - [pid=7495][err] [7495:7509:0930/185200.938700:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+  - [pid=7495][err] [7495:7495:0930/185200.941297:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+  - [pid=7495][err] [7495:7495:0930/185200.941337:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+  - [pid=7495] <gracefully close start>
+  - [pid=7495] <kill>
+  - [pid=7495] <will force kill>
+  - [pid=7495] <process did exit: exitCode=1, signal=null>
+  - [pid=7495] starting temporary directories cleanup
+  - [pid=7495] finished temporary directories cleanup
+  - [pid=7495] <gracefully close end>
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 43, in _get_task_page
+    context = await browser_pool.get_task_context(task_id, session_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 180, in get_task_context
+    context = await self.acquire()
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 116, in acquire
+    await self.start()
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 90, in start
+    self._browser = await self._playwright.chromium.launch(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 14495, in launch
+    await self._impl_obj.launch(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_browser_type.py", line 98, in launch
+    await self._channel.send(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: BrowserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ Looks like you launched a headed browser without having a XServer running.                     ║
+║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+║                                                                                                ║
+║ <3 Playwright Team                                                                             ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+Call log:
+  - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-rTpEhH --remote-debugging-pipe --no-startup-window
+  - <launched> pid=7495
+  - [pid=7495][err] [7495:7509:0930/185200.938700:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+  - [pid=7495][err] [7495:7495:0930/185200.941297:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+  - [pid=7495][err] [7495:7495:0930/185200.941337:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+  - [pid=7495] <gracefully close start>
+  - [pid=7495] <kill>
+  - [pid=7495] <will force kill>
+  - [pid=7495] <process did exit: exitCode=1, signal=null>
+  - [pid=7495] starting temporary directories cleanup
+  - [pid=7495] finished temporary directories cleanup
+  - [pid=7495] <gracefully close end>
+___________________ test_vision_fallback_screenshot_caching ____________________
+
+    @pytest.mark.asyncio
+    async def test_vision_fallback_screenshot_caching():
+        """Verify VisionFallback reuses cached inference when screenshot hash is identical."""
+        vf = VisionFallback()
+        dummy_screenshot = b"test_image_bytes_12345"
+    
+        with patch("backend.vision.fallback.OllamaGateway.complete_structured", new_callable=AsyncMock) as mock_complete:
+            mock_complete.return_value = VisionAction(
+                action_type="click",
+                x_percent=0.5,
+                y_percent=0.5,
+                reasoning="Click center",
+            )
+    
+            # First call -> computes inference
+>           action1 = await vf.plan_action(dummy_screenshot, "find submit", "button")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_checkpoint_and_optimization.py:225: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <backend.vision.fallback.VisionFallback object at 0x7f078038a850>
+screenshot_bytes = b'test_image_bytes_12345', goal = 'find submit'
+target = 'button'
+
+    async def plan_action(self, screenshot_bytes: bytes, goal: str, target: str | None) -> VisionAction:
+        """Analyze the screenshot and return the next action, reusing cached inference if unchanged."""
+        config = get_config()
+        is_avail, selected_vision_model = await self.check_vision_availability()
+        if not is_avail or not selected_vision_model:
+            logger.error("[VISION]\ncalled=false\nmodel=none\nimage_attached=false\nerror=VISION_UNAVAILABLE")
+>           raise VisionUnavailableError("VISION_UNAVAILABLE: No compatible vision model installed in Ollama.")
+E           backend.vision.fallback.VisionUnavailableError: VISION_UNAVAILABLE: No compatible vision model installed in Ollama.
+
+backend/vision/fallback.py:88: VisionUnavailableError
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.vision.fallback:fallback.py:87 [VISION]
+called=false
+model=none
+image_attached=false
+error=VISION_UNAVAILABLE
+_______________________ test_different_working_directory _______________________
+
+    def test_different_working_directory():
+        """Verify the launcher resolves paths correctly when run from another directory."""
+        scratch_dir = BASE_DIR / "scratch"
+>       res = subprocess.run(
+            [sys.executable, str(BASE_DIR / "main.py"), "--help"],
+            cwd=str(scratch_dir),
+            capture_output=True,
+            text=True,
+        )
+
+tests/test_launcher.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/subprocess.py:548: in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/subprocess.py:1026: in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Popen: returncode: 255 args: ['/home/user/Agentic-pilot-local/.venv-eval/bi...>
+args = ['/home/user/Agentic-pilot-local/.venv-eval/bin/python', '/home/user/Agentic-pilot-local/main.py', '--help']
+executable = b'/home/user/Agentic-pilot-local/.venv-eval/bin/python'
+preexec_fn = None, close_fds = True, pass_fds = ()
+cwd = '/home/user/Agentic-pilot-local/scratch', env = None, startupinfo = None
+creationflags = 0, shell = False, p2cread = -1, p2cwrite = -1, c2pread = 19
+c2pwrite = 21, errread = 22, errwrite = 24, restore_signals = True, gid = None
+gids = None, uid = None, umask = -1, start_new_session = False
+process_group = -1
+
+    def _execute_child(self, args, executable, preexec_fn, close_fds,
+                       pass_fds, cwd, env,
+                       startupinfo, creationflags, shell,
+                       p2cread, p2cwrite,
+                       c2pread, c2pwrite,
+                       errread, errwrite,
+                       restore_signals,
+                       gid, gids, uid, umask,
+                       start_new_session, process_group):
+        """Execute program (POSIX version)"""
+    
+        if isinstance(args, (str, bytes)):
+            args = [args]
+        elif isinstance(args, os.PathLike):
+            if shell:
+                raise TypeError('path-like args is not allowed when '
+                                'shell is true')
+            args = [args]
+        else:
+            args = list(args)
+    
+        if shell:
+            # On Android the default shell is at '/system/bin/sh'.
+            unix_shell = ('/system/bin/sh' if
+                      hasattr(sys, 'getandroidapilevel') else '/bin/sh')
+            args = [unix_shell, "-c"] + args
+            if executable:
+                args[0] = executable
+    
+        if executable is None:
+            executable = args[0]
+    
+        sys.audit("subprocess.Popen", executable, args, cwd, env)
+    
+        if (_USE_POSIX_SPAWN
+                and os.path.dirname(executable)
+                and preexec_fn is None
+                and not close_fds
+                and not pass_fds
+                and cwd is None
+                and (p2cread == -1 or p2cread > 2)
+                and (c2pwrite == -1 or c2pwrite > 2)
+                and (errwrite == -1 or errwrite > 2)
+                and not start_new_session
+                and process_group == -1
+                and gid is None
+                and gids is None
+                and uid is None
+                and umask < 0):
+            self._posix_spawn(args, executable, env, restore_signals,
+                              p2cread, p2cwrite,
+                              c2pread, c2pwrite,
+                              errread, errwrite)
+            return
+    
+        orig_executable = executable
+    
+        # For transferring possible exec failure from child to parent.
+        # Data format: "exception name:hex errno:description"
+        # Pickle is not used; it is complex and involves memory allocation.
+        errpipe_read, errpipe_write = os.pipe()
+        # errpipe_write must not be in the standard io 0, 1, or 2 fd range.
+        low_fds_to_close = []
+        while errpipe_write < 3:
+            low_fds_to_close.append(errpipe_write)
+            errpipe_write = os.dup(errpipe_write)
+        for low_fd in low_fds_to_close:
+            os.close(low_fd)
+        try:
+            try:
+                # We must avoid complex work that could involve
+                # malloc or free in the child process to avoid
+                # potential deadlocks, thus we do all this here.
+                # and pass it to fork_exec()
+    
+                if env is not None:
+                    env_list = []
+                    for k, v in env.items():
+                        k = os.fsencode(k)
+                        if b'=' in k:
+                            raise ValueError("illegal environment variable name")
+                        env_list.append(k + b'=' + os.fsencode(v))
+                else:
+                    env_list = None  # Use execv instead of execve.
+                executable = os.fsencode(executable)
+                if os.path.dirname(executable):
+                    executable_list = (executable,)
+                else:
+                    # This matches the behavior of os._execvpe().
+                    executable_list = tuple(
+                        os.path.join(os.fsencode(dir), executable)
+                        for dir in os.get_exec_path(env))
+                fds_to_keep = set(pass_fds)
+                fds_to_keep.add(errpipe_write)
+                self.pid = _fork_exec(
+                        args, executable_list,
+                        close_fds, tuple(sorted(map(int, fds_to_keep))),
+                        cwd, env_list,
+                        p2cread, p2cwrite, c2pread, c2pwrite,
+                        errread, errwrite,
+                        errpipe_read, errpipe_write,
+                        restore_signals, start_new_session,
+                        process_group, gid, gids, uid, umask,
+                        preexec_fn, _USE_VFORK)
+                self._child_created = True
+            finally:
+                # be sure the FD is closed no matter what
+                os.close(errpipe_write)
+    
+            self._close_pipe_fds(p2cread, p2cwrite,
+                                 c2pread, c2pwrite,
+                                 errread, errwrite)
+    
+            # Wait for exec to fail or succeed; possibly raising an
+            # exception (limited in size)
+            errpipe_data = bytearray()
+            while True:
+                part = os.read(errpipe_read, 50000)
+                errpipe_data += part
+                if not part or len(errpipe_data) > 50000:
+                    break
+        finally:
+            # be sure the FD is closed no matter what
+            os.close(errpipe_read)
+    
+        if errpipe_data:
+            try:
+                pid, sts = os.waitpid(self.pid, 0)
+                if pid == self.pid:
+                    self._handle_exitstatus(sts)
+                else:
+                    self.returncode = sys.maxsize
+            except ChildProcessError:
+                pass
+    
+            try:
+                exception_name, hex_errno, err_msg = (
+                        errpipe_data.split(b':', 2))
+                # The encoding here should match the encoding
+                # written in by the subprocess implementations
+                # like _posixsubprocess
+                err_msg = err_msg.decode()
+            except ValueError:
+                exception_name = b'SubprocessError'
+                hex_errno = b'0'
+                err_msg = 'Bad exception data from child: {!r}'.format(
+                              bytes(errpipe_data))
+            child_exception_type = getattr(
+                    builtins, exception_name.decode('ascii'),
+                    SubprocessError)
+            if issubclass(child_exception_type, OSError) and hex_errno:
+                errno_num = int(hex_errno, 16)
+                if err_msg == "noexec:chdir":
+                    err_msg = ""
+                    # The error must be from chdir(cwd).
+                    err_filename = cwd
+                elif err_msg == "noexec":
+                    err_msg = ""
+                    err_filename = None
+                else:
+                    err_filename = orig_executable
+                if errno_num != 0:
+                    err_msg = os.strerror(errno_num)
+                if err_filename is not None:
+>                   raise child_exception_type(errno_num, err_msg, err_filename)
+E                   FileNotFoundError: [Errno 2] No such file or directory: '/home/user/Agentic-pilot-local/scratch'
+
+/usr/lib/python3.11/subprocess.py:1955: FileNotFoundError
+=============================== warnings summary ===============================
+tests/test_browser_agent_pipeline.py::test_opening_google_does_not_prematurely_complete_task
+tests/test_browser_agent_pipeline.py::test_google_search_action_executes_and_continues
+tests/test_browser_agent_pipeline.py::test_multistep_navigation_sequence
+tests/test_browser_agent_pipeline.py::test_action_succeeds_but_task_remains_executing
+tests/test_browser_agent_pipeline.py::test_all_task_requirements_satisfied_completes_task
+tests/test_captcha_handling.py::test_1_normal_google_page_continues_normally
+tests/test_captcha_handling.py::test_4_user_clears_captcha_resumes_from_current_step
+tests/test_navigation_transition_and_typing.py::test_7_task_completes_only_after_verification
+tests/test_navigation_transition_and_typing.py::test_9_task_does_not_complete_after_type_text_alone
+  /home/user/Agentic-pilot-local/backend/browser/dom.py:50: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+    pass
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_browser_agent_pipeline.py::test_opening_google_does_not_prematurely_complete_task
+tests/test_browser_agent_pipeline.py::test_google_search_action_executes_and_continues
+tests/test_browser_agent_pipeline.py::test_multistep_navigation_sequence
+tests/test_browser_agent_pipeline.py::test_action_succeeds_but_task_remains_executing
+tests/test_browser_agent_pipeline.py::test_all_task_requirements_satisfied_completes_task
+tests/test_captcha_handling.py::test_1_normal_google_page_continues_normally
+tests/test_captcha_handling.py::test_4_user_clears_captcha_resumes_from_current_step
+tests/test_navigation_transition_and_typing.py::test_7_task_completes_only_after_verification
+tests/test_navigation_transition_and_typing.py::test_9_task_does_not_complete_after_type_text_alone
+  /home/user/Agentic-pilot-local/backend/browser/dom.py:69: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+    pass
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_browser_agent_pipeline.py::test_action_succeeds_but_task_remains_executing
+  /home/user/Agentic-pilot-local/backend/agent/nodes.py:1335: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+    is_captcha, captcha_reason = await detect_captcha(page)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_rag_retrieval.py::test_retrieval_provenance_and_structure
+  /usr/lib/python3.11/threading.py:1024: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+    with _shutdown_locks_lock:
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+__________________________ test_runner_execution_flow __________________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=1/4 model=deepseek-r1:1.5b retryable=True backoff=0.25s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=67
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=2/4 model=deepseek-r1:1.5b retryable=True backoff=0.50s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=2
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=3/4 model=deepseek-r1:1.5b retryable=True backoff=1.00s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=1
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=4/4 model=deepseek-r1:1.5b retryable=True backoff=2.00s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=1
+CRITICAL pilot.llm:gateway.py:146 OLLAMA_EXHAUSTED model=deepseek-r1:1.5b retries=4 last_error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:107 NODE=parse_intent FAILED task_id=7f695b7b-a96f-48dd-83fa-6596aab4daa4 error=Ollama completion failed after 4 attempts: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download error_type=RuntimeError duration_ms=3830
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 96, in complete
+    response = await self._client_instance().chat(**request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 1047, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 819, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 765, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 94, in parse_intent_node
+    parsed = await gateway.complete_structured(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 177, in complete_structured
+    raw = await self.complete(system_with_schema, prompt, json_mode=True, image_bytes=image_bytes, model_override=model_override)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 150, in complete
+    raise RuntimeError(f"Ollama completion failed after {self.config.max_retry_count + 1} attempts: {last_error}") from last_error
+RuntimeError: Ollama completion failed after 4 attempts: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:48 BROWSER context_acquisition_failed task_id=7f695b7b-a96f-48dd-83fa-6596aab4daa4 error=BrowserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ Looks like you launched a headed browser without having a XServer running.                     ║
+║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+║                                                                                                ║
+║ <3 Playwright Team                                                                             ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+Call log:
+  - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-xlJrqA --remote-debugging-pipe --no-startup-window
+  - <launched> pid=7281
+  - [pid=7281][err] [7281:7295:0930/185143.244536:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+  - [pid=7281][err] [7281:7281:0930/185143.246747:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+  - [pid=7281][err] [7281:7281:0930/185143.246760:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+  - [pid=7281] <gracefully close start>
+  - [pid=7281] <kill>
+  - [pid=7281] <will force kill>
+  - [pid=7281] <process did exit: exitCode=1, signal=null>
+  - [pid=7281] starting temporary directories cleanup
+  - [pid=7281] finished temporary directories cleanup
+  - [pid=7281] <gracefully close end>
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 43, in _get_task_page
+    context = await browser_pool.get_task_context(task_id, session_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 180, in get_task_context
+    context = await self.acquire()
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 116, in acquire
+    await self.start()
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 90, in start
+    self._browser = await self._playwright.chromium.launch(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 14495, in launch
+    await self._impl_obj.launch(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_browser_type.py", line 98, in launch
+    await self._channel.send(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: BrowserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ Looks like you launched a headed browser without having a XServer running.                     ║
+║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+║                                                                                                ║
+║ <3 Playwright Team                                                                             ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+Call log:
+  - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-xlJrqA --remote-debugging-pipe --no-startup-window
+  - <launched> pid=7281
+  - [pid=7281][err] [7281:7295:0930/185143.244536:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+  - [pid=7281][err] [7281:7281:0930/185143.246747:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+  - [pid=7281][err] [7281:7281:0930/185143.246760:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+  - [pid=7281] <gracefully close start>
+  - [pid=7281] <kill>
+  - [pid=7281] <will force kill>
+  - [pid=7281] <process did exit: exitCode=1, signal=null>
+  - [pid=7281] starting temporary directories cleanup
+  - [pid=7281] finished temporary directories cleanup
+  - [pid=7281] <gracefully close end>
+
+ERROR    pilot.agent.runner:runner.py:347 RUNNER task_failed task_id=7f695b7b-a96f-48dd-83fa-6596aab4daa4 error=BrowserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ Looks like you launched a headed browser without having a XServer running.                     ║
+║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+║                                                                                                ║
+║ <3 Playwright Team                                                                             ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+Call log:
+  - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-xlJrqA --remote-debugging-pipe --no-startup-window
+  - <launched> pid=7281
+  - [pid=7281][err] [7281:7295:0930/185143.244536:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+  - [pid=7281][err] [7281:7281:0930/185143.246747:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+  - [pid=7281][err] [7281:7281:0930/185143.246760:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+  - [pid=7281] <gracefully close start>
+  - [pid=7281] <kill>
+  - [pid=7281] <will force kill>
+  - [pid=7281] <process did exit: exitCode=1, signal=null>
+  - [pid=7281] starting temporary directories cleanup
+  - [pid=7281] finished temporary directories cleanup
+  - [pid=7281] <gracefully close end>
+ error_type=TargetClosedError
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/agent/runner.py", line 274, in _run
+    async for event in graph.astream(state):
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/langgraph/pregel/main.py", line 3440, in astream
+    async for _ in runner.atick(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/langgraph/pregel/_runner.py", line 396, in atick
+    await arun_with_retry(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/langgraph/pregel/_retry.py", line 744, in arun_with_retry
+    return await task.proc.ainvoke(task.input, config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/langgraph/_internal/_runnable.py", line 756, in ainvoke
+    input = await asyncio.create_task(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/langgraph/_internal/_runnable.py", line 522, in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 430, in extract_dom_node
+    page = await _get_task_page(state)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 43, in _get_task_page
+    context = await browser_pool.get_task_context(task_id, session_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 180, in get_task_context
+    context = await self.acquire()
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 116, in acquire
+    await self.start()
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 90, in start
+    self._browser = await self._playwright.chromium.launch(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 14495, in launch
+    await self._impl_obj.launch(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_browser_type.py", line 98, in launch
+    await self._channel.send(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: BrowserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ Looks like you launched a headed browser without having a XServer running.                     ║
+║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+║                                                                                                ║
+║ <3 Playwright Team                                                                             ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+Call log:
+  - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-xlJrqA --remote-debugging-pipe --no-startup-window
+  - <launched> pid=7281
+  - [pid=7281][err] [7281:7295:0930/185143.244536:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+  - [pid=7281][err] [7281:7281:0930/185143.246747:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+  - [pid=7281][err] [7281:7281:0930/185143.246760:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+  - [pid=7281] <gracefully close start>
+  - [pid=7281] <kill>
+  - [pid=7281] <will force kill>
+  - [pid=7281] <process did exit: exitCode=1, signal=null>
+  - [pid=7281] starting temporary directories cleanup
+  - [pid=7281] finished temporary directories cleanup
+  - [pid=7281] <gracefully close end>
+
+During task with name 'extract_dom' and id '53bd65fd-8a14-94ba-76c2-9b70744d04cc'
+_________________________ test_high_risk_approval_flow _________________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=1/4 model=deepseek-r1:1.5b retryable=True backoff=0.25s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=71
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=2/4 model=deepseek-r1:1.5b retryable=True backoff=0.50s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=2
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=3/4 model=deepseek-r1:1.5b retryable=True backoff=1.00s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=1
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=4/4 model=deepseek-r1:1.5b retryable=True backoff=2.00s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=1
+CRITICAL pilot.llm:gateway.py:146 OLLAMA_EXHAUSTED model=deepseek-r1:1.5b retries=4 last_error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:107 NODE=parse_intent FAILED task_id=231b935b-28c0-4059-96e2-3a02dc4dda3f error=Ollama completion failed after 4 attempts: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download error_type=RuntimeError duration_ms=3832
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 96, in complete
+    response = await self._client_instance().chat(**request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 1047, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 819, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 765, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 94, in parse_intent_node
+    parsed = await gateway.complete_structured(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 177, in complete_structured
+    raw = await self.complete(system_with_schema, prompt, json_mode=True, image_bytes=image_bytes, model_override=model_override)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 150, in complete
+    raise RuntimeError(f"Ollama completion failed after {self.config.max_retry_count + 1} attempts: {last_error}") from last_error
+RuntimeError: Ollama completion failed after 4 attempts: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:48 BROWSER context_acquisition_failed task_id=231b935b-28c0-4059-96e2-3a02dc4dda3f error=BrowserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ Looks like you launched a headed browser without having a XServer running.                     ║
+║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+║                                                                                                ║
+║ <3 Playwright Team                                                                             ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+Call log:
+  - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-LfVD37 --remote-debugging-pipe --no-startup-window
+  - <launched> pid=7371
+  - [pid=7371][err] [7371:7385:0930/185148.412598:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+  - [pid=7371][err] [7371:7371:0930/185148.417995:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+  - [pid=7371][err] [7371:7371:0930/185148.418034:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+  - [pid=7371] <gracefully close start>
+  - [pid=7371] <kill>
+  - [pid=7371] <will force kill>
+  - [pid=7371] <process did exit: exitCode=1, signal=null>
+  - [pid=7371] starting temporary directories cleanup
+  - [pid=7371] finished temporary directories cleanup
+  - [pid=7371] <gracefully close end>
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 43, in _get_task_page
+    context = await browser_pool.get_task_context(task_id, session_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 180, in get_task_context
+    context = await self.acquire()
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 116, in acquire
+    await self.start()
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 90, in start
+    self._browser = await self._playwright.chromium.launch(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 14495, in launch
+    await self._impl_obj.launch(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_browser_type.py", line 98, in launch
+    await self._channel.send(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: BrowserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ Looks like you launched a headed browser without having a XServer running.                     ║
+║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+║                                                                                                ║
+║ <3 Playwright Team                                                                             ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+Call log:
+  - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-LfVD37 --remote-debugging-pipe --no-startup-window
+  - <launched> pid=7371
+  - [pid=7371][err] [7371:7385:0930/185148.412598:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+  - [pid=7371][err] [7371:7371:0930/185148.417995:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+  - [pid=7371][err] [7371:7371:0930/185148.418034:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+  - [pid=7371] <gracefully close start>
+  - [pid=7371] <kill>
+  - [pid=7371] <will force kill>
+  - [pid=7371] <process did exit: exitCode=1, signal=null>
+  - [pid=7371] starting temporary directories cleanup
+  - [pid=7371] finished temporary directories cleanup
+  - [pid=7371] <gracefully close end>
+
+ERROR    pilot.agent.runner:runner.py:347 RUNNER task_failed task_id=231b935b-28c0-4059-96e2-3a02dc4dda3f error=BrowserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ Looks like you launched a headed browser without having a XServer running.                     ║
+║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+║                                                                                                ║
+║ <3 Playwright Team                                                                             ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+Call log:
+  - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-LfVD37 --remote-debugging-pipe --no-startup-window
+  - <launched> pid=7371
+  - [pid=7371][err] [7371:7385:0930/185148.412598:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+  - [pid=7371][err] [7371:7371:0930/185148.417995:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+  - [pid=7371][err] [7371:7371:0930/185148.418034:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+  - [pid=7371] <gracefully close start>
+  - [pid=7371] <kill>
+  - [pid=7371] <will force kill>
+  - [pid=7371] <process did exit: exitCode=1, signal=null>
+  - [pid=7371] starting temporary directories cleanup
+  - [pid=7371] finished temporary directories cleanup
+  - [pid=7371] <gracefully close end>
+ error_type=TargetClosedError
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/agent/runner.py", line 274, in _run
+    async for event in graph.astream(state):
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/langgraph/pregel/main.py", line 3440, in astream
+    async for _ in runner.atick(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/langgraph/pregel/_runner.py", line 396, in atick
+    await arun_with_retry(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/langgraph/pregel/_retry.py", line 744, in arun_with_retry
+    return await task.proc.ainvoke(task.input, config)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/langgraph/_internal/_runnable.py", line 756, in ainvoke
+    input = await asyncio.create_task(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/langgraph/_internal/_runnable.py", line 522, in ainvoke
+    ret = await self.afunc(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 430, in extract_dom_node
+    page = await _get_task_page(state)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 43, in _get_task_page
+    context = await browser_pool.get_task_context(task_id, session_id)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 180, in get_task_context
+    context = await self.acquire()
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 116, in acquire
+    await self.start()
+  File "/home/user/Agentic-pilot-local/backend/browser/pool.py", line 90, in start
+    self._browser = await self._playwright.chromium.launch(
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/async_api/_generated.py", line 14495, in launch
+    await self._impl_obj.launch(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_browser_type.py", line 98, in launch
+    await self._channel.send(
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 69, in send
+    return await self._connection.wrap_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 559, in wrap_api_call
+    raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+playwright._impl._errors.TargetClosedError: BrowserType.launch: Target page, context or browser has been closed
+Browser logs:
+
+╔════════════════════════════════════════════════════════════════════════════════════════════════╗
+║ Looks like you launched a headed browser without having a XServer running.                     ║
+║ Set either 'headless: true' or use 'xvfb-run <your-playwright-app>' before running Playwright. ║
+║                                                                                                ║
+║ <3 Playwright Team                                                                             ║
+╚════════════════════════════════════════════════════════════════════════════════════════════════╝
+Call log:
+  - <launching> /opt/pw-browsers/chromium-1194/chrome-linux/chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-extensions --disable-features=AcceptCHFrame,AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,Translate,AutoDeElevate,RenderDocument --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --enable-automation --no-sandbox --disable-blink-features=AutomationControlled --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-LfVD37 --remote-debugging-pipe --no-startup-window
+  - <launched> pid=7371
+  - [pid=7371][err] [7371:7385:0930/185148.412598:ERROR:dbus/bus.cc:408] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+  - [pid=7371][err] [7371:7371:0930/185148.417995:ERROR:ui/ozone/platform/x11/ozone_platform_x11.cc:249] Missing X server or $DISPLAY
+  - [pid=7371][err] [7371:7371:0930/185148.418034:ERROR:ui/aura/env.cc:257] The platform failed to initialize.  Exiting.
+  - [pid=7371] <gracefully close start>
+  - [pid=7371] <kill>
+  - [pid=7371] <will force kill>
+  - [pid=7371] <process did exit: exitCode=1, signal=null>
+  - [pid=7371] starting temporary directories cleanup
+  - [pid=7371] finished temporary directories cleanup
+  - [pid=7371] <gracefully close end>
+
+During task with name 'extract_dom' and id 'f3681be2-e1e4-1103-3382-82a103fd958f'
+____________ test_opening_google_does_not_prematurely_complete_task ____________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.verification:manager.py:234 VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+_________________ test_1_normal_google_page_continues_normally _________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.agent.nodes:nodes.py:499 Observation screenshot capture failed: object MagicMock can't be used in 'await' expression
+___________________ test_2_captcha_page_detected_as_blocked ____________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.agent.nodes:nodes.py:452 [OBSERVATION]
+CAPTCHA detected
+
+[BROWSER]
+URL=https://www.google.com/sorry/index?continue=https://www.google.com/search%3Fq%3DOpenAI
+
+[VERIFICATION]
+Bot verification required
+
+[TASK]
+status=blocked
+___________________ test_3_captcha_detected_never_completed ____________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.agent.nodes:nodes.py:1324 [TASK]
+step=2/3
+completed=false
+reason=CAPTCHA / bot verification detected
+________________ test_5_captcha_remains_no_infinite_retry_loop _________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.recovery:engine.py:169 RECOVERY BLOCKED task_id=test-task-captcha reason=Google requires human verification (CAPTCHA / bot verification detected).
+_________________ test_6_fallback_provider_explicitly_recorded _________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.agent.runner:runner.py:161 [FALLBACK]
+Google blocked by CAPTCHA
+Switching to duckduckgo
+_____________________________ test_input_sanitizer _____________________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.security.sanitizer:sanitizer.py:79 SANITIZER injection_detected source=dom count=1 patterns=['Ignore all previous instructions']
+WARNING  pilot.security.sanitizer:sanitizer.py:79 SANITIZER injection_detected source=dom count=1 patterns=['system: ']
+_____________________ test_parse_intent_node_model_routing _____________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+_____________ test_8_task_does_not_complete_after_navigation_alone _____________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.verification:manager.py:260 VERIFY_TASK_COMPLETION REJECTED: Requested text 'hii i am agentic ai powered by local llm qwen' not verified on page.
+_____________ test_9_task_does_not_complete_after_type_text_alone ______________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.verification:manager.py:260 VERIFY_TASK_COMPLETION REJECTED: Requested text 'hii i am agentic ai powered by local llm qwen' not verified on page.
+WARNING  pilot.agent.nodes:nodes.py:1464 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; text_verified: expected=hii i am agentic ai powered by local llm qwen, observed=mismatched text; premature_completion_prevented: expected=False, observed=True - continuing loop
+___ test_10_vision_invocation_is_separately_verified_from_screenshot_capture ___
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+____________________ test_malicious_instruction_containment ____________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.security.sanitizer:sanitizer.py:79 SANITIZER injection_detected source=rag count=1 patterns=['Ignore previous instructions']
+WARNING  pilot.security.sanitizer:sanitizer.py:79 SANITIZER injection_detected source=rag_untrusted_upload.md count=1 patterns=['Ignore previous instructions']
+============================= slowest 25 durations =============================
+15.16s call     tests/e2e/test_runner.py::test_high_risk_approval_flow
+5.43s call     tests/e2e/test_certification.py::test_certification_suite
+5.12s call     tests/e2e/test_runner.py::test_runner_execution_flow
+0.81s call     tests/test_rag_integration.py::test_retrieve_context_node_integration
+0.73s setup    tests/test_rag_retrieval.py::test_retrieval_provenance_and_structure
+0.72s setup    tests/test_rag_retrieval.py::test_hybrid_search_scoring
+0.67s setup    tests/test_rag_retrieval.py::test_retrieval_query_cache
+0.65s call     tests/test_rag_router.py::test_route_and_retrieve_execution
+0.58s call     tests/test_browser_agent_pipeline.py::test_vision_unavailable_fails_explicitly
+0.56s call     tests/test_browser_agent_pipeline.py::test_action_failure_never_marks_completed
+0.55s call     tests/test_rag_ingestion.py::test_ingestion_pipeline_deduplication
+0.41s call     tests/test_rag_ingestion.py::test_ingestion_delete_document
+0.40s call     tests/test_rag_retrieval.py::test_retrieval_empty_when_no_matches
+0.38s call     tests/test_rag_retrieval.py::test_hybrid_search_scoring
+0.30s call     tests/test_rag_retrieval.py::test_retrieval_query_cache
+0.29s call     tests/test_rag_retrieval.py::test_retrieval_provenance_and_structure
+0.27s setup    tests/e2e/test_certification.py::test_certification_suite
+0.13s call     tests/test_navigation_transition_and_typing.py::test_10_vision_invocation_is_separately_verified_from_screenshot_capture
+0.11s setup    tests/test_browser_agent_pipeline.py::test_opening_google_does_not_prematurely_complete_task
+0.10s call     tests/test_checkpoint_and_optimization.py::test_vision_fallback_screenshot_caching
+0.07s call     tests/test_multi_model_integration.py::test_parse_intent_node_model_routing
+0.04s call     tests/test_navigation_transition_and_typing.py::test_1_successful_navigation_transitions_to_observation
+0.04s call     tests/test_navigation_transition_and_typing.py::test_4_type_text_executes
+0.04s call     tests/test_navigation_transition_and_typing.py::test_5_screenshot_is_captured_after_typing
+0.03s setup    tests/test_navigation_transition_and_typing.py::test_2_navigation_is_not_repeated_indefinitely
+=========================== short test summary info ============================
+PASSED tests/e2e/test_runner.py::test_runner_execution_flow
+PASSED tests/e2e/test_runner.py::test_high_risk_approval_flow
+PASSED tests/test_browser_agent_pipeline.py::test_opening_google_does_not_prematurely_complete_task
+PASSED tests/test_browser_agent_pipeline.py::test_google_search_action_executes_and_continues
+PASSED tests/test_browser_agent_pipeline.py::test_multistep_navigation_sequence
+PASSED tests/test_browser_agent_pipeline.py::test_action_succeeds_but_task_remains_executing
+PASSED tests/test_browser_agent_pipeline.py::test_all_task_requirements_satisfied_completes_task
+PASSED tests/test_captcha_handling.py::test_1_normal_google_page_continues_normally
+PASSED tests/test_captcha_handling.py::test_2_captcha_page_detected_as_blocked
+PASSED tests/test_captcha_handling.py::test_3_captcha_detected_never_completed
+PASSED tests/test_captcha_handling.py::test_4_user_clears_captcha_resumes_from_current_step
+PASSED tests/test_captcha_handling.py::test_5_captcha_remains_no_infinite_retry_loop
+PASSED tests/test_captcha_handling.py::test_6_fallback_provider_explicitly_recorded
+PASSED tests/test_captcha_handling.py::test_7_no_fallback_available_maintains_blocked_state
+PASSED tests/test_case_study_enhancements.py::test_config_ablation_flags
+PASSED tests/test_case_study_enhancements.py::test_task_plan_models
+PASSED tests/test_case_study_enhancements.py::test_execution_record_schema
+PASSED tests/test_case_study_enhancements.py::test_verification_expected_vs_observed
+PASSED tests/test_case_study_enhancements.py::test_verification_file_state
+PASSED tests/test_case_study_enhancements.py::test_recovery_classification_and_escalation
+PASSED tests/test_case_study_enhancements.py::test_input_sanitizer
+PASSED tests/test_case_study_enhancements.py::test_privacy_auditor
+PASSED tests/test_case_study_enhancements.py::test_desktop_executor
+PASSED tests/test_case_study_enhancements.py::test_telemetry_metrics
+PASSED tests/test_case_study_enhancements.py::test_ablation_presets
+PASSED tests/test_checkpoint_and_optimization.py::test_checkpoint_save_and_load
+PASSED tests/test_checkpoint_and_optimization.py::test_parse_intent_checkpoint_resumption
+PASSED tests/test_checkpoint_and_optimization.py::test_context_router_single_fetch_reuse
+PASSED tests/test_checkpoint_and_optimization.py::test_model_stickiness_preserves_active_model
+PASSED tests/test_checkpoint_and_optimization.py::test_single_installed_model_bypass
+PASSED tests/test_checkpoint_and_optimization.py::test_context_builder_deduplication_and_budgeting
+PASSED tests/test_database.py::test_database_task_event_roundtrip
+PASSED tests/test_launcher.py::test_orchestrator_initialization
+PASSED tests/test_launcher.py::test_is_port_in_use_and_range_validation
+PASSED tests/test_launcher.py::test_check_http_health_live_and_offline
+PASSED tests/test_launcher.py::test_environment_verification
+PASSED tests/test_launcher.py::test_free_ports_safe_execution
+PASSED tests/test_launcher.py::test_cli_argument_parsing
+PASSED tests/test_launcher.py::test_shutdown_process_tracking
+PASSED tests/test_model_registry.py::test_model_capability_enum
+PASSED tests/test_model_registry.py::test_model_metadata_capabilities
+PASSED tests/test_model_registry.py::test_default_known_models_populated
+PASSED tests/test_model_registry.py::test_dynamic_registration_and_unregistration
+PASSED tests/test_model_registry.py::test_mark_installed
+PASSED tests/test_model_registry.py::test_get_models_with_capability_priority
+PASSED tests/test_model_registry.py::test_get_preferred_model_fallback
+PASSED tests/test_model_router.py::test_single_model_mode
+PASSED tests/test_model_router.py::test_dynamic_vision_routing
+PASSED tests/test_model_router.py::test_dynamic_coding_routing
+PASSED tests/test_model_router.py::test_dynamic_recovery_routing
+PASSED tests/test_model_router.py::test_dynamic_intent_parsing_routing
+PASSED tests/test_model_router.py::test_anti_thrashing_preserves_capable_active_model
+PASSED tests/test_model_router.py::test_fallback_when_specialized_model_missing
+PASSED tests/test_multi_model_integration.py::test_execution_record_model_provenance
+PASSED tests/test_multi_model_integration.py::test_telemetry_tracer_multi_model_metrics
+PASSED tests/test_multi_model_integration.py::test_code_executor_file_operations
+PASSED tests/test_multi_model_integration.py::test_parse_intent_node_model_routing
+PASSED tests/test_multi_model_integration.py::test_plan_action_node_model_routing
+PASSED tests/test_multi_model_rag.py::test_build_planning_context_coding_role
+PASSED tests/test_multi_model_rag.py::test_build_planning_context_vision_role
+PASSED tests/test_multi_model_rag.py::test_build_planning_context_reasoning_role
+PASSED tests/test_multi_model_rag.py::test_build_planning_context_lightweight_role
+PASSED tests/test_multi_model_rag.py::test_build_planning_context_general_role
+PASSED tests/test_multi_model_rag.py::test_security_boundaries_preserved_across_all_roles
+PASSED tests/test_navigation_transition_and_typing.py::test_1_successful_navigation_transitions_to_observation
+PASSED tests/test_navigation_transition_and_typing.py::test_2_navigation_is_not_repeated_indefinitely
+PASSED tests/test_navigation_transition_and_typing.py::test_3_input_field_is_identified
+PASSED tests/test_navigation_transition_and_typing.py::test_4_type_text_executes
+PASSED tests/test_navigation_transition_and_typing.py::test_5_screenshot_is_captured_after_typing
+PASSED tests/test_navigation_transition_and_typing.py::test_6_exact_text_verification_succeeds
+PASSED tests/test_navigation_transition_and_typing.py::test_7_task_completes_only_after_verification
+PASSED tests/test_navigation_transition_and_typing.py::test_8_task_does_not_complete_after_navigation_alone
+PASSED tests/test_navigation_transition_and_typing.py::test_9_task_does_not_complete_after_type_text_alone
+PASSED tests/test_navigation_transition_and_typing.py::test_10_vision_invocation_is_separately_verified_from_screenshot_capture
+PASSED tests/test_parser.py::test_parse_model_response_strips_code_fences
+PASSED tests/test_plugins.py::test_plugin_registry_exposes_three_builtins
+PASSED tests/test_plugins.py::test_gmail_plugin_detects_send_email_risk
+PASSED tests/test_rag_chunking.py::test_markdown_heading_chunking
+PASSED tests/test_rag_chunking.py::test_plain_text_paragraph_chunking
+PASSED tests/test_rag_chunking.py::test_empty_document_chunking
+PASSED tests/test_rag_context.py::test_build_planning_context_separation
+PASSED tests/test_rag_context.py::test_build_planning_context_none_handling
+PASSED tests/test_rag_ingestion.py::test_document_loader_formats
+PASSED tests/test_rag_ingestion.py::test_ingestion_pipeline_deduplication
+PASSED tests/test_rag_ingestion.py::test_ingestion_delete_document
+PASSED tests/test_rag_integration.py::test_retrieve_context_node_integration
+PASSED tests/test_rag_integration.py::test_plan_action_node_with_retrieved_knowledge
+PASSED tests/test_rag_integration.py::test_execute_action_attaches_knowledge_provenance
+PASSED tests/test_rag_integration.py::test_rag_disabled_graceful_degradation
+PASSED tests/test_rag_retrieval.py::test_retrieval_provenance_and_structure
+PASSED tests/test_rag_retrieval.py::test_retrieval_query_cache
+PASSED tests/test_rag_retrieval.py::test_retrieval_empty_when_no_matches
+PASSED tests/test_rag_retrieval.py::test_hybrid_search_scoring
+PASSED tests/test_rag_router.py::test_should_retrieve_knowledge_decisions
+PASSED tests/test_rag_router.py::test_rag_disabled_flag
+PASSED tests/test_rag_router.py::test_route_and_retrieve_execution
+PASSED tests/test_rag_security.py::test_untrusted_knowledge_banner_presence
+PASSED tests/test_rag_security.py::test_malicious_instruction_containment
+PASSED tests/test_rag_security.py::test_empty_chunks_formatting
+PASSED tests/test_recovery_engine.py::test_diagnose_with_none_error
+PASSED tests/test_recovery_engine.py::test_handle_failure_with_none_error_in_state
+PASSED tests/test_recovery_engine.py::test_checkpoint_with_none_session_id
+PASSED tests/test_recovery_engine.py::test_browser_context_single_logging
+ERROR tests/test_task_runner.py - NameError: name 'Database' is not defined
+FAILED tests/e2e/test_certification.py::test_certification_suite - AssertionE...
+FAILED tests/test_browser_agent_pipeline.py::test_vision_unavailable_fails_explicitly
+FAILED tests/test_browser_agent_pipeline.py::test_action_failure_never_marks_completed
+FAILED tests/test_checkpoint_and_optimization.py::test_vision_fallback_screenshot_caching
+FAILED tests/test_launcher.py::test_different_working_directory - FileNotFoun...
+5 failed, 103 passed, 20 warnings, 1 error in 37.06s
+exit=1
+wall_clock_seconds=38.810149123
