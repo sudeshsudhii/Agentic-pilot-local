@@ -1,0 +1,1 @@
+### scripts/validate_memory.py  cwd=<scratch> isolated PILOT_DB_PATH/DATA_DIR/LOG_DIR (2026-09-30T19:03:08Z); Ollama NOT installed

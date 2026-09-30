@@ -1,0 +1,15 @@
+subset,rule,n_cases,n_oracle_true,n_oracle_false,reported_complete,false_completions,FCR,false_rejections,false_rejection_rate
+all,dispatch_only,35,13,22,35,22,0.629,0,0.0
+all,evidence_gate,35,13,22,19,7,0.368,1,0.077
+search,dispatch_only,7,3,4,7,4,0.571,0,0.0
+search,evidence_gate,7,3,4,4,1,0.25,0,0.0
+navigation,dispatch_only,7,2,5,7,5,0.714,0,0.0
+navigation,evidence_gate,7,2,5,4,2,0.5,0,0.0
+captcha,dispatch_only,4,0,4,4,4,1.0,0,
+captcha,evidence_gate,4,0,4,1,1,1.0,0,
+text_entry,dispatch_only,6,3,3,6,3,0.5,0,0.0
+text_entry,evidence_gate,6,3,3,4,1,0.25,0,0.0
+extraction,dispatch_only,7,3,4,7,4,0.571,0,0.0
+extraction,evidence_gate,7,3,4,3,1,0.333,1,0.333
+multi_step,dispatch_only,4,2,2,4,2,0.5,0,0.0
+multi_step,evidence_gate,4,2,2,3,1,0.333,0,0.0
