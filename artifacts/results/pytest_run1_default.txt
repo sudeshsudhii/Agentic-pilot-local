@@ -1,0 +1,13 @@
+### RUN 1: python -m pytest -q  (default invocation, 2026-09-30T18:49:32Z)
+
+==================================== ERRORS ====================================
+__________________ ERROR collecting tests/test_task_runner.py __________________
+tests/test_task_runner.py:103: in <module>
+    async def wait_for_status(db: Database, task_id: str, statuses: set[str]):
+                                  ^^^^^^^^
+E   NameError: name 'Database' is not defined
+=========================== short test summary info ============================
+ERROR tests/test_task_runner.py - NameError: name 'Database' is not defined
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 1.59s
+exit=2
