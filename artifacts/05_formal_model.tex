@@ -1,0 +1,42 @@
+% B1 -- Formal model of evidence-gated execution (source for Sec. IV-C).
+% Every definition below is mapped to code in 07_claims_ledger.md.
+% Symbols:
+%   s_t   environment state (browser page) at step t
+%   o_t   observation = Omega(s_t): URL, title, DOM manifest, screenshot
+%   a_t   planned action (PlannedAction)
+%   alpha dispatch success (ActionResult.success)
+%   phi_i expected-state predicate of plan step i
+%   beta  blocking predicate (CAPTCHA, browser/HTTP error page)
+%   Phi   task-level completion predicate (verify_task_completion)
+%   e_t   evidence record (pre/post screenshots, DOM snapshot, verification JSON)
+
+\subsection{Evidence-Gated Verification Model}
+\label{sec:formal}
+
+We model an episode as a sequence of observations $o_t=\Omega(s_t)$, where $s_t$ is the browser state after step $t$ and $\Omega$ returns the page URL, the page title, the interactive-element manifest and a screenshot. The planner maps $(g, o_t, \mathcal{M})$, with $g$ the user goal and $\mathcal{M}$ the retrieved context, to an action $a_t$. The executor applies $a_t$ and returns a dispatch flag $\alpha_t\in\{0,1\}$ that is $1$ when the browser call returned without an exception or a failed low-level check (e.g., reading back the value of a text field).
+
+\paragraph{Blocking predicate} $\beta(o)=1$ when the observation shows a state in which further autonomous action is either impossible or not permitted: a \texttt{chrome-error://} URL, an HTTP error title (404, 500, 502, 503), or a CAPTCHA/bot-check page. A CAPTCHA forces the terminal state \textsc{Blocked}; the other cases are treated as failures that enter recovery.
+
+\paragraph{Step predicates} The decomposer produces a plan $P=(g_1,\dots,g_n)$. In the current implementation the per-step predicate is weak: $\phi_i(o_{t+1}) := \alpha_t$, i.e., a step is marked complete when its action dispatched successfully, and the plan index advances.
+
+\paragraph{Task predicate} Completion is decided by a separate predicate $\Phi(g,o,\hat{y},P)$ evaluated only when the planner emits \texttt{complete}, when the plan index reaches $n$, or when a requested text entry has been dispatched. With $\hat{y}$ the extracted answer,
+\begin{equation}
+\Phi = \neg\beta(o)\;\wedge\;\neg H(g,o)\;\wedge\;T(g,o)\;\wedge\;X(g,\hat{y})\;\wedge\;R(P,\hat{y}),
+\label{eq:phi}
+\end{equation}
+where $H$ is true when the goal requires search or extraction but $o$ is still a search-engine home page; $T$ requires that any literal text requested in $g$ appears in an input, textarea or contenteditable element of the live DOM; $X$ requires, for extraction goals, a non-empty structured extraction or an answer longer than 40 characters that is not a restated navigation instruction; and $R$ requires that no plan step remains pending unless an answer has already been produced. Each conjunct is optional and is only instantiated when $g$ triggers it.
+
+\paragraph{Completion rule} The agent reports success iff $\Phi=1$, and every evaluation of $\Phi$ is written to the evidence store together with its expected and observed values. A rejected evaluation does not terminate the episode; control returns to observation and planning until an iteration budget of $K$ planner calls ($K=15$) is exhausted. A final gate re-checks that navigation actually occurred when the intent named a target site, and downgrades the outcome to \textsc{Failed} otherwise.
+
+\paragraph{Property} Dispatch success does not imply task success:
+\begin{equation}
+\alpha_t = 1 \;\not\Rightarrow\; \Phi(g,o_{t+1},\hat{y},P)=1 .
+\end{equation}
+A successful \texttt{navigate} to a search engine home page is the canonical counterexample: $\alpha_t=1$ but $H=1$, hence $\Phi=0$.
+
+\paragraph{False completion rate} Let $\mathcal{T}_c$ be the set of episodes the agent reports as completed, and let $\Phi^{\star}$ be an independent, task-specific oracle predicate written by the experimenter (not by the agent). Then
+\begin{equation}
+\mathrm{FCR} = \frac{\lvert\{\tau\in\mathcal{T}_c : \Phi^{\star}(\tau)=0\}\rvert}{\lvert\mathcal{T}_c\rvert}.
+\label{eq:fcr}
+\end{equation}
+FCR is defined over reported completions, so it measures how often the agent claims success it has not achieved; task success rate is reported separately.
