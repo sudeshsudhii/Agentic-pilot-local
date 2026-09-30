@@ -1,0 +1,26 @@
+file,subsystem,collected,passed,failed,skipped,errors
+tests/e2e/test_certification.py,e2e (live browser + LLM),1,0,1,0,0
+tests/e2e/test_runner.py,e2e (live browser + LLM),2,2,0,0,0
+tests/test_browser_agent_pipeline.py,"agent+browser (graph nodes, verification gate)",7,5,2,0,0
+tests/test_captcha_handling.py,browser (CAPTCHA detection/blocking),7,7,0,0,0
+tests/test_case_study_enhancements.py,"cross-cutting (config flags, verification, recovery, security, telemetry, experiment presets)",11,11,0,0,0
+tests/test_checkpoint_and_optimization.py,agent checkpoint + caching (incl. vision cache),7,6,1,0,0
+tests/test_database.py,db,1,1,0,0,0
+tests/test_launcher.py,launcher (main.py),8,7,1,0,0
+tests/test_model_registry.py,llm (registry),7,7,0,0,0
+tests/test_model_router.py,llm (router),7,7,0,0,0
+tests/test_multi_model_integration.py,llm (multi-model routing in nodes),5,5,0,0,0
+tests/test_multi_model_rag.py,rag + llm,6,6,0,0,0
+tests/test_navigation_transition_and_typing.py,agent+browser (navigation/typing/vision flags),10,10,0,0,0
+tests/test_parser.py,llm (parser),1,1,0,0,0
+tests/test_plugins.py,plugins,2,2,0,0,0
+tests/test_rag_chunking.py,rag,3,3,0,0,0
+tests/test_rag_context.py,rag,2,2,0,0,0
+tests/test_rag_ingestion.py,rag,3,3,0,0,0
+tests/test_rag_integration.py,rag,4,4,0,0,0
+tests/test_rag_retrieval.py,rag,4,4,0,0,0
+tests/test_rag_router.py,rag,3,3,0,0,0
+tests/test_rag_security.py,rag + security,3,3,0,0,0
+tests/test_recovery_engine.py,recovery,4,4,0,0,0
+tests/test_task_runner.py,agent (task runner),0,0,0,0,1
+TOTAL,,108,103,5,0,1

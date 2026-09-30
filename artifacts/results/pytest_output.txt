@@ -1,2 +1,778 @@
 ### RUN 4 (canonical): PILOT_HEADLESS_BROWSER=true python -m pytest -q -rA --continue-on-collection-errors --timeout=240 --timeout-method=signal --junitxml=artifacts/results/junit.xml --durations=25  (start 2026-09-30T19:15:06Z); playwright==1.56.0 (matches /opt/pw-browsers/chromium-1194); pytest-timeout 2.4.0; no DISPLAY; Ollama NOT installed
-F........
+F........F........................F.......F...................................... [ 75%]
+...........................                                              [100%]
+==================================== ERRORS ====================================
+__________________ ERROR collecting tests/test_task_runner.py __________________
+tests/test_task_runner.py:103: in <module>
+    async def wait_for_status(db: Database, task_id: str, statuses: set[str]):
+                                  ^^^^^^^^
+E   NameError: name 'Database' is not defined
+=================================== FAILURES ===================================
+___________________________ test_certification_suite ___________________________
+
+runner = <backend.agent.runner.TaskRunner object at 0x7f99213c27d0>
+setup_db = <backend.db.database.Database object at 0x7f9931b1f850>
+
+    @pytest.mark.asyncio
+    async def test_certification_suite(runner, setup_db):
+        # 1. Navigation
+        task_id1 = await runner.submit("Navigate to example.com")
+        task1 = await wait_for_completion(setup_db, task_id1)
+>       assert task1.status == "completed", f"Navigation failed: {task1.error}"
+E       AssertionError: Navigation failed: Recovery exhausted (6 attempts). Last: Unclassified failure during need_help: Max retries exceeded: Missing intent or manifest
+E       assert 'failed' == 'completed'
+E         
+E         - completed
+E         + failed
+
+tests/e2e/test_certification.py:43: AssertionError
+------------------------------ Captured log setup ------------------------------
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=1/4 model=deepseek-r1:1.5b retryable=True backoff=0.25s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=74
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=2/4 model=deepseek-r1:1.5b retryable=True backoff=0.50s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=2
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=3/4 model=deepseek-r1:1.5b retryable=True backoff=1.00s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=2
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=4/4 model=deepseek-r1:1.5b retryable=True backoff=2.00s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=2
+CRITICAL pilot.llm:gateway.py:146 OLLAMA_EXHAUSTED model=deepseek-r1:1.5b retries=4 last_error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:107 NODE=parse_intent FAILED task_id=9c4f4519-7633-4011-8c8e-5b896834a9b1 error=Ollama completion failed after 4 attempts: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download error_type=RuntimeError duration_ms=3838
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 96, in complete
+    response = await self._client_instance().chat(**request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 1047, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 819, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 765, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 94, in parse_intent_node
+    parsed = await gateway.complete_structured(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 177, in complete_structured
+    raw = await self.complete(system_with_schema, prompt, json_mode=True, image_bytes=image_bytes, model_override=model_override)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 150, in complete
+    raise RuntimeError(f"Ollama completion failed after {self.config.max_retry_count + 1} attempts: {last_error}") from last_error
+RuntimeError: Ollama completion failed after 4 attempts: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:1372 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.agent.nodes:nodes.py:1372 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.agent.nodes:nodes.py:1372 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.agent.nodes:nodes.py:1372 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.recovery:engine.py:146 RECOVERY EXHAUSTED task_id=9c4f4519-7633-4011-8c8e-5b896834a9b1 failure_type=unknown retries=6/6
+WARNING  pilot.agent.nodes:nodes.py:1654 NODE=complete_node MEMORY_STORE_FAILED task_id=9c4f4519-7633-4011-8c8e-5b896834a9b1 error='NoneType' object has no attribute 'target'
+__________________ test_action_failure_never_marks_completed ___________________
+
+self = <Coroutine test_action_failure_never_marks_completed>
+
+    def runtest(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        runner = self._request.getfixturevalue(runner_fixture_id)
+        context = contextvars.copy_context()
+        synchronized_obj = _synchronize_coroutine(
+            getattr(*self._synchronization_target_attr), runner, context
+        )
+        with MonkeyPatch.context() as c:
+            c.setattr(*self._synchronization_target_attr, synchronized_obj)
+>           super().runtest()
+
+.venv-eval/lib/python3.11/site-packages/pytest_asyncio/plugin.py:569: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv-eval/lib/python3.11/site-packages/pytest_asyncio/plugin.py:905: in inner
+    runner.run(coro, context=context)
+/usr/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/asyncio/base_events.py:641: in run_until_complete
+    self.run_forever()
+/usr/lib/python3.11/asyncio/base_events.py:608: in run_forever
+    self._run_once()
+/usr/lib/python3.11/asyncio/base_events.py:1898: in _run_once
+    event_list = self._selector.select(timeout)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selectors.EpollSelector object at 0x7f99181d4290>, timeout = -1
+
+    def select(self, timeout=None):
+        if timeout is None:
+            timeout = -1
+        elif timeout <= 0:
+            timeout = 0
+        else:
+            # epoll_wait() has a resolution of 1 millisecond, round away
+            # from zero to wait *at least* timeout seconds.
+            timeout = math.ceil(timeout * 1e3) * 1e-3
+    
+        # epoll_wait() expects `maxevents` to be greater than zero;
+        # we want to make sure that `select()` can be called when no
+        # FD is registered.
+        max_ev = max(len(self._fd_to_key), 1)
+    
+        ready = []
+        try:
+>           fd_event_list = self._selector.poll(timeout, max_ev)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: Timeout (>240.0s) from pytest-timeout.
+
+/usr/lib/python3.11/selectors.py:468: Failed
+----------------------------- Captured stdout call -----------------------------
++++++++++++++++++++++++++++++++++++ Timeout ++++++++++++++++++++++++++++++++++++
+~~~~~~~ Stack of Thread-13 (_connection_worker_thread) (140295270131392) ~~~~~~~
+  File "/usr/lib/python3.11/threading.py", line 1002, in _bootstrap
+    self._bootstrap_inner()
+  File "/usr/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.11/threading.py", line 982, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/aiosqlite/core.py", line 59, in _connection_worker_thread
+    future, function = tx.get()
+~~~~~~~~~~~~~~~~~ Stack of asyncio-waitpid-3 (140295442265792) ~~~~~~~~~~~~~~~~~
+  File "/usr/lib/python3.11/threading.py", line 1002, in _bootstrap
+    self._bootstrap_inner()
+  File "/usr/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.11/threading.py", line 982, in run
+    self._target(*self._args, **self._kwargs)
+  File "/usr/lib/python3.11/asyncio/unix_events.py", line 1404, in _do_waitpid
+    pid, status = os.waitpid(expected_pid, 0)
+~~~~~~~~~~~~~~~~~ Stack of asyncio-waitpid-0 (140295433873088) ~~~~~~~~~~~~~~~~~
+  File "/usr/lib/python3.11/threading.py", line 1002, in _bootstrap
+    self._bootstrap_inner()
+  File "/usr/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.11/threading.py", line 982, in run
+    self._target(*self._args, **self._kwargs)
+  File "/usr/lib/python3.11/asyncio/unix_events.py", line 1404, in _do_waitpid
+    pid, status = os.waitpid(expected_pid, 0)
++++++++++++++++++++++++++++++++++++ Timeout ++++++++++++++++++++++++++++++++++++
+---------------------------- Captured log teardown -----------------------------
+ERROR    asyncio:base_events.py:1785 Exception in callback ProtocolCallback.__init__.<locals>.cb(<Task cancell...eline.py:335>>) at /home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py:230
+handle: <Handle ProtocolCallback.__init__.<locals>.cb(<Task cancell...eline.py:335>>) at /home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py:230>
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 234, in cb
+    self.future.cancel()
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+___________________ test_vision_fallback_screenshot_caching ____________________
+
+    @pytest.mark.asyncio
+    async def test_vision_fallback_screenshot_caching():
+        """Verify VisionFallback reuses cached inference when screenshot hash is identical."""
+        vf = VisionFallback()
+        dummy_screenshot = b"test_image_bytes_12345"
+    
+        with patch("backend.vision.fallback.OllamaGateway.complete_structured", new_callable=AsyncMock) as mock_complete:
+            mock_complete.return_value = VisionAction(
+                action_type="click",
+                x_percent=0.5,
+                y_percent=0.5,
+                reasoning="Click center",
+            )
+    
+            # First call -> computes inference
+>           action1 = await vf.plan_action(dummy_screenshot, "find submit", "button")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_checkpoint_and_optimization.py:225: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <backend.vision.fallback.VisionFallback object at 0x7f99101a19d0>
+screenshot_bytes = b'test_image_bytes_12345', goal = 'find submit'
+target = 'button'
+
+    async def plan_action(self, screenshot_bytes: bytes, goal: str, target: str | None) -> VisionAction:
+        """Analyze the screenshot and return the next action, reusing cached inference if unchanged."""
+        config = get_config()
+        is_avail, selected_vision_model = await self.check_vision_availability()
+        if not is_avail or not selected_vision_model:
+            logger.error("[VISION]\ncalled=false\nmodel=none\nimage_attached=false\nerror=VISION_UNAVAILABLE")
+>           raise VisionUnavailableError("VISION_UNAVAILABLE: No compatible vision model installed in Ollama.")
+E           backend.vision.fallback.VisionUnavailableError: VISION_UNAVAILABLE: No compatible vision model installed in Ollama.
+
+backend/vision/fallback.py:88: VisionUnavailableError
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.vision.fallback:fallback.py:87 [VISION]
+called=false
+model=none
+image_attached=false
+error=VISION_UNAVAILABLE
+_______________________ test_different_working_directory _______________________
+
+    def test_different_working_directory():
+        """Verify the launcher resolves paths correctly when run from another directory."""
+        scratch_dir = BASE_DIR / "scratch"
+>       res = subprocess.run(
+            [sys.executable, str(BASE_DIR / "main.py"), "--help"],
+            cwd=str(scratch_dir),
+            capture_output=True,
+            text=True,
+        )
+
+tests/test_launcher.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/subprocess.py:548: in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/subprocess.py:1026: in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Popen: returncode: 255 args: ['/home/user/Agentic-pilot-local/.venv-eval/bi...>
+args = ['/home/user/Agentic-pilot-local/.venv-eval/bin/python', '/home/user/Agentic-pilot-local/main.py', '--help']
+executable = b'/home/user/Agentic-pilot-local/.venv-eval/bin/python'
+preexec_fn = None, close_fds = True, pass_fds = ()
+cwd = '/home/user/Agentic-pilot-local/scratch', env = None, startupinfo = None
+creationflags = 0, shell = False, p2cread = -1, p2cwrite = -1, c2pread = 19
+c2pwrite = 21, errread = 22, errwrite = 24, restore_signals = True, gid = None
+gids = None, uid = None, umask = -1, start_new_session = False
+process_group = -1
+
+    def _execute_child(self, args, executable, preexec_fn, close_fds,
+                       pass_fds, cwd, env,
+                       startupinfo, creationflags, shell,
+                       p2cread, p2cwrite,
+                       c2pread, c2pwrite,
+                       errread, errwrite,
+                       restore_signals,
+                       gid, gids, uid, umask,
+                       start_new_session, process_group):
+        """Execute program (POSIX version)"""
+    
+        if isinstance(args, (str, bytes)):
+            args = [args]
+        elif isinstance(args, os.PathLike):
+            if shell:
+                raise TypeError('path-like args is not allowed when '
+                                'shell is true')
+            args = [args]
+        else:
+            args = list(args)
+    
+        if shell:
+            # On Android the default shell is at '/system/bin/sh'.
+            unix_shell = ('/system/bin/sh' if
+                      hasattr(sys, 'getandroidapilevel') else '/bin/sh')
+            args = [unix_shell, "-c"] + args
+            if executable:
+                args[0] = executable
+    
+        if executable is None:
+            executable = args[0]
+    
+        sys.audit("subprocess.Popen", executable, args, cwd, env)
+    
+        if (_USE_POSIX_SPAWN
+                and os.path.dirname(executable)
+                and preexec_fn is None
+                and not close_fds
+                and not pass_fds
+                and cwd is None
+                and (p2cread == -1 or p2cread > 2)
+                and (c2pwrite == -1 or c2pwrite > 2)
+                and (errwrite == -1 or errwrite > 2)
+                and not start_new_session
+                and process_group == -1
+                and gid is None
+                and gids is None
+                and uid is None
+                and umask < 0):
+            self._posix_spawn(args, executable, env, restore_signals,
+                              p2cread, p2cwrite,
+                              c2pread, c2pwrite,
+                              errread, errwrite)
+            return
+    
+        orig_executable = executable
+    
+        # For transferring possible exec failure from child to parent.
+        # Data format: "exception name:hex errno:description"
+        # Pickle is not used; it is complex and involves memory allocation.
+        errpipe_read, errpipe_write = os.pipe()
+        # errpipe_write must not be in the standard io 0, 1, or 2 fd range.
+        low_fds_to_close = []
+        while errpipe_write < 3:
+            low_fds_to_close.append(errpipe_write)
+            errpipe_write = os.dup(errpipe_write)
+        for low_fd in low_fds_to_close:
+            os.close(low_fd)
+        try:
+            try:
+                # We must avoid complex work that could involve
+                # malloc or free in the child process to avoid
+                # potential deadlocks, thus we do all this here.
+                # and pass it to fork_exec()
+    
+                if env is not None:
+                    env_list = []
+                    for k, v in env.items():
+                        k = os.fsencode(k)
+                        if b'=' in k:
+                            raise ValueError("illegal environment variable name")
+                        env_list.append(k + b'=' + os.fsencode(v))
+                else:
+                    env_list = None  # Use execv instead of execve.
+                executable = os.fsencode(executable)
+                if os.path.dirname(executable):
+                    executable_list = (executable,)
+                else:
+                    # This matches the behavior of os._execvpe().
+                    executable_list = tuple(
+                        os.path.join(os.fsencode(dir), executable)
+                        for dir in os.get_exec_path(env))
+                fds_to_keep = set(pass_fds)
+                fds_to_keep.add(errpipe_write)
+                self.pid = _fork_exec(
+                        args, executable_list,
+                        close_fds, tuple(sorted(map(int, fds_to_keep))),
+                        cwd, env_list,
+                        p2cread, p2cwrite, c2pread, c2pwrite,
+                        errread, errwrite,
+                        errpipe_read, errpipe_write,
+                        restore_signals, start_new_session,
+                        process_group, gid, gids, uid, umask,
+                        preexec_fn, _USE_VFORK)
+                self._child_created = True
+            finally:
+                # be sure the FD is closed no matter what
+                os.close(errpipe_write)
+    
+            self._close_pipe_fds(p2cread, p2cwrite,
+                                 c2pread, c2pwrite,
+                                 errread, errwrite)
+    
+            # Wait for exec to fail or succeed; possibly raising an
+            # exception (limited in size)
+            errpipe_data = bytearray()
+            while True:
+                part = os.read(errpipe_read, 50000)
+                errpipe_data += part
+                if not part or len(errpipe_data) > 50000:
+                    break
+        finally:
+            # be sure the FD is closed no matter what
+            os.close(errpipe_read)
+    
+        if errpipe_data:
+            try:
+                pid, sts = os.waitpid(self.pid, 0)
+                if pid == self.pid:
+                    self._handle_exitstatus(sts)
+                else:
+                    self.returncode = sys.maxsize
+            except ChildProcessError:
+                pass
+    
+            try:
+                exception_name, hex_errno, err_msg = (
+                        errpipe_data.split(b':', 2))
+                # The encoding here should match the encoding
+                # written in by the subprocess implementations
+                # like _posixsubprocess
+                err_msg = err_msg.decode()
+            except ValueError:
+                exception_name = b'SubprocessError'
+                hex_errno = b'0'
+                err_msg = 'Bad exception data from child: {!r}'.format(
+                              bytes(errpipe_data))
+            child_exception_type = getattr(
+                    builtins, exception_name.decode('ascii'),
+                    SubprocessError)
+            if issubclass(child_exception_type, OSError) and hex_errno:
+                errno_num = int(hex_errno, 16)
+                if err_msg == "noexec:chdir":
+                    err_msg = ""
+                    # The error must be from chdir(cwd).
+                    err_filename = cwd
+                elif err_msg == "noexec":
+                    err_msg = ""
+                    err_filename = None
+                else:
+                    err_filename = orig_executable
+                if errno_num != 0:
+                    err_msg = os.strerror(errno_num)
+                if err_filename is not None:
+>                   raise child_exception_type(errno_num, err_msg, err_filename)
+E                   FileNotFoundError: [Errno 2] No such file or directory: '/home/user/Agentic-pilot-local/scratch'
+
+/usr/lib/python3.11/subprocess.py:1955: FileNotFoundError
+=============================== warnings summary ===============================
+tests/test_browser_agent_pipeline.py::test_opening_google_does_not_prematurely_complete_task
+tests/test_browser_agent_pipeline.py::test_google_search_action_executes_and_continues
+tests/test_browser_agent_pipeline.py::test_multistep_navigation_sequence
+tests/test_browser_agent_pipeline.py::test_action_succeeds_but_task_remains_executing
+tests/test_browser_agent_pipeline.py::test_all_task_requirements_satisfied_completes_task
+tests/test_captcha_handling.py::test_1_normal_google_page_continues_normally
+tests/test_captcha_handling.py::test_4_user_clears_captcha_resumes_from_current_step
+tests/test_navigation_transition_and_typing.py::test_7_task_completes_only_after_verification
+tests/test_navigation_transition_and_typing.py::test_9_task_does_not_complete_after_type_text_alone
+  /home/user/Agentic-pilot-local/backend/browser/dom.py:50: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+    pass
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_browser_agent_pipeline.py::test_opening_google_does_not_prematurely_complete_task
+tests/test_browser_agent_pipeline.py::test_google_search_action_executes_and_continues
+tests/test_browser_agent_pipeline.py::test_multistep_navigation_sequence
+tests/test_browser_agent_pipeline.py::test_action_succeeds_but_task_remains_executing
+tests/test_browser_agent_pipeline.py::test_all_task_requirements_satisfied_completes_task
+tests/test_captcha_handling.py::test_1_normal_google_page_continues_normally
+tests/test_captcha_handling.py::test_4_user_clears_captcha_resumes_from_current_step
+tests/test_navigation_transition_and_typing.py::test_7_task_completes_only_after_verification
+tests/test_navigation_transition_and_typing.py::test_9_task_does_not_complete_after_type_text_alone
+  /home/user/Agentic-pilot-local/backend/browser/dom.py:69: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+    pass
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_browser_agent_pipeline.py::test_action_succeeds_but_task_remains_executing
+  /home/user/Agentic-pilot-local/backend/agent/nodes.py:1335: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+    is_captcha, captcha_reason = await detect_captcha(page)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+==================================== PASSES ====================================
+__________________________ test_runner_execution_flow __________________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=1/4 model=deepseek-r1:1.5b retryable=True backoff=0.25s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=73
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=2/4 model=deepseek-r1:1.5b retryable=True backoff=0.50s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=3
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=3/4 model=deepseek-r1:1.5b retryable=True backoff=1.00s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=2
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=4/4 model=deepseek-r1:1.5b retryable=True backoff=2.00s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=4
+CRITICAL pilot.llm:gateway.py:146 OLLAMA_EXHAUSTED model=deepseek-r1:1.5b retries=4 last_error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:107 NODE=parse_intent FAILED task_id=af5ac181-6c00-40af-94ba-e1225440cd2e error=Ollama completion failed after 4 attempts: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download error_type=RuntimeError duration_ms=3839
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 96, in complete
+    response = await self._client_instance().chat(**request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 1047, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 819, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 765, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 94, in parse_intent_node
+    parsed = await gateway.complete_structured(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 177, in complete_structured
+    raw = await self.complete(system_with_schema, prompt, json_mode=True, image_bytes=image_bytes, model_override=model_override)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 150, in complete
+    raise RuntimeError(f"Ollama completion failed after {self.config.max_retry_count + 1} attempts: {last_error}") from last_error
+RuntimeError: Ollama completion failed after 4 attempts: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:1372 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.agent.nodes:nodes.py:1372 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.agent.nodes:nodes.py:1372 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.agent.nodes:nodes.py:1372 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.recovery:engine.py:146 RECOVERY EXHAUSTED task_id=af5ac181-6c00-40af-94ba-e1225440cd2e failure_type=unknown retries=6/6
+WARNING  pilot.agent.nodes:nodes.py:1654 NODE=complete_node MEMORY_STORE_FAILED task_id=af5ac181-6c00-40af-94ba-e1225440cd2e error='NoneType' object has no attribute 'target'
+_________________________ test_high_risk_approval_flow _________________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=1/4 model=deepseek-r1:1.5b retryable=True backoff=0.25s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=71
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=2/4 model=deepseek-r1:1.5b retryable=True backoff=0.50s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=2
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=3/4 model=deepseek-r1:1.5b retryable=True backoff=1.00s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=1
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=4/4 model=deepseek-r1:1.5b retryable=True backoff=2.00s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=1
+CRITICAL pilot.llm:gateway.py:146 OLLAMA_EXHAUSTED model=deepseek-r1:1.5b retries=4 last_error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:107 NODE=parse_intent FAILED task_id=f8119d0d-0bc2-499e-8289-3eb9b83414e5 error=Ollama completion failed after 4 attempts: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download error_type=RuntimeError duration_ms=3834
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 96, in complete
+    response = await self._client_instance().chat(**request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 1047, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 819, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 765, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 94, in parse_intent_node
+    parsed = await gateway.complete_structured(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 177, in complete_structured
+    raw = await self.complete(system_with_schema, prompt, json_mode=True, image_bytes=image_bytes, model_override=model_override)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 150, in complete
+    raise RuntimeError(f"Ollama completion failed after {self.config.max_retry_count + 1} attempts: {last_error}") from last_error
+RuntimeError: Ollama completion failed after 4 attempts: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:1372 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.agent.nodes:nodes.py:1372 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.agent.nodes:nodes.py:1372 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.agent.nodes:nodes.py:1372 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.recovery:engine.py:146 RECOVERY EXHAUSTED task_id=f8119d0d-0bc2-499e-8289-3eb9b83414e5 failure_type=unknown retries=6/6
+WARNING  pilot.agent.nodes:nodes.py:1654 NODE=complete_node MEMORY_STORE_FAILED task_id=f8119d0d-0bc2-499e-8289-3eb9b83414e5 error='NoneType' object has no attribute 'target'
+____________ test_opening_google_does_not_prematurely_complete_task ____________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.verification:manager.py:234 VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+___________________ test_vision_unavailable_fails_explicitly ___________________
+------------------------------ Captured log call -------------------------------
+ERROR    pilot.vision.fallback:fallback.py:87 [VISION]
+called=false
+model=none
+image_attached=false
+error=VISION_UNAVAILABLE
+ERROR    pilot.agent.nodes:nodes.py:1362 [TASK]
+step=1/4
+completed=false
+reason=VISION_UNAVAILABLE
+_________________ test_1_normal_google_page_continues_normally _________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.agent.nodes:nodes.py:499 Observation screenshot capture failed: object MagicMock can't be used in 'await' expression
+___________________ test_2_captcha_page_detected_as_blocked ____________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.agent.nodes:nodes.py:452 [OBSERVATION]
+CAPTCHA detected
+
+[BROWSER]
+URL=https://www.google.com/sorry/index?continue=https://www.google.com/search%3Fq%3DOpenAI
+
+[VERIFICATION]
+Bot verification required
+
+[TASK]
+status=blocked
+___________________ test_3_captcha_detected_never_completed ____________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.agent.nodes:nodes.py:1324 [TASK]
+step=2/3
+completed=false
+reason=CAPTCHA / bot verification detected
+________________ test_5_captcha_remains_no_infinite_retry_loop _________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.recovery:engine.py:169 RECOVERY BLOCKED task_id=test-task-captcha reason=Google requires human verification (CAPTCHA / bot verification detected).
+_________________ test_6_fallback_provider_explicitly_recorded _________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.agent.runner:runner.py:161 [FALLBACK]
+Google blocked by CAPTCHA
+Switching to duckduckgo
+_____________________________ test_input_sanitizer _____________________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.security.sanitizer:sanitizer.py:79 SANITIZER injection_detected source=dom count=1 patterns=['Ignore all previous instructions']
+WARNING  pilot.security.sanitizer:sanitizer.py:79 SANITIZER injection_detected source=dom count=1 patterns=['system: ']
+_____________________ test_parse_intent_node_model_routing _____________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+_____________ test_8_task_does_not_complete_after_navigation_alone _____________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.verification:manager.py:260 VERIFY_TASK_COMPLETION REJECTED: Requested text 'hii i am agentic ai powered by local llm qwen' not verified on page.
+_____________ test_9_task_does_not_complete_after_type_text_alone ______________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.verification:manager.py:260 VERIFY_TASK_COMPLETION REJECTED: Requested text 'hii i am agentic ai powered by local llm qwen' not verified on page.
+WARNING  pilot.agent.nodes:nodes.py:1464 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; text_verified: expected=hii i am agentic ai powered by local llm qwen, observed=mismatched text; premature_completion_prevented: expected=False, observed=True - continuing loop
+___ test_10_vision_invocation_is_separately_verified_from_screenshot_capture ___
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+____________________ test_retrieve_context_node_integration ____________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.rag.router:router.py:128 ROUTER memory_lookup_failed task_id=T-INT-101 error=Database is not connected
+______________________ test_route_and_retrieve_execution _______________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.rag.router:router.py:128 ROUTER memory_lookup_failed task_id=T-999 error=Database is not connected
+____________________ test_malicious_instruction_containment ____________________
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.security.sanitizer:sanitizer.py:79 SANITIZER injection_detected source=rag count=1 patterns=['Ignore previous instructions']
+WARNING  pilot.security.sanitizer:sanitizer.py:79 SANITIZER injection_detected source=rag_untrusted_upload.md count=1 patterns=['Ignore previous instructions']
+============================= slowest 25 durations =============================
+239.99s call     tests/test_browser_agent_pipeline.py::test_action_failure_never_marks_completed
+15.17s call     tests/e2e/test_runner.py::test_high_risk_approval_flow
+8.44s call     tests/e2e/test_certification.py::test_certification_suite
+7.63s call     tests/e2e/test_runner.py::test_runner_execution_flow
+1.10s setup    tests/test_rag_retrieval.py::test_hybrid_search_scoring
+0.98s setup    tests/test_rag_retrieval.py::test_retrieval_provenance_and_structure
+0.86s call     tests/test_browser_agent_pipeline.py::test_vision_unavailable_fails_explicitly
+0.80s setup    tests/test_rag_retrieval.py::test_retrieval_query_cache
+0.53s call     tests/test_rag_ingestion.py::test_ingestion_delete_document
+0.51s call     tests/test_rag_retrieval.py::test_retrieval_empty_when_no_matches
+0.47s call     tests/test_rag_integration.py::test_retrieve_context_node_integration
+0.42s call     tests/test_rag_ingestion.py::test_ingestion_pipeline_deduplication
+0.39s call     tests/test_rag_retrieval.py::test_retrieval_provenance_and_structure
+0.37s call     tests/test_rag_router.py::test_route_and_retrieve_execution
+0.33s call     tests/test_rag_retrieval.py::test_retrieval_query_cache
+0.31s call     tests/test_rag_retrieval.py::test_hybrid_search_scoring
+0.24s setup    tests/e2e/test_certification.py::test_certification_suite
+0.16s call     tests/test_browser_agent_pipeline.py::test_multistep_navigation_sequence
+0.12s teardown tests/e2e/test_runner.py::test_runner_execution_flow
+0.10s call     tests/test_navigation_transition_and_typing.py::test_10_vision_invocation_is_separately_verified_from_screenshot_capture
+0.09s teardown tests/e2e/test_runner.py::test_high_risk_approval_flow
+0.08s call     tests/test_checkpoint_and_optimization.py::test_vision_fallback_screenshot_caching
+0.08s call     tests/test_multi_model_integration.py::test_parse_intent_node_model_routing
+0.05s call     tests/test_launcher.py::test_free_ports_safe_execution
+0.04s call     tests/test_launcher.py::test_shutdown_process_tracking
+=========================== short test summary info ============================
+PASSED tests/e2e/test_runner.py::test_runner_execution_flow
+PASSED tests/e2e/test_runner.py::test_high_risk_approval_flow
+PASSED tests/test_browser_agent_pipeline.py::test_opening_google_does_not_prematurely_complete_task
+PASSED tests/test_browser_agent_pipeline.py::test_google_search_action_executes_and_continues
+PASSED tests/test_browser_agent_pipeline.py::test_multistep_navigation_sequence
+PASSED tests/test_browser_agent_pipeline.py::test_vision_unavailable_fails_explicitly
+PASSED tests/test_browser_agent_pipeline.py::test_action_succeeds_but_task_remains_executing
+PASSED tests/test_browser_agent_pipeline.py::test_all_task_requirements_satisfied_completes_task
+PASSED tests/test_captcha_handling.py::test_1_normal_google_page_continues_normally
+PASSED tests/test_captcha_handling.py::test_2_captcha_page_detected_as_blocked
+PASSED tests/test_captcha_handling.py::test_3_captcha_detected_never_completed
+PASSED tests/test_captcha_handling.py::test_4_user_clears_captcha_resumes_from_current_step
+PASSED tests/test_captcha_handling.py::test_5_captcha_remains_no_infinite_retry_loop
+PASSED tests/test_captcha_handling.py::test_6_fallback_provider_explicitly_recorded
+PASSED tests/test_captcha_handling.py::test_7_no_fallback_available_maintains_blocked_state
+PASSED tests/test_case_study_enhancements.py::test_config_ablation_flags
+PASSED tests/test_case_study_enhancements.py::test_task_plan_models
+PASSED tests/test_case_study_enhancements.py::test_execution_record_schema
+PASSED tests/test_case_study_enhancements.py::test_verification_expected_vs_observed
+PASSED tests/test_case_study_enhancements.py::test_verification_file_state
+PASSED tests/test_case_study_enhancements.py::test_recovery_classification_and_escalation
+PASSED tests/test_case_study_enhancements.py::test_input_sanitizer
+PASSED tests/test_case_study_enhancements.py::test_privacy_auditor
+PASSED tests/test_case_study_enhancements.py::test_desktop_executor
+PASSED tests/test_case_study_enhancements.py::test_telemetry_metrics
+PASSED tests/test_case_study_enhancements.py::test_ablation_presets
+PASSED tests/test_checkpoint_and_optimization.py::test_checkpoint_save_and_load
+PASSED tests/test_checkpoint_and_optimization.py::test_parse_intent_checkpoint_resumption
+PASSED tests/test_checkpoint_and_optimization.py::test_context_router_single_fetch_reuse
+PASSED tests/test_checkpoint_and_optimization.py::test_model_stickiness_preserves_active_model
+PASSED tests/test_checkpoint_and_optimization.py::test_single_installed_model_bypass
+PASSED tests/test_checkpoint_and_optimization.py::test_context_builder_deduplication_and_budgeting
+PASSED tests/test_database.py::test_database_task_event_roundtrip
+PASSED tests/test_launcher.py::test_orchestrator_initialization
+PASSED tests/test_launcher.py::test_is_port_in_use_and_range_validation
+PASSED tests/test_launcher.py::test_check_http_health_live_and_offline
+PASSED tests/test_launcher.py::test_environment_verification
+PASSED tests/test_launcher.py::test_free_ports_safe_execution
+PASSED tests/test_launcher.py::test_cli_argument_parsing
+PASSED tests/test_launcher.py::test_shutdown_process_tracking
+PASSED tests/test_model_registry.py::test_model_capability_enum
+PASSED tests/test_model_registry.py::test_model_metadata_capabilities
+PASSED tests/test_model_registry.py::test_default_known_models_populated
+PASSED tests/test_model_registry.py::test_dynamic_registration_and_unregistration
+PASSED tests/test_model_registry.py::test_mark_installed
+PASSED tests/test_model_registry.py::test_get_models_with_capability_priority
+PASSED tests/test_model_registry.py::test_get_preferred_model_fallback
+PASSED tests/test_model_router.py::test_single_model_mode
+PASSED tests/test_model_router.py::test_dynamic_vision_routing
+PASSED tests/test_model_router.py::test_dynamic_coding_routing
+PASSED tests/test_model_router.py::test_dynamic_recovery_routing
+PASSED tests/test_model_router.py::test_dynamic_intent_parsing_routing
+PASSED tests/test_model_router.py::test_anti_thrashing_preserves_capable_active_model
+PASSED tests/test_model_router.py::test_fallback_when_specialized_model_missing
+PASSED tests/test_multi_model_integration.py::test_execution_record_model_provenance
+PASSED tests/test_multi_model_integration.py::test_telemetry_tracer_multi_model_metrics
+PASSED tests/test_multi_model_integration.py::test_code_executor_file_operations
+PASSED tests/test_multi_model_integration.py::test_parse_intent_node_model_routing
+PASSED tests/test_multi_model_integration.py::test_plan_action_node_model_routing
+PASSED tests/test_multi_model_rag.py::test_build_planning_context_coding_role
+PASSED tests/test_multi_model_rag.py::test_build_planning_context_vision_role
+PASSED tests/test_multi_model_rag.py::test_build_planning_context_reasoning_role
+PASSED tests/test_multi_model_rag.py::test_build_planning_context_lightweight_role
+PASSED tests/test_multi_model_rag.py::test_build_planning_context_general_role
+PASSED tests/test_multi_model_rag.py::test_security_boundaries_preserved_across_all_roles
+PASSED tests/test_navigation_transition_and_typing.py::test_1_successful_navigation_transitions_to_observation
+PASSED tests/test_navigation_transition_and_typing.py::test_2_navigation_is_not_repeated_indefinitely
+PASSED tests/test_navigation_transition_and_typing.py::test_3_input_field_is_identified
+PASSED tests/test_navigation_transition_and_typing.py::test_4_type_text_executes
+PASSED tests/test_navigation_transition_and_typing.py::test_5_screenshot_is_captured_after_typing
+PASSED tests/test_navigation_transition_and_typing.py::test_6_exact_text_verification_succeeds
+PASSED tests/test_navigation_transition_and_typing.py::test_7_task_completes_only_after_verification
+PASSED tests/test_navigation_transition_and_typing.py::test_8_task_does_not_complete_after_navigation_alone
+PASSED tests/test_navigation_transition_and_typing.py::test_9_task_does_not_complete_after_type_text_alone
+PASSED tests/test_navigation_transition_and_typing.py::test_10_vision_invocation_is_separately_verified_from_screenshot_capture
+PASSED tests/test_parser.py::test_parse_model_response_strips_code_fences
+PASSED tests/test_plugins.py::test_plugin_registry_exposes_three_builtins
+PASSED tests/test_plugins.py::test_gmail_plugin_detects_send_email_risk
+PASSED tests/test_rag_chunking.py::test_markdown_heading_chunking
+PASSED tests/test_rag_chunking.py::test_plain_text_paragraph_chunking
+PASSED tests/test_rag_chunking.py::test_empty_document_chunking
+PASSED tests/test_rag_context.py::test_build_planning_context_separation
+PASSED tests/test_rag_context.py::test_build_planning_context_none_handling
+PASSED tests/test_rag_ingestion.py::test_document_loader_formats
+PASSED tests/test_rag_ingestion.py::test_ingestion_pipeline_deduplication
+PASSED tests/test_rag_ingestion.py::test_ingestion_delete_document
+PASSED tests/test_rag_integration.py::test_retrieve_context_node_integration
+PASSED tests/test_rag_integration.py::test_plan_action_node_with_retrieved_knowledge
+PASSED tests/test_rag_integration.py::test_execute_action_attaches_knowledge_provenance
+PASSED tests/test_rag_integration.py::test_rag_disabled_graceful_degradation
+PASSED tests/test_rag_retrieval.py::test_retrieval_provenance_and_structure
+PASSED tests/test_rag_retrieval.py::test_retrieval_query_cache
+PASSED tests/test_rag_retrieval.py::test_retrieval_empty_when_no_matches
+PASSED tests/test_rag_retrieval.py::test_hybrid_search_scoring
+PASSED tests/test_rag_router.py::test_should_retrieve_knowledge_decisions
+PASSED tests/test_rag_router.py::test_rag_disabled_flag
+PASSED tests/test_rag_router.py::test_route_and_retrieve_execution
+PASSED tests/test_rag_security.py::test_untrusted_knowledge_banner_presence
+PASSED tests/test_rag_security.py::test_malicious_instruction_containment
+PASSED tests/test_rag_security.py::test_empty_chunks_formatting
+PASSED tests/test_recovery_engine.py::test_diagnose_with_none_error
+PASSED tests/test_recovery_engine.py::test_handle_failure_with_none_error_in_state
+PASSED tests/test_recovery_engine.py::test_checkpoint_with_none_session_id
+PASSED tests/test_recovery_engine.py::test_browser_context_single_logging
+ERROR tests/test_task_runner.py - NameError: name 'Database' is not defined
+FAILED tests/e2e/test_certification.py::test_certification_suite - AssertionE...
+FAILED tests/test_browser_agent_pipeline.py::test_action_failure_never_marks_completed
+FAILED tests/test_checkpoint_and_optimization.py::test_vision_fallback_screenshot_caching
+FAILED tests/test_launcher.py::test_different_working_directory - FileNotFoun...
+4 failed, 104 passed, 19 warnings, 1 error in 281.97s (0:04:41)
+/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/unraisableexception.py:33: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+  gc.collect()
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+exit=1
+wall_clock_seconds=284.021089368

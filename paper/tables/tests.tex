@@ -1,2 +1,22 @@
-% Placeholder until the Evaluation Engineer's run is merged.
-\todo{MEASURE: test-suite table (pending evaluation run).}
+\begin{table}[t]
+\centering
+\caption{Repository test suite in the component-study environment, without Ollama (headless Chromium, 240\,s per-test timeout). Err.: collection error. Line coverage of \texttt{backend/}: 62.0\,\%. Source: \texttt{tests\_by\_file.csv}, \texttt{junit.xml}.}
+\label{tab:tests}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Test group (files) & Tests & Pass & Fail & Err. \\
+\midrule
+Agent nodes, CAPTCHA, checkpoint, recovery (6) & 35 & 33 & 2 & 1 \\
+Model router, registry, parser (4) & 20 & 20 & 0 & 0 \\
+RAG and memory (8) & 28 & 28 & 0 & 0 \\
+Config, evidence, security, telemetry (1) & 11 & 11 & 0 & 0 \\
+Database, plugins, launcher (3) & 11 & 10 & 1 & 0 \\
+End-to-end with browser and LLM (2) & 3 & 2 & 1 & 0 \\
+\midrule
+Total, \texttt{tests/} (24) & 108 & 104 & 4 & 1 \\
+Observatory (1) & 20 & 20 & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,592 @@
+### COVERAGE RUN: PILOT_HEADLESS_BROWSER=true python -m pytest -q --continue-on-collection-errors --timeout=240 --timeout-method=signal --cov=backend --cov-report=term --cov-report=json:artifacts/results/coverage.json -p no:cacheprovider (start 2026-09-30T19:20:20Z); same env as canonical run 4
+F........F........................F.......F...................................... [ 75%]
+...........................<unknown>:121: DeprecationWarning: invalid escape sequence '\s'
+/home/user/Agentic-pilot-local/backend/browser/dom.py:121: DeprecationWarning: invalid escape sequence '\s'
+  """
+<unknown>:121: DeprecationWarning: invalid escape sequence '\s'
+/home/user/Agentic-pilot-local/backend/browser/dom.py:121: DeprecationWarning: invalid escape sequence '\s'
+  """
+<unknown>:121: DeprecationWarning: invalid escape sequence '\s'
+/home/user/Agentic-pilot-local/backend/browser/dom.py:121: DeprecationWarning: invalid escape sequence '\s'
+  """
+<unknown>:121: DeprecationWarning: invalid escape sequence '\s'
+                                              [100%]
+==================================== ERRORS ====================================
+__________________ ERROR collecting tests/test_task_runner.py __________________
+tests/test_task_runner.py:103: in <module>
+    async def wait_for_status(db: Database, task_id: str, statuses: set[str]):
+                                  ^^^^^^^^
+E   NameError: name 'Database' is not defined
+=================================== FAILURES ===================================
+___________________________ test_certification_suite ___________________________
+
+runner = <backend.agent.runner.TaskRunner object at 0x7fdced98b6d0>
+setup_db = <backend.db.database.Database object at 0x7fdcfe8df0d0>
+
+    @pytest.mark.asyncio
+    async def test_certification_suite(runner, setup_db):
+        # 1. Navigation
+        task_id1 = await runner.submit("Navigate to example.com")
+        task1 = await wait_for_completion(setup_db, task_id1)
+>       assert task1.status == "completed", f"Navigation failed: {task1.error}"
+E       AssertionError: Navigation failed: Recovery exhausted (6 attempts). Last: Unclassified failure during need_help: Max retries exceeded: Missing intent or manifest
+E       assert 'failed' == 'completed'
+E         
+E         - completed
+E         + failed
+
+tests/e2e/test_certification.py:43: AssertionError
+------------------------------ Captured log setup ------------------------------
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=1/4 model=deepseek-r1:1.5b retryable=True backoff=0.25s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=73
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=2/4 model=deepseek-r1:1.5b retryable=True backoff=0.50s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=3
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=3/4 model=deepseek-r1:1.5b retryable=True backoff=1.00s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=2
+WARNING  pilot.llm:gateway.py:137 OLLAMA_RETRY attempt=4/4 model=deepseek-r1:1.5b retryable=True backoff=2.00s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=2
+CRITICAL pilot.llm:gateway.py:146 OLLAMA_EXHAUSTED model=deepseek-r1:1.5b retries=4 last_error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:107 NODE=parse_intent FAILED task_id=df8e5027-ef2a-4fc2-911f-1de393a9dd8a error=Ollama completion failed after 4 attempts: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download error_type=RuntimeError duration_ms=3839
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 96, in complete
+    response = await self._client_instance().chat(**request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 1047, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 819, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 765, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 94, in parse_intent_node
+    parsed = await gateway.complete_structured(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 177, in complete_structured
+    raw = await self.complete(system_with_schema, prompt, json_mode=True, image_bytes=image_bytes, model_override=model_override)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 150, in complete
+    raise RuntimeError(f"Ollama completion failed after {self.config.max_retry_count + 1} attempts: {last_error}") from last_error
+RuntimeError: Ollama completion failed after 4 attempts: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:1372 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.agent.nodes:nodes.py:1372 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.agent.nodes:nodes.py:1372 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.agent.nodes:nodes.py:1372 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.recovery:engine.py:146 RECOVERY EXHAUSTED task_id=df8e5027-ef2a-4fc2-911f-1de393a9dd8a failure_type=unknown retries=6/6
+WARNING  pilot.agent.nodes:nodes.py:1654 NODE=complete_node MEMORY_STORE_FAILED task_id=df8e5027-ef2a-4fc2-911f-1de393a9dd8a error='NoneType' object has no attribute 'target'
+__________________ test_action_failure_never_marks_completed ___________________
+
+self = <Coroutine test_action_failure_never_marks_completed>
+
+    def runtest(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        runner = self._request.getfixturevalue(runner_fixture_id)
+        context = contextvars.copy_context()
+        synchronized_obj = _synchronize_coroutine(
+            getattr(*self._synchronization_target_attr), runner, context
+        )
+        with MonkeyPatch.context() as c:
+            c.setattr(*self._synchronization_target_attr, synchronized_obj)
+>           super().runtest()
+
+.venv-eval/lib/python3.11/site-packages/pytest_asyncio/plugin.py:569: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv-eval/lib/python3.11/site-packages/pytest_asyncio/plugin.py:905: in inner
+    runner.run(coro, context=context)
+/usr/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/asyncio/base_events.py:641: in run_until_complete
+    self.run_forever()
+/usr/lib/python3.11/asyncio/base_events.py:608: in run_forever
+    self._run_once()
+/usr/lib/python3.11/asyncio/base_events.py:1898: in _run_once
+    event_list = self._selector.select(timeout)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <selectors.EpollSelector object at 0x7fdce4392ed0>, timeout = -1
+
+    def select(self, timeout=None):
+        if timeout is None:
+            timeout = -1
+        elif timeout <= 0:
+            timeout = 0
+        else:
+            # epoll_wait() has a resolution of 1 millisecond, round away
+            # from zero to wait *at least* timeout seconds.
+            timeout = math.ceil(timeout * 1e3) * 1e-3
+    
+        # epoll_wait() expects `maxevents` to be greater than zero;
+        # we want to make sure that `select()` can be called when no
+        # FD is registered.
+        max_ev = max(len(self._fd_to_key), 1)
+    
+        ready = []
+        try:
+>           fd_event_list = self._selector.poll(timeout, max_ev)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: Timeout (>240.0s) from pytest-timeout.
+
+/usr/lib/python3.11/selectors.py:468: Failed
+----------------------------- Captured stdout call -----------------------------
++++++++++++++++++++++++++++++++++++ Timeout ++++++++++++++++++++++++++++++++++++
+~~~~~~~ Stack of Thread-13 (_connection_worker_thread) (140586292082368) ~~~~~~~
+  File "/usr/lib/python3.11/threading.py", line 1002, in _bootstrap
+    self._bootstrap_inner()
+  File "/usr/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.11/threading.py", line 982, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/aiosqlite/core.py", line 59, in _connection_worker_thread
+    future, function = tx.get()
+~~~~~~~~~~~~~~~~~ Stack of asyncio-waitpid-3 (140586057172672) ~~~~~~~~~~~~~~~~~
+  File "/usr/lib/python3.11/threading.py", line 1002, in _bootstrap
+    self._bootstrap_inner()
+  File "/usr/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.11/threading.py", line 982, in run
+    self._target(*self._args, **self._kwargs)
+  File "/usr/lib/python3.11/asyncio/unix_events.py", line 1404, in _do_waitpid
+    pid, status = os.waitpid(expected_pid, 0)
+~~~~~~~~~~~~~~~~~ Stack of asyncio-waitpid-0 (140586283689664) ~~~~~~~~~~~~~~~~~
+  File "/usr/lib/python3.11/threading.py", line 1002, in _bootstrap
+    self._bootstrap_inner()
+  File "/usr/lib/python3.11/threading.py", line 1045, in _bootstrap_inner
+    self.run()
+  File "/usr/lib/python3.11/threading.py", line 982, in run
+    self._target(*self._args, **self._kwargs)
+  File "/usr/lib/python3.11/asyncio/unix_events.py", line 1404, in _do_waitpid
+    pid, status = os.waitpid(expected_pid, 0)
++++++++++++++++++++++++++++++++++++ Timeout ++++++++++++++++++++++++++++++++++++
+---------------------------- Captured log teardown -----------------------------
+ERROR    asyncio:base_events.py:1785 Exception in callback ProtocolCallback.__init__.<locals>.cb(<Task cancell...eline.py:335>>) at /home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py:230
+handle: <Handle ProtocolCallback.__init__.<locals>.cb(<Task cancell...eline.py:335>>) at /home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py:230>
+Traceback (most recent call last):
+  File "/usr/lib/python3.11/asyncio/events.py", line 84, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/playwright/_impl/_connection.py", line 234, in cb
+    self.future.cancel()
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 762, in call_soon
+    self._check_closed()
+  File "/usr/lib/python3.11/asyncio/base_events.py", line 520, in _check_closed
+    raise RuntimeError('Event loop is closed')
+RuntimeError: Event loop is closed
+___________________ test_vision_fallback_screenshot_caching ____________________
+
+    @pytest.mark.asyncio
+    async def test_vision_fallback_screenshot_caching():
+        """Verify VisionFallback reuses cached inference when screenshot hash is identical."""
+        vf = VisionFallback()
+        dummy_screenshot = b"test_image_bytes_12345"
+    
+        with patch("backend.vision.fallback.OllamaGateway.complete_structured", new_callable=AsyncMock) as mock_complete:
+            mock_complete.return_value = VisionAction(
+                action_type="click",
+                x_percent=0.5,
+                y_percent=0.5,
+                reasoning="Click center",
+            )
+    
+            # First call -> computes inference
+>           action1 = await vf.plan_action(dummy_screenshot, "find submit", "button")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_checkpoint_and_optimization.py:225: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <backend.vision.fallback.VisionFallback object at 0x7fdce4197350>
+screenshot_bytes = b'test_image_bytes_12345', goal = 'find submit'
+target = 'button'
+
+    async def plan_action(self, screenshot_bytes: bytes, goal: str, target: str | None) -> VisionAction:
+        """Analyze the screenshot and return the next action, reusing cached inference if unchanged."""
+        config = get_config()
+        is_avail, selected_vision_model = await self.check_vision_availability()
+        if not is_avail or not selected_vision_model:
+            logger.error("[VISION]\ncalled=false\nmodel=none\nimage_attached=false\nerror=VISION_UNAVAILABLE")
+>           raise VisionUnavailableError("VISION_UNAVAILABLE: No compatible vision model installed in Ollama.")
+E           backend.vision.fallback.VisionUnavailableError: VISION_UNAVAILABLE: No compatible vision model installed in Ollama.
+
+backend/vision/fallback.py:88: VisionUnavailableError
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.vision.fallback:fallback.py:87 [VISION]
+called=false
+model=none
+image_attached=false
+error=VISION_UNAVAILABLE
+_______________________ test_different_working_directory _______________________
+
+    def test_different_working_directory():
+        """Verify the launcher resolves paths correctly when run from another directory."""
+        scratch_dir = BASE_DIR / "scratch"
+>       res = subprocess.run(
+            [sys.executable, str(BASE_DIR / "main.py"), "--help"],
+            cwd=str(scratch_dir),
+            capture_output=True,
+            text=True,
+        )
+
+tests/test_launcher.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/subprocess.py:548: in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/subprocess.py:1026: in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Popen: returncode: 255 args: ['/home/user/Agentic-pilot-local/.venv-eval/bi...>
+args = ['/home/user/Agentic-pilot-local/.venv-eval/bin/python', '/home/user/Agentic-pilot-local/main.py', '--help']
+executable = b'/home/user/Agentic-pilot-local/.venv-eval/bin/python'
+preexec_fn = None, close_fds = True, pass_fds = ()
+cwd = '/home/user/Agentic-pilot-local/scratch', env = None, startupinfo = None
+creationflags = 0, shell = False, p2cread = -1, p2cwrite = -1, c2pread = 19
+c2pwrite = 21, errread = 22, errwrite = 24, restore_signals = True, gid = None
+gids = None, uid = None, umask = -1, start_new_session = False
+process_group = -1
+
+    def _execute_child(self, args, executable, preexec_fn, close_fds,
+                       pass_fds, cwd, env,
+                       startupinfo, creationflags, shell,
+                       p2cread, p2cwrite,
+                       c2pread, c2pwrite,
+                       errread, errwrite,
+                       restore_signals,
+                       gid, gids, uid, umask,
+                       start_new_session, process_group):
+        """Execute program (POSIX version)"""
+    
+        if isinstance(args, (str, bytes)):
+            args = [args]
+        elif isinstance(args, os.PathLike):
+            if shell:
+                raise TypeError('path-like args is not allowed when '
+                                'shell is true')
+            args = [args]
+        else:
+            args = list(args)
+    
+        if shell:
+            # On Android the default shell is at '/system/bin/sh'.
+            unix_shell = ('/system/bin/sh' if
+                      hasattr(sys, 'getandroidapilevel') else '/bin/sh')
+            args = [unix_shell, "-c"] + args
+            if executable:
+                args[0] = executable
+    
+        if executable is None:
+            executable = args[0]
+    
+        sys.audit("subprocess.Popen", executable, args, cwd, env)
+    
+        if (_USE_POSIX_SPAWN
+                and os.path.dirname(executable)
+                and preexec_fn is None
+                and not close_fds
+                and not pass_fds
+                and cwd is None
+                and (p2cread == -1 or p2cread > 2)
+                and (c2pwrite == -1 or c2pwrite > 2)
+                and (errwrite == -1 or errwrite > 2)
+                and not start_new_session
+                and process_group == -1
+                and gid is None
+                and gids is None
+                and uid is None
+                and umask < 0):
+            self._posix_spawn(args, executable, env, restore_signals,
+                              p2cread, p2cwrite,
+                              c2pread, c2pwrite,
+                              errread, errwrite)
+            return
+    
+        orig_executable = executable
+    
+        # For transferring possible exec failure from child to parent.
+        # Data format: "exception name:hex errno:description"
+        # Pickle is not used; it is complex and involves memory allocation.
+        errpipe_read, errpipe_write = os.pipe()
+        # errpipe_write must not be in the standard io 0, 1, or 2 fd range.
+        low_fds_to_close = []
+        while errpipe_write < 3:
+            low_fds_to_close.append(errpipe_write)
+            errpipe_write = os.dup(errpipe_write)
+        for low_fd in low_fds_to_close:
+            os.close(low_fd)
+        try:
+            try:
+                # We must avoid complex work that could involve
+                # malloc or free in the child process to avoid
+                # potential deadlocks, thus we do all this here.
+                # and pass it to fork_exec()
+    
+                if env is not None:
+                    env_list = []
+                    for k, v in env.items():
+                        k = os.fsencode(k)
+                        if b'=' in k:
+                            raise ValueError("illegal environment variable name")
+                        env_list.append(k + b'=' + os.fsencode(v))
+                else:
+                    env_list = None  # Use execv instead of execve.
+                executable = os.fsencode(executable)
+                if os.path.dirname(executable):
+                    executable_list = (executable,)
+                else:
+                    # This matches the behavior of os._execvpe().
+                    executable_list = tuple(
+                        os.path.join(os.fsencode(dir), executable)
+                        for dir in os.get_exec_path(env))
+                fds_to_keep = set(pass_fds)
+                fds_to_keep.add(errpipe_write)
+                self.pid = _fork_exec(
+                        args, executable_list,
+                        close_fds, tuple(sorted(map(int, fds_to_keep))),
+                        cwd, env_list,
+                        p2cread, p2cwrite, c2pread, c2pwrite,
+                        errread, errwrite,
+                        errpipe_read, errpipe_write,
+                        restore_signals, start_new_session,
+                        process_group, gid, gids, uid, umask,
+                        preexec_fn, _USE_VFORK)
+                self._child_created = True
+            finally:
+                # be sure the FD is closed no matter what
+                os.close(errpipe_write)
+    
+            self._close_pipe_fds(p2cread, p2cwrite,
+                                 c2pread, c2pwrite,
+                                 errread, errwrite)
+    
+            # Wait for exec to fail or succeed; possibly raising an
+            # exception (limited in size)
+            errpipe_data = bytearray()
+            while True:
+                part = os.read(errpipe_read, 50000)
+                errpipe_data += part
+                if not part or len(errpipe_data) > 50000:
+                    break
+        finally:
+            # be sure the FD is closed no matter what
+            os.close(errpipe_read)
+    
+        if errpipe_data:
+            try:
+                pid, sts = os.waitpid(self.pid, 0)
+                if pid == self.pid:
+                    self._handle_exitstatus(sts)
+                else:
+                    self.returncode = sys.maxsize
+            except ChildProcessError:
+                pass
+    
+            try:
+                exception_name, hex_errno, err_msg = (
+                        errpipe_data.split(b':', 2))
+                # The encoding here should match the encoding
+                # written in by the subprocess implementations
+                # like _posixsubprocess
+                err_msg = err_msg.decode()
+            except ValueError:
+                exception_name = b'SubprocessError'
+                hex_errno = b'0'
+                err_msg = 'Bad exception data from child: {!r}'.format(
+                              bytes(errpipe_data))
+            child_exception_type = getattr(
+                    builtins, exception_name.decode('ascii'),
+                    SubprocessError)
+            if issubclass(child_exception_type, OSError) and hex_errno:
+                errno_num = int(hex_errno, 16)
+                if err_msg == "noexec:chdir":
+                    err_msg = ""
+                    # The error must be from chdir(cwd).
+                    err_filename = cwd
+                elif err_msg == "noexec":
+                    err_msg = ""
+                    err_filename = None
+                else:
+                    err_filename = orig_executable
+                if errno_num != 0:
+                    err_msg = os.strerror(errno_num)
+                if err_filename is not None:
+>                   raise child_exception_type(errno_num, err_msg, err_filename)
+E                   FileNotFoundError: [Errno 2] No such file or directory: '/home/user/Agentic-pilot-local/scratch'
+
+/usr/lib/python3.11/subprocess.py:1955: FileNotFoundError
+=============================== warnings summary ===============================
+tests/test_browser_agent_pipeline.py::test_opening_google_does_not_prematurely_complete_task
+tests/test_browser_agent_pipeline.py::test_google_search_action_executes_and_continues
+tests/test_browser_agent_pipeline.py::test_multistep_navigation_sequence
+tests/test_browser_agent_pipeline.py::test_action_succeeds_but_task_remains_executing
+tests/test_browser_agent_pipeline.py::test_all_task_requirements_satisfied_completes_task
+tests/test_captcha_handling.py::test_1_normal_google_page_continues_normally
+tests/test_captcha_handling.py::test_4_user_clears_captcha_resumes_from_current_step
+tests/test_navigation_transition_and_typing.py::test_7_task_completes_only_after_verification
+tests/test_navigation_transition_and_typing.py::test_9_task_does_not_complete_after_type_text_alone
+  /home/user/Agentic-pilot-local/backend/browser/dom.py:50: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+    pass
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_browser_agent_pipeline.py::test_opening_google_does_not_prematurely_complete_task
+tests/test_browser_agent_pipeline.py::test_google_search_action_executes_and_continues
+tests/test_browser_agent_pipeline.py::test_multistep_navigation_sequence
+tests/test_browser_agent_pipeline.py::test_action_succeeds_but_task_remains_executing
+tests/test_browser_agent_pipeline.py::test_all_task_requirements_satisfied_completes_task
+tests/test_captcha_handling.py::test_1_normal_google_page_continues_normally
+tests/test_captcha_handling.py::test_4_user_clears_captcha_resumes_from_current_step
+tests/test_navigation_transition_and_typing.py::test_7_task_completes_only_after_verification
+tests/test_navigation_transition_and_typing.py::test_9_task_does_not_complete_after_type_text_alone
+  /home/user/Agentic-pilot-local/backend/browser/dom.py:69: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+    pass
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_browser_agent_pipeline.py::test_action_succeeds_but_task_remains_executing
+  /home/user/Agentic-pilot-local/backend/agent/nodes.py:1335: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+    is_captcha, captcha_reason = await detect_captcha(page)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.11.15-final-0 _______________
+
+Name                                      Stmts   Miss  Cover
+-------------------------------------------------------------
+backend/__init__.py                           0      0   100%
+backend/agent/__init__.py                     0      0   100%
+backend/agent/checkpoint.py                 108     20    81%
+backend/agent/code_executor.py               56      9    84%
+backend/agent/graph.py                       62     13    79%
+backend/agent/nodes.py                      720    236    67%
+backend/agent/prompts.py                      3      0   100%
+backend/agent/runner.py                     213     56    74%
+backend/agent/state.py                       39      0   100%
+backend/api/__init__.py                       0      0   100%
+backend/api/approvals.py                     15     15     0%
+backend/api/health.py                        22     22     0%
+backend/api/observability.py                 67     67     0%
+backend/api/plugins.py                        7      7     0%
+backend/api/schemas.py                       75     75     0%
+backend/api/sessions.py                       6      6     0%
+backend/api/settings.py                      57     57     0%
+backend/api/tasks.py                        120    120     0%
+backend/browser/__init__.py                   0      0   100%
+backend/browser/actions.py                   98     98     0%
+backend/browser/dom.py                       95     39    59%
+backend/browser/executor.py                 182    145    20%
+backend/browser/pool.py                     227     96    58%
+backend/config.py                            57      0   100%
+backend/db/__init__.py                        0      0   100%
+backend/db/database.py                      152     40    74%
+backend/db/models.py                         32      0   100%
+backend/desktop/__init__.py                   2      0   100%
+backend/desktop/executor.py                 105     77    27%
+backend/evidence/manager.py                  98     13    87%
+backend/experiment/__init__.py                3      0   100%
+backend/experiment/config.py                 13      0   100%
+backend/experiment/runner.py                 78     57    27%
+backend/llm/__init__.py                       6      0   100%
+backend/llm/analyzer.py                      55     14    75%
+backend/llm/gateway.py                      117     43    63%
+backend/llm/parser.py                       151     45    70%
+backend/llm/registry.py                     142     11    92%
+backend/llm/router.py                        88     21    76%
+backend/main.py                              78     78     0%
+backend/memory/provider.py                  100     33    67%
+backend/plugins/__init__.py                   0      0   100%
+backend/plugins/base.py                      34      0   100%
+backend/plugins/builtin/__init__.py           0      0   100%
+backend/plugins/builtin/gmail.py             22     11    50%
+backend/plugins/builtin/google_forms.py      21     10    52%
+backend/plugins/builtin/twitter.py           24     13    46%
+backend/plugins/runtime.py                   24      1    96%
+backend/rag/__init__.py                      10      0   100%
+backend/rag/context_builder.py              103      6    94%
+backend/rag/ingestion/__init__.py             4      0   100%
+backend/rag/ingestion/chunker.py             98     23    77%
+backend/rag/ingestion/loader.py              92     43    53%
+backend/rag/ingestion/pipeline.py            59     30    49%
+backend/rag/models.py                        51      0   100%
+backend/rag/retriever.py                    114     24    79%
+backend/rag/router.py                        67      7    90%
+backend/rag/security.py                      26      2    92%
+backend/rag/store.py                         89     23    74%
+backend/recovery/engine.py                   81      6    93%
+backend/security/__init__.py                  0      0   100%
+backend/security/approval.py                 15      6    60%
+backend/security/audit.py                    44      4    91%
+backend/security/credentials.py              10     10     0%
+backend/security/sanitizer.py                35      2    94%
+backend/security/sessions.py                 15     15     0%
+backend/telemetry/broadcaster.py             82     29    65%
+backend/telemetry/tracer.py                 109     16    85%
+backend/verification/manager.py             178     54    70%
+backend/vision/fallback.py                   73     29    60%
+backend/vision/provider.py                   13      2    85%
+-------------------------------------------------------------
+TOTAL                                      4942   1879    62%
+Coverage JSON written to file artifacts/results/coverage.json
+=========================== short test summary info ============================
+FAILED tests/e2e/test_certification.py::test_certification_suite - AssertionE...
+FAILED tests/test_browser_agent_pipeline.py::test_action_failure_never_marks_completed
+FAILED tests/test_checkpoint_and_optimization.py::test_vision_fallback_screenshot_caching
+FAILED tests/test_launcher.py::test_different_working_directory - FileNotFoun...
+ERROR tests/test_task_runner.py - NameError: name 'Database' is not defined
+4 failed, 104 passed, 19 warnings, 1 error in 291.42s (0:04:51)
+/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/unraisableexception.py:67: PytestUnraisableExceptionWarning: Exception ignored in: <coroutine object AsyncMockMixin._execute_mock_call at 0x7fdce7f59a40>
+
+Traceback (most recent call last):
+  File "<string>", line 1, in <lambda>
+KeyError: '__import__'
+
+Enable tracemalloc to get traceback where the object was allocated.
+See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+  warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/unraisableexception.py:67: PytestUnraisableExceptionWarning: Exception ignored in: <coroutine object AsyncMockMixin._execute_mock_call at 0x7fdce7f59b40>
+
+Traceback (most recent call last):
+  File "<string>", line 1, in <lambda>
+KeyError: '__import__'
+
+Enable tracemalloc to get traceback where the object was allocated.
+See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+  warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/unraisableexception.py:67: PytestUnraisableExceptionWarning: Exception ignored in: <coroutine object AsyncMockMixin._execute_mock_call at 0x7fdce7f59f40>
+
+Traceback (most recent call last):
+  File "<string>", line 1, in <lambda>
+KeyError: '__import__'
+
+Enable tracemalloc to get traceback where the object was allocated.
+See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+  warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/unraisableexception.py:67: PytestUnraisableExceptionWarning: Exception ignored in: <coroutine object AsyncMockMixin._execute_mock_call at 0x7fdce7f58b40>
+
+Traceback (most recent call last):
+  File "<string>", line 1, in <lambda>
+KeyError: '__import__'
+
+Enable tracemalloc to get traceback where the object was allocated.
+See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+  warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+exit=1
+wall_clock_seconds=293.561636212

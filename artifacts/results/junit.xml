@@ -1,120 +1,301 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="0" skipped="0" tests="1" time="1.282" timestamp="2026-09-30T18:52:45.944057+00:00" hostname="vm"><testcase classname="pytest" name="internal" time="0.000"><error message="internal error">Traceback (most recent call last):
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/mouseinfo/__init__.py", line 276, in &lt;module&gt;
-    import tkinter
-ModuleNotFoundError: No module named 'tkinter'
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="4" skipped="0" tests="109" time="281.943" timestamp="2026-09-30T19:15:07.013639+00:00" hostname="vm"><testcase classname="" name="tests.test_task_runner" time="0.000"><error message="collection failure">tests/test_task_runner.py:103: in &lt;module&gt;
+    async def wait_for_status(db: Database, task_id: str, statuses: set[str]):
+                                  ^^^^^^^^
+E   NameError: name 'Database' is not defined</error></testcase><testcase classname="tests.e2e.test_certification" name="test_certification_suite" time="8.697"><failure message="AssertionError: Navigation failed: Recovery exhausted (6 attempts). Last: Unclassified failure during need_help: Max retries exceeded: Missing intent or manifest&#10;assert 'failed' == 'completed'&#10;  &#10;  - completed&#10;  + failed">runner = &lt;backend.agent.runner.TaskRunner object at 0x7f99213c27d0&gt;
+setup_db = &lt;backend.db.database.Database object at 0x7f9931b1f850&gt;
 
-During handling of the above exception, another exception occurred:
+    @pytest.mark.asyncio
+    async def test_certification_suite(runner, setup_db):
+        # 1. Navigation
+        task_id1 = await runner.submit("Navigate to example.com")
+        task1 = await wait_for_completion(setup_db, task_id1)
+&gt;       assert task1.status == "completed", f"Navigation failed: {task1.error}"
+E       AssertionError: Navigation failed: Recovery exhausted (6 attempts). Last: Unclassified failure during need_help: Max retries exceeded: Missing intent or manifest
+E       assert 'failed' == 'completed'
+E         
+E         - completed
+E         + failed
 
-Traceback (most recent call last):
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/main.py", line 330, in wrap_session
-    session.exitstatus = doit(config, session) or 0
-                         ^^^^^^^^^^^^^^^^^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/main.py", line 383, in _main
-    config.hook.pytest_collection(session=session)
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/pluggy/_hooks.py", line 512, in __call__
-    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/pluggy/_manager.py", line 120, in _hookexec
-    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/pluggy/_callers.py", line 167, in _multicall
-    raise exception
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
-    teardown.throw(exception)
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/logging.py", line 803, in pytest_collection
-    return (yield)
-            ^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
-    teardown.throw(exception)
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/warnings.py", line 99, in pytest_collection
-    return (yield)
-            ^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
-    teardown.throw(exception)
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/config/__init__.py", line 1445, in pytest_collection
-    return (yield)
-            ^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/pluggy/_callers.py", line 121, in _multicall
-    res = hook_impl.function(*args)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/main.py", line 394, in pytest_collection
-    session.perform_collect()
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/main.py", line 869, in perform_collect
-    self.items.extend(self.genitems(node))
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/main.py", line 1035, in genitems
-    yield from self.genitems(subnode)
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/main.py", line 1032, in genitems
-    rep, duplicate = self._collect_one_node(node, handle_dupes)
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/main.py", line 895, in _collect_one_node
-    rep = collect_one_node(node)
-          ^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/runner.py", line 589, in collect_one_node
-    rep: CollectReport = ihook.pytest_make_collect_report(collector=collector)
-                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/pluggy/_hooks.py", line 512, in __call__
-    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/pluggy/_manager.py", line 120, in _hookexec
-    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/pluggy/_callers.py", line 167, in _multicall
-    raise exception
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
-    teardown.throw(exception)
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/fixtures.py", line 1798, in pytest_make_collect_report
-    result = yield
-             ^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
-    teardown.throw(exception)
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/capture.py", line 880, in pytest_make_collect_report
-    rep = yield
-          ^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/pluggy/_callers.py", line 121, in _multicall
-    res = hook_impl.function(*args)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/runner.py", line 408, in pytest_make_collect_report
-    call = CallInfo.from_call(
-           ^^^^^^^^^^^^^^^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/runner.py", line 361, in from_call
-    result: TResult | None = func()
-                             ^^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/runner.py", line 406, in collect
-    return list(collector.collect())
-                ^^^^^^^^^^^^^^^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/python.py", line 564, in collect
-    self._register_setup_module_fixture()
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/python.py", line 577, in _register_setup_module_fixture
-    self.obj, ("setUpModule", "setup_module")
-    ^^^^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/python.py", line 290, in obj
-    self._obj = obj = self._getobj()
-                      ^^^^^^^^^^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/python.py", line 561, in _getobj
-    return importtestmodule(self.path, self.config)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/python.py", line 508, in importtestmodule
-    mod = import_path(
-          ^^^^^^^^^^^^
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/pathlib.py", line 596, in import_path
-    importlib.import_module(module_name)
-  File "/usr/lib/python3.11/importlib/__init__.py", line 126, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "&lt;frozen importlib._bootstrap&gt;", line 1204, in _gcd_import
-  File "&lt;frozen importlib._bootstrap&gt;", line 1176, in _find_and_load
-  File "&lt;frozen importlib._bootstrap&gt;", line 1147, in _find_and_load_unlocked
-  File "&lt;frozen importlib._bootstrap&gt;", line 690, in _load_unlocked
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/_pytest/assertion/rewrite.py", line 188, in exec_module
-    exec(co, module.__dict__)
-  File "/home/user/Agentic-pilot-local/tests/test_case_study_enhancements.py", line 27, in &lt;module&gt;
-    from backend.desktop.executor import DesktopExecutor
-  File "/home/user/Agentic-pilot-local/backend/desktop/__init__.py", line 7, in &lt;module&gt;
-    from backend.desktop.executor import DesktopExecutor, desktop_executor
-  File "/home/user/Agentic-pilot-local/backend/desktop/executor.py", line 25, in &lt;module&gt;
-    import pyautogui
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/pyautogui/__init__.py", line 246, in &lt;module&gt;
-    import mouseinfo
-  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/mouseinfo/__init__.py", line 280, in &lt;module&gt;
-    sys.exit('NOTE: You must install tkinter on Linux to use MouseInfo. Run the following: sudo apt-get install python3-tk python3-dev')
-SystemExit: NOTE: You must install tkinter on Linux to use MouseInfo. Run the following: sudo apt-get install python3-tk python3-dev</error></testcase></testsuite></testsuites>
+tests/e2e/test_certification.py:43: AssertionError</failure></testcase><testcase classname="tests.e2e.test_runner" name="test_runner_execution_flow" time="7.761" /><testcase classname="tests.e2e.test_runner" name="test_high_risk_approval_flow" time="15.259" /><testcase classname="tests.test_browser_agent_pipeline" name="test_opening_google_does_not_prematurely_complete_task" time="0.035" /><testcase classname="tests.test_browser_agent_pipeline" name="test_google_search_action_executes_and_continues" time="0.032" /><testcase classname="tests.test_browser_agent_pipeline" name="test_multistep_navigation_sequence" time="0.176" /><testcase classname="tests.test_browser_agent_pipeline" name="test_vision_unavailable_fails_explicitly" time="0.873" /><testcase classname="tests.test_browser_agent_pipeline" name="test_action_succeeds_but_task_remains_executing" time="0.038" /><testcase classname="tests.test_browser_agent_pipeline" name="test_all_task_requirements_satisfied_completes_task" time="0.042" /><testcase classname="tests.test_browser_agent_pipeline" name="test_action_failure_never_marks_completed" time="240.006"><failure message="Failed: Timeout (&gt;240.0s) from pytest-timeout.">self = &lt;Coroutine test_action_failure_never_marks_completed&gt;
+
+    def runtest(self) -&gt; None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        runner = self._request.getfixturevalue(runner_fixture_id)
+        context = contextvars.copy_context()
+        synchronized_obj = _synchronize_coroutine(
+            getattr(*self._synchronization_target_attr), runner, context
+        )
+        with MonkeyPatch.context() as c:
+            c.setattr(*self._synchronization_target_attr, synchronized_obj)
+&gt;           super().runtest()
+
+.venv-eval/lib/python3.11/site-packages/pytest_asyncio/plugin.py:569: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.venv-eval/lib/python3.11/site-packages/pytest_asyncio/plugin.py:905: in inner
+    runner.run(coro, context=context)
+/usr/lib/python3.11/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/asyncio/base_events.py:641: in run_until_complete
+    self.run_forever()
+/usr/lib/python3.11/asyncio/base_events.py:608: in run_forever
+    self._run_once()
+/usr/lib/python3.11/asyncio/base_events.py:1898: in _run_once
+    event_list = self._selector.select(timeout)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;selectors.EpollSelector object at 0x7f99181d4290&gt;, timeout = -1
+
+    def select(self, timeout=None):
+        if timeout is None:
+            timeout = -1
+        elif timeout &lt;= 0:
+            timeout = 0
+        else:
+            # epoll_wait() has a resolution of 1 millisecond, round away
+            # from zero to wait *at least* timeout seconds.
+            timeout = math.ceil(timeout * 1e3) * 1e-3
+    
+        # epoll_wait() expects `maxevents` to be greater than zero;
+        # we want to make sure that `select()` can be called when no
+        # FD is registered.
+        max_ev = max(len(self._fd_to_key), 1)
+    
+        ready = []
+        try:
+&gt;           fd_event_list = self._selector.poll(timeout, max_ev)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           Failed: Timeout (&gt;240.0s) from pytest-timeout.
+
+/usr/lib/python3.11/selectors.py:468: Failed</failure></testcase><testcase classname="tests.test_captcha_handling" name="test_1_normal_google_page_continues_normally" time="0.039" /><testcase classname="tests.test_captcha_handling" name="test_2_captcha_page_detected_as_blocked" time="0.046" /><testcase classname="tests.test_captcha_handling" name="test_3_captcha_detected_never_completed" time="0.028" /><testcase classname="tests.test_captcha_handling" name="test_4_user_clears_captcha_resumes_from_current_step" time="0.051" /><testcase classname="tests.test_captcha_handling" name="test_5_captcha_remains_no_infinite_retry_loop" time="0.039" /><testcase classname="tests.test_captcha_handling" name="test_6_fallback_provider_explicitly_recorded" time="0.040" /><testcase classname="tests.test_captcha_handling" name="test_7_no_fallback_available_maintains_blocked_state" time="0.025" /><testcase classname="tests.test_case_study_enhancements" name="test_config_ablation_flags" time="0.006" /><testcase classname="tests.test_case_study_enhancements" name="test_task_plan_models" time="0.001" /><testcase classname="tests.test_case_study_enhancements" name="test_execution_record_schema" time="0.002" /><testcase classname="tests.test_case_study_enhancements" name="test_verification_expected_vs_observed" time="0.002" /><testcase classname="tests.test_case_study_enhancements" name="test_verification_file_state" time="0.002" /><testcase classname="tests.test_case_study_enhancements" name="test_recovery_classification_and_escalation" time="0.001" /><testcase classname="tests.test_case_study_enhancements" name="test_input_sanitizer" time="0.001" /><testcase classname="tests.test_case_study_enhancements" name="test_privacy_auditor" time="0.001" /><testcase classname="tests.test_case_study_enhancements" name="test_desktop_executor" time="0.000" /><testcase classname="tests.test_case_study_enhancements" name="test_telemetry_metrics" time="0.002" /><testcase classname="tests.test_case_study_enhancements" name="test_ablation_presets" time="0.000" /><testcase classname="tests.test_checkpoint_and_optimization" name="test_checkpoint_save_and_load" time="0.002" /><testcase classname="tests.test_checkpoint_and_optimization" name="test_parse_intent_checkpoint_resumption" time="0.003" /><testcase classname="tests.test_checkpoint_and_optimization" name="test_context_router_single_fetch_reuse" time="0.002" /><testcase classname="tests.test_checkpoint_and_optimization" name="test_model_stickiness_preserves_active_model" time="0.001" /><testcase classname="tests.test_checkpoint_and_optimization" name="test_single_installed_model_bypass" time="0.001" /><testcase classname="tests.test_checkpoint_and_optimization" name="test_context_builder_deduplication_and_budgeting" time="0.001" /><testcase classname="tests.test_checkpoint_and_optimization" name="test_vision_fallback_screenshot_caching" time="0.088"><failure message="backend.vision.fallback.VisionUnavailableError: VISION_UNAVAILABLE: No compatible vision model installed in Ollama.">@pytest.mark.asyncio
+    async def test_vision_fallback_screenshot_caching():
+        """Verify VisionFallback reuses cached inference when screenshot hash is identical."""
+        vf = VisionFallback()
+        dummy_screenshot = b"test_image_bytes_12345"
+    
+        with patch("backend.vision.fallback.OllamaGateway.complete_structured", new_callable=AsyncMock) as mock_complete:
+            mock_complete.return_value = VisionAction(
+                action_type="click",
+                x_percent=0.5,
+                y_percent=0.5,
+                reasoning="Click center",
+            )
+    
+            # First call -&gt; computes inference
+&gt;           action1 = await vf.plan_action(dummy_screenshot, "find submit", "button")
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_checkpoint_and_optimization.py:225: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;backend.vision.fallback.VisionFallback object at 0x7f99101a19d0&gt;
+screenshot_bytes = b'test_image_bytes_12345', goal = 'find submit'
+target = 'button'
+
+    async def plan_action(self, screenshot_bytes: bytes, goal: str, target: str | None) -&gt; VisionAction:
+        """Analyze the screenshot and return the next action, reusing cached inference if unchanged."""
+        config = get_config()
+        is_avail, selected_vision_model = await self.check_vision_availability()
+        if not is_avail or not selected_vision_model:
+            logger.error("[VISION]\ncalled=false\nmodel=none\nimage_attached=false\nerror=VISION_UNAVAILABLE")
+&gt;           raise VisionUnavailableError("VISION_UNAVAILABLE: No compatible vision model installed in Ollama.")
+E           backend.vision.fallback.VisionUnavailableError: VISION_UNAVAILABLE: No compatible vision model installed in Ollama.
+
+backend/vision/fallback.py:88: VisionUnavailableError</failure></testcase><testcase classname="tests.test_database" name="test_database_task_event_roundtrip" time="0.030" /><testcase classname="tests.test_launcher" name="test_orchestrator_initialization" time="0.001" /><testcase classname="tests.test_launcher" name="test_is_port_in_use_and_range_validation" time="0.002" /><testcase classname="tests.test_launcher" name="test_check_http_health_live_and_offline" time="0.002" /><testcase classname="tests.test_launcher" name="test_environment_verification" time="0.002" /><testcase classname="tests.test_launcher" name="test_free_ports_safe_execution" time="0.048" /><testcase classname="tests.test_launcher" name="test_cli_argument_parsing" time="0.003" /><testcase classname="tests.test_launcher" name="test_different_working_directory" time="0.002"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/home/user/Agentic-pilot-local/scratch'">def test_different_working_directory():
+        """Verify the launcher resolves paths correctly when run from another directory."""
+        scratch_dir = BASE_DIR / "scratch"
+&gt;       res = subprocess.run(
+            [sys.executable, str(BASE_DIR / "main.py"), "--help"],
+            cwd=str(scratch_dir),
+            capture_output=True,
+            text=True,
+        )
+
+tests/test_launcher.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.11/subprocess.py:548: in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.11/subprocess.py:1026: in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: 255 args: ['/home/user/Agentic-pilot-local/.venv-eval/bi...&gt;
+args = ['/home/user/Agentic-pilot-local/.venv-eval/bin/python', '/home/user/Agentic-pilot-local/main.py', '--help']
+executable = b'/home/user/Agentic-pilot-local/.venv-eval/bin/python'
+preexec_fn = None, close_fds = True, pass_fds = ()
+cwd = '/home/user/Agentic-pilot-local/scratch', env = None, startupinfo = None
+creationflags = 0, shell = False, p2cread = -1, p2cwrite = -1, c2pread = 19
+c2pwrite = 21, errread = 22, errwrite = 24, restore_signals = True, gid = None
+gids = None, uid = None, umask = -1, start_new_session = False
+process_group = -1
+
+    def _execute_child(self, args, executable, preexec_fn, close_fds,
+                       pass_fds, cwd, env,
+                       startupinfo, creationflags, shell,
+                       p2cread, p2cwrite,
+                       c2pread, c2pwrite,
+                       errread, errwrite,
+                       restore_signals,
+                       gid, gids, uid, umask,
+                       start_new_session, process_group):
+        """Execute program (POSIX version)"""
+    
+        if isinstance(args, (str, bytes)):
+            args = [args]
+        elif isinstance(args, os.PathLike):
+            if shell:
+                raise TypeError('path-like args is not allowed when '
+                                'shell is true')
+            args = [args]
+        else:
+            args = list(args)
+    
+        if shell:
+            # On Android the default shell is at '/system/bin/sh'.
+            unix_shell = ('/system/bin/sh' if
+                      hasattr(sys, 'getandroidapilevel') else '/bin/sh')
+            args = [unix_shell, "-c"] + args
+            if executable:
+                args[0] = executable
+    
+        if executable is None:
+            executable = args[0]
+    
+        sys.audit("subprocess.Popen", executable, args, cwd, env)
+    
+        if (_USE_POSIX_SPAWN
+                and os.path.dirname(executable)
+                and preexec_fn is None
+                and not close_fds
+                and not pass_fds
+                and cwd is None
+                and (p2cread == -1 or p2cread &gt; 2)
+                and (c2pwrite == -1 or c2pwrite &gt; 2)
+                and (errwrite == -1 or errwrite &gt; 2)
+                and not start_new_session
+                and process_group == -1
+                and gid is None
+                and gids is None
+                and uid is None
+                and umask &lt; 0):
+            self._posix_spawn(args, executable, env, restore_signals,
+                              p2cread, p2cwrite,
+                              c2pread, c2pwrite,
+                              errread, errwrite)
+            return
+    
+        orig_executable = executable
+    
+        # For transferring possible exec failure from child to parent.
+        # Data format: "exception name:hex errno:description"
+        # Pickle is not used; it is complex and involves memory allocation.
+        errpipe_read, errpipe_write = os.pipe()
+        # errpipe_write must not be in the standard io 0, 1, or 2 fd range.
+        low_fds_to_close = []
+        while errpipe_write &lt; 3:
+            low_fds_to_close.append(errpipe_write)
+            errpipe_write = os.dup(errpipe_write)
+        for low_fd in low_fds_to_close:
+            os.close(low_fd)
+        try:
+            try:
+                # We must avoid complex work that could involve
+                # malloc or free in the child process to avoid
+                # potential deadlocks, thus we do all this here.
+                # and pass it to fork_exec()
+    
+                if env is not None:
+                    env_list = []
+                    for k, v in env.items():
+                        k = os.fsencode(k)
+                        if b'=' in k:
+                            raise ValueError("illegal environment variable name")
+                        env_list.append(k + b'=' + os.fsencode(v))
+                else:
+                    env_list = None  # Use execv instead of execve.
+                executable = os.fsencode(executable)
+                if os.path.dirname(executable):
+                    executable_list = (executable,)
+                else:
+                    # This matches the behavior of os._execvpe().
+                    executable_list = tuple(
+                        os.path.join(os.fsencode(dir), executable)
+                        for dir in os.get_exec_path(env))
+                fds_to_keep = set(pass_fds)
+                fds_to_keep.add(errpipe_write)
+                self.pid = _fork_exec(
+                        args, executable_list,
+                        close_fds, tuple(sorted(map(int, fds_to_keep))),
+                        cwd, env_list,
+                        p2cread, p2cwrite, c2pread, c2pwrite,
+                        errread, errwrite,
+                        errpipe_read, errpipe_write,
+                        restore_signals, start_new_session,
+                        process_group, gid, gids, uid, umask,
+                        preexec_fn, _USE_VFORK)
+                self._child_created = True
+            finally:
+                # be sure the FD is closed no matter what
+                os.close(errpipe_write)
+    
+            self._close_pipe_fds(p2cread, p2cwrite,
+                                 c2pread, c2pwrite,
+                                 errread, errwrite)
+    
+            # Wait for exec to fail or succeed; possibly raising an
+            # exception (limited in size)
+            errpipe_data = bytearray()
+            while True:
+                part = os.read(errpipe_read, 50000)
+                errpipe_data += part
+                if not part or len(errpipe_data) &gt; 50000:
+                    break
+        finally:
+            # be sure the FD is closed no matter what
+            os.close(errpipe_read)
+    
+        if errpipe_data:
+            try:
+                pid, sts = os.waitpid(self.pid, 0)
+                if pid == self.pid:
+                    self._handle_exitstatus(sts)
+                else:
+                    self.returncode = sys.maxsize
+            except ChildProcessError:
+                pass
+    
+            try:
+                exception_name, hex_errno, err_msg = (
+                        errpipe_data.split(b':', 2))
+                # The encoding here should match the encoding
+                # written in by the subprocess implementations
+                # like _posixsubprocess
+                err_msg = err_msg.decode()
+            except ValueError:
+                exception_name = b'SubprocessError'
+                hex_errno = b'0'
+                err_msg = 'Bad exception data from child: {!r}'.format(
+                              bytes(errpipe_data))
+            child_exception_type = getattr(
+                    builtins, exception_name.decode('ascii'),
+                    SubprocessError)
+            if issubclass(child_exception_type, OSError) and hex_errno:
+                errno_num = int(hex_errno, 16)
+                if err_msg == "noexec:chdir":
+                    err_msg = ""
+                    # The error must be from chdir(cwd).
+                    err_filename = cwd
+                elif err_msg == "noexec":
+                    err_msg = ""
+                    err_filename = None
+                else:
+                    err_filename = orig_executable
+                if errno_num != 0:
+                    err_msg = os.strerror(errno_num)
+                if err_filename is not None:
+&gt;                   raise child_exception_type(errno_num, err_msg, err_filename)
+E                   FileNotFoundError: [Errno 2] No such file or directory: '/home/user/Agentic-pilot-local/scratch'
+
+/usr/lib/python3.11/subprocess.py:1955: FileNotFoundError</failure></testcase><testcase classname="tests.test_launcher" name="test_shutdown_process_tracking" time="0.038" /><testcase classname="tests.test_model_registry" name="test_model_capability_enum" time="0.001" /><testcase classname="tests.test_model_registry" name="test_model_metadata_capabilities" time="0.001" /><testcase classname="tests.test_model_registry" name="test_default_known_models_populated" time="0.001" /><testcase classname="tests.test_model_registry" name="test_dynamic_registration_and_unregistration" time="0.001" /><testcase classname="tests.test_model_registry" name="test_mark_installed" time="0.001" /><testcase classname="tests.test_model_registry" name="test_get_models_with_capability_priority" time="0.001" /><testcase classname="tests.test_model_registry" name="test_get_preferred_model_fallback" time="0.001" /><testcase classname="tests.test_model_router" name="test_single_model_mode" time="0.001" /><testcase classname="tests.test_model_router" name="test_dynamic_vision_routing" time="0.001" /><testcase classname="tests.test_model_router" name="test_dynamic_coding_routing" time="0.001" /><testcase classname="tests.test_model_router" name="test_dynamic_recovery_routing" time="0.001" /><testcase classname="tests.test_model_router" name="test_dynamic_intent_parsing_routing" time="0.001" /><testcase classname="tests.test_model_router" name="test_anti_thrashing_preserves_capable_active_model" time="0.001" /><testcase classname="tests.test_model_router" name="test_fallback_when_specialized_model_missing" time="0.001" /><testcase classname="tests.test_multi_model_integration" name="test_execution_record_model_provenance" time="0.002" /><testcase classname="tests.test_multi_model_integration" name="test_telemetry_tracer_multi_model_metrics" time="0.002" /><testcase classname="tests.test_multi_model_integration" name="test_code_executor_file_operations" time="0.003" /><testcase classname="tests.test_multi_model_integration" name="test_parse_intent_node_model_routing" time="0.089" /><testcase classname="tests.test_multi_model_integration" name="test_plan_action_node_model_routing" time="0.004" /><testcase classname="tests.test_multi_model_rag" name="test_build_planning_context_coding_role" time="0.001" /><testcase classname="tests.test_multi_model_rag" name="test_build_planning_context_vision_role" time="0.001" /><testcase classname="tests.test_multi_model_rag" name="test_build_planning_context_reasoning_role" time="0.001" /><testcase classname="tests.test_multi_model_rag" name="test_build_planning_context_lightweight_role" time="0.001" /><testcase classname="tests.test_multi_model_rag" name="test_build_planning_context_general_role" time="0.001" /><testcase classname="tests.test_multi_model_rag" name="test_security_boundaries_preserved_across_all_roles" time="0.001" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_1_successful_navigation_transitions_to_observation" time="0.061" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_2_navigation_is_not_repeated_indefinitely" time="0.036" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_3_input_field_is_identified" time="0.027" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_4_type_text_executes" time="0.055" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_5_screenshot_is_captured_after_typing" time="0.046" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_6_exact_text_verification_succeeds" time="0.024" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_7_task_completes_only_after_verification" time="0.046" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_8_task_does_not_complete_after_navigation_alone" time="0.024" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_9_task_does_not_complete_after_type_text_alone" time="0.029" /><testcase classname="tests.test_navigation_transition_and_typing" name="test_10_vision_invocation_is_separately_verified_from_screenshot_capture" time="0.117" /><testcase classname="tests.test_parser" name="test_parse_model_response_strips_code_fences" time="0.001" /><testcase classname="tests.test_plugins" name="test_plugin_registry_exposes_three_builtins" time="0.001" /><testcase classname="tests.test_plugins" name="test_gmail_plugin_detects_send_email_risk" time="0.000" /><testcase classname="tests.test_rag_chunking" name="test_markdown_heading_chunking" time="0.001" /><testcase classname="tests.test_rag_chunking" name="test_plain_text_paragraph_chunking" time="0.001" /><testcase classname="tests.test_rag_chunking" name="test_empty_document_chunking" time="0.000" /><testcase classname="tests.test_rag_context" name="test_build_planning_context_separation" time="0.001" /><testcase classname="tests.test_rag_context" name="test_build_planning_context_none_handling" time="0.001" /><testcase classname="tests.test_rag_ingestion" name="test_document_loader_formats" time="0.002" /><testcase classname="tests.test_rag_ingestion" name="test_ingestion_pipeline_deduplication" time="0.418" /><testcase classname="tests.test_rag_ingestion" name="test_ingestion_delete_document" time="0.532" /><testcase classname="tests.test_rag_integration" name="test_retrieve_context_node_integration" time="0.468" /><testcase classname="tests.test_rag_integration" name="test_plan_action_node_with_retrieved_knowledge" time="0.004" /><testcase classname="tests.test_rag_integration" name="test_execute_action_attaches_knowledge_provenance" time="0.013" /><testcase classname="tests.test_rag_integration" name="test_rag_disabled_graceful_degradation" time="0.003" /><testcase classname="tests.test_rag_retrieval" name="test_retrieval_provenance_and_structure" time="1.368" /><testcase classname="tests.test_rag_retrieval" name="test_retrieval_query_cache" time="1.128" /><testcase classname="tests.test_rag_retrieval" name="test_retrieval_empty_when_no_matches" time="0.511" /><testcase classname="tests.test_rag_retrieval" name="test_hybrid_search_scoring" time="1.406" /><testcase classname="tests.test_rag_router" name="test_should_retrieve_knowledge_decisions" time="0.001" /><testcase classname="tests.test_rag_router" name="test_rag_disabled_flag" time="0.001" /><testcase classname="tests.test_rag_router" name="test_route_and_retrieve_execution" time="0.367" /><testcase classname="tests.test_rag_security" name="test_untrusted_knowledge_banner_presence" time="0.001" /><testcase classname="tests.test_rag_security" name="test_malicious_instruction_containment" time="0.001" /><testcase classname="tests.test_rag_security" name="test_empty_chunks_formatting" time="0.001" /><testcase classname="tests.test_recovery_engine" name="test_diagnose_with_none_error" time="0.000" /><testcase classname="tests.test_recovery_engine" name="test_handle_failure_with_none_error_in_state" time="0.002" /><testcase classname="tests.test_recovery_engine" name="test_checkpoint_with_none_session_id" time="0.002" /><testcase classname="tests.test_recovery_engine" name="test_browser_context_single_logging" time="0.003" /></testsuite></testsuites>
