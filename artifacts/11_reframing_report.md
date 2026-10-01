@@ -4,6 +4,8 @@ The paper describes agent code at commit `eb3803e`. The capability evidence is i
 
 ## A. What changed
 
+> **Update:** at the author's request the original title was restored. The scoped definitions of "autonomous" and "privacy-preserving" were added to §I, and "privacy-preserving computing" to the keywords. The title-related reviewer risk below therefore applies more strongly.
+
 - **Title:** changed from "…Evidence-Driven Local Autonomous AI Agent Framework for Privacy-Preserving Intelligent Task Automation" to **"Agentic Pilot: Toward a Local Computer-Use Agent with Evidence-Gated Task Completion"**.
   - "Toward" signals the direction without claiming a finished computer-use agent.
   - "Privacy-preserving" was dropped because only a narrow property is supported.
