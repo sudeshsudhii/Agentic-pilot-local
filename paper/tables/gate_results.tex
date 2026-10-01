@@ -1,26 +1,24 @@
 \begin{table}[t]
 \centering
-\caption{Decisions on 38 constructed end states. $n^{+}$/$n^{-}$: states that do / do not satisfy the goal under the oracle. FC: false completions (reported complete, goal not satisfied); FR: false rejections (goal satisfied, not reported complete). A dispatch-only rule has FC\,$=n^{-}$ and FR\,$=0$. Comp.: CAPTCHA pre-check and $\Phi$ called with the case's answer. Live: the real \texttt{verify} node with an empty (E) or a generic one-sentence (V) planner \texttt{reasoning} string. Source: \texttt{verification\_gate\_summary.csv}.}
+\caption{Gate decisions on constructed end states, before (commit \texttt{2361d50}) and after the fixes of Section~\ref{sec:impl}. $n^{+}$/$n^{-}$: states that do / do not meet the goal under the oracle. FC: false completions; FR: false rejections; a dispatch-only rule has FC\,$=n^{-}$, FR\,$=0$. Comp.: pre-check and $\Phi$ called directly. Live: the real \texttt{verify} node with empty (E) or verbose (V) planner reasoning. After the fixes the three modes agree. The 12 held-out states were written after the fixes. Source: \texttt{verification\_gate\_cases*.csv}.}
 \label{tab:gate}
 \footnotesize
-\setlength{\tabcolsep}{3.2pt}
+\setlength{\tabcolsep}{2.6pt}
 \begin{tabular}{@{}lcc|cc|cc|cc@{}}
 \toprule
- & & & \multicolumn{2}{c|}{Comp.} & \multicolumn{2}{c|}{Live E} & \multicolumn{2}{c}{Live V} \\
-Category & $n^{+}$ & $n^{-}$ & FC & FR & FC & FR & FC & FR \\
+ & & & \multicolumn{4}{c|}{Before fixes} & \multicolumn{2}{c}{After} \\
+ & & & \multicolumn{2}{c|}{Comp.} & \multicolumn{2}{c|}{Live} & \multicolumn{2}{c}{all} \\
+Category & $n^{+}$ & $n^{-}$ & FC & FR & FC E/V & FR & FC & FR \\
 \midrule
-Search & 3 & 4 & 1 & 0 & 1 & 0 & 1 & 0 \\
-Navigation & 2 & 6 & 3 & 0 & 3 & 0 & 3 & 0 \\
-Bot check & 2 & 4 & 1 & 2 & 1 & 2 & 1 & 2 \\
-Text entry & 3 & 3 & 1 & 0 & 1 & 0 & 1 & 0 \\
-Extraction & 3 & 4 & 1 & 1 & 1 & 1 & 2 & 1 \\
-Multi-step & 2 & 2 & 1 & 0 & 2 & 0 & 2 & 0 \\
+Search & 3 & 4 & 1 & 0 & 1/1 & 0 & 0 & 0 \\
+Navigation & 2 & 6 & 3 & 0 & 3/3 & 0 & 1 & 0 \\
+Bot check & 2 & 4 & 1 & 2 & 1/1 & 2 & 1 & 0 \\
+Text entry & 3 & 3 & 1 & 0 & 1/1 & 0 & 0 & 0 \\
+Extraction & 3 & 4 & 1 & 1 & 1/2 & 1 & 0 & 1 \\
+Multi-step & 2 & 2 & 1 & 0 & 2/2 & 0 & 1 & 0 \\
 \midrule
-All & 15 & 23 & 8 & 3 & 9 & 3 & 10 & 3 \\
-FCR & \multicolumn{2}{c|}{0.605$^{*}$} & \multicolumn{2}{c|}{0.400} & \multicolumn{2}{c|}{0.429} & \multicolumn{2}{c}{0.455} \\
+All design & 15 & 23 & 8 & 3 & 9/10 & 3 & 3 & 1 \\
+Held-out & 7 & 5 & 4 & 1 & 4/4 & 1 & 3 & 1 \\
 \bottomrule
 \end{tabular}
-\vspace{1pt}
-
-\raggedright\scriptsize $^{*}$Dispatch-only rule.
 \end{table}

@@ -1,6 +1,6 @@
 \begin{table}[t]
 \centering
-\caption{Status of each mechanism at commit \texttt{2361d50}, traced through the code. I+T: implemented and unit-tested; I: implemented, untested; P: proposed or partial. Live: affects the default execution path.}
+\caption{Status of each mechanism at commit \texttt{eb3803e}, traced through the code. I+T: implemented and unit-tested; I: implemented, untested; P: proposed or partial. Live: affects the default execution path. $^{\dagger}$Changed by the fixes of Section~\ref{sec:impl}.}
 \label{tab:status}
 \footnotesize
 \setlength{\tabcolsep}{2.5pt}
@@ -9,19 +9,19 @@
 Mechanism & Status & Live & Note \\
 \midrule
 Graph, checkpoints, re-scheduling & I+T & yes & graph run only by e2e tests \\
-Completion predicate $\Phi$ & I+T & yes & weaker live (Sec.~\ref{sec:results}) \\
+Completion predicate $\Phi^{\dagger}$ & I+T & yes & rule-based (Sec.~\ref{sec:results}) \\
 Per-step predicates, click check & P & -- & steps advance on dispatch \\
-CAPTCHA halt, resume, fallback & I+T & yes & no solver \\
-DOM grounding, vision fallback & I+T & yes & vision on \texttt{need\_help} only \\
+CAPTCHA halt, resume, fallback$^{\dagger}$ & I+T & yes & no solver \\
+DOM grounding, vision fallback & I+T & yes & vision on \texttt{need\_help} \\
 Failure classes, retry bounds & I+T & yes & 7 types; 3+3 attempts \\
-Strategy-specific recovery & P & no & strategy label dropped \\
-Role routing, stickiness & I+T & yes & substring keywords; no cool-down \\
-Memory write / RAG retrieval & I / I+T & yes / no & retrieval bypassed \\
+Recovery strategies$^{\dagger}$ & P & partial & only vision fallback acts \\
+Role routing, stickiness$^{\dagger}$ & I+T & yes & task-local; no cool-down \\
+Memory and RAG retrieval$^{\dagger}$ & I+T & yes & effect not measured \\
 Sanitizer on element text & I+T & yes & title, URL unfiltered \\
 Task-level approval gate & I & yes & once per task \\
 Model-call audit log & I+T & yes & browsing not logged \\
 Evidence store & I+T & yes & some files overwritten \\
-Ablation flags & I & partial & verification flag unread \\
+Ablation flags, eval runner$^{\dagger}$ & I & yes & not yet run with a model \\
 Desktop executor / extension & I / P & no & not wired (Sec.~\ref{sec:desktop}) \\
 \bottomrule
 \end{tabular}

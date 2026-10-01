@@ -94,6 +94,24 @@ Every factual statement in the paper about the system, a number, or other work, 
 | R13 | §VIII | The DOM extractor writes `data-pilot-id` into pages | `dom.py:152-153` | verified |
 | R14 | Tab. I | Gate cells for WebArena, WebVoyager, OSWorld and AgentDojo changed to N; ours to P | column definition in the Table I caption | verified |
 
+## Post-fix claims (code at commit `5359458`; the paper cites `eb3803e`, which only adds `no_memory` to the default `--eval` presets)
+
+The paper now describes the fixed code. The rows below supersede N1–N5, N9, N11, N15 and the S/R rows wherever they conflict.
+
+| ID | Section | Claim | Type | Source | Status |
+|---|---|---|---|---|---|
+| F1 | Abstract, §VII, Tab. IV | Before fixes: component FC 8/23, live FC 9/10 of 23, FR 3/15 | experiment | `results/verification_gate_cases_before_fixes.csv` (harness run on a `08653e2` worktree, identical agent code to `2361d50`) | verified |
+| F2 | Abstract, §VII, Tab. IV | After fixes: FC 3/23 and FR 1/15 in all three modes (misses C4, P3, N8; FR X6) | experiment | `results/verification_gate_cases.csv` | verified |
+| F3 | Abstract, §VII, Tab. IV | Held-out (12 states, 5 unsatisfied): FC 4 before and 3 after; FR 1 (H7) both times; misses H1, H3, H11 | experiment | both CSVs, `split=held_out` | verified |
+| F4 | Abstract, §VII | Median 30.6 ms over 35 full decisions (max 39.5); 3 pre-check stops ≤ 6.3 ms | experiment | `results/verification_gate_run.log` | verified |
+| F5 | §VII-B | Keyword probes now route to lightweight/qwen2.5:1.5b; cross-task probe gives qwen3.5:2b for a new task's planning; within-task stickiness still keeps deepseek-r1:1.5b | experiment | `results/routing_resolution.csv` (after), `routing_resolution_before_fixes.csv` | verified |
+| F6 | §VII-C | 129 tests in 25 files: 126 pass, 3 fail (live web needed; one also needs Ollama); 0 errors; Observatory 20/20; coverage 65.0% (3,256/5,009 lines) | experiment | `results/junit_after_fixes.xml`, `pytest_after_fixes.txt`, `coverage_after_fixes.txt` | verified |
+| F7 | §V | 10,867 backend lines, 1,679 in `nodes.py` | code | `wc -l` on the working tree at `5359458` | verified |
+| F8 | §V, §IV | Fix list (extraction, gate, CAPTCHA, regex, flags, recovery, memory, routing, eval runner, sampling) | code | `git show 5359458`; `tests/test_verification_fixes.py` | verified |
+| F9 | §IV-D | Only `vision_fallback` changes behaviour; `alternative_selector` and `replan` remain labels | code | `nodes.py` `plan_action_node` (`forced_vision`); no other consumer of `recovery_strategy` | verified |
+| F10 | §IV-F, §VIII | Retrieval now runs; memory is not bannered or sanitized | code | `runner.py` (None seeding); `rag/context_builder.py:108-120` | verified (code); effect not measured |
+| F11 | §VI | Presets exist for all six configurations; `--eval` runs them | code | `experiment/config.py`; `main.py` `run_eval` | verified (code); **not run with a model** |
+
 ## Claims about other work
 
 See `06_citation_audit.md` (32 rows). All citations are verified at abstract or venue level; four are flagged for a full-PDF re-read.

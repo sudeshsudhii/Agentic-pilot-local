@@ -299,3 +299,33 @@ All used `.venv-eval` and the paper's harness approach. No repository files were
 - **Q2 and Q3:** require end-to-end runs and the author's history, and are flagged in the README.
 
 **Final verdict after revision (Lead Editor's view):** the paper is now accurate about what it shows. Its evidence is still component-level, so a venue would likely still reject it until the end-to-end protocol has been run.
+
+
+---
+
+## 8. Follow-up: code fixes (commit `5359458`)
+
+After the review, the author asked for the fixable items to be fixed in code rather than only disclosed.
+
+**Addressed in code:**
+- **W4:** the case-specific extraction and click code was removed.
+- **W2:** reasoning is no longer accepted as an answer, and `complete` no longer marks a step done.
+- **Gate gaps:** query check, error and login titles, exact matching, goal-term overlap, and a stricter R.
+- **CAPTCHA false positives:** title wording made specific; hidden and invisible frames ignored.
+- **Regex:** the exact-text pattern no longer hijacks ordinary requests.
+- **Routing (W5):** whole-word keywords; stickiness is task-local; recovery is not routed.
+- **Inert mechanisms:** the verification flag, memory retrieval and `vision_fallback` now take effect.
+- **Evaluation:** the eval runner and `--eval` now run the presets.
+- **Tests:** all test defects fixed.
+
+**Effect on the evidence:**
+- Design set: 20 of 23 unsatisfied states caught, 1 of 15 satisfied states rejected, identical across modes.
+- New held-out set (12 states, written after the fixes): 2 of 5 unsatisfied states caught, versus 1 of 5 before.
+
+The paper reports both sets and calls the design-set gain optimistic by construction.
+
+**Still open:**
+- W1: no end-to-end evidence.
+- W3: author-written fixtures and no model-judge baseline.
+- Per-action approval and per-step predicates.
+- The `alternative_selector` and `replan` strategies.

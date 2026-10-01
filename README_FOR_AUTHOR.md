@@ -1,123 +1,98 @@
 # Agentic Pilot IEEE paper — notes for the author
 
-This branch has a first complete draft of the paper, `paper/main.pdf` (IEEEtran conference format). Every supporting artifact is in `artifacts/`. **The draft is yours to verify, revise and own.** An AI system wrote it from the code, from experiments it ran in a cloud container, and from references it checked. The Acknowledgment says so, as IEEE policy requires.
+This branch holds a complete draft paper, `paper/main.pdf` (IEEEtran conference, 9 pages: 8 pages of body plus references). It also holds the code fixes the paper describes and all supporting artifacts in `artifacts/`.
 
-Build it with `paper/build.sh`, which runs pdflatex, bibtex, pdflatex, pdflatex. The build currently gives 0 LaTeX warnings and 0 BibTeX warnings.
+**The draft is yours to verify, revise and own.** An AI system wrote it, and the Acknowledgment says so, as IEEE policy requires. Build it with `paper/build.sh`; it currently builds with 0 LaTeX and 0 BibTeX warnings.
 
----
+## 1. Status: what is done and what is not
 
-## 1. Read this first: what the code review found
+**Not ready to submit.** One result is missing: **end-to-end runs with local models on real websites.** The drafting container had neither Ollama nor web access. Everything else that can be done without them is done.
 
-The paper describes the system **as the code actually behaves**, not as the README describes it. Wherever the two disagreed, the code wins. `artifacts/01_system_inventory.md` §0 and §14 have full `file:line` evidence. The headline findings:
+### Fixed in code (commits `5359458` and `eb3803e`; paper §V)
 
-1. **`python main.py --eval` does nothing.** It runs `scratch/*.py` scripts, but `scratch/` is gitignored and absent. `backend/experiment/runner.py:82` imports `create_agent_graph`, which does not exist. As a result, every ablation task fails immediately (A4 ran all 15 presets and got 120 of 120 failed).
-2. **Recovery strategies are labels only.** `alternative_selector`, `vision_fallback` and `replan` are recorded but never executed. The `recovery_strategy` key is not in `AgentState`, so LangGraph drops it, and every retry re-observes the page and re-plans.
-3. **Memory is written but never read on the live path.** `runner.py:265-266` seeds `retrieved_*=[]`, and `rag/router.py:71-77` treats that as already retrieved. Knowledge RAG therefore never runs in production either.
-4. **`enable_verification` is never read** by the agent, so the "no verification" ablation changes nothing.
-5. **The routing cool-down (`model_switch_cooldown_steps`) is never read.** With a full model set installed, stickiness means the planner model was never selected for planning in our probes (paper §VII-B).
-6. **The privacy auditor logs only Ollama calls.** `record_external_request` is never called, and the keyring `CredentialStore` is unused. "Zero exfiltration" is not a claim the paper can make; §VIII states a narrow, true property instead.
-7. **⚠ Extraction is hard-coded to one case study** (`backend/agent/nodes.py:1100-1142`). Every `extract` action produces a "Kattankulathur campus" answer. When fewer than 3 matching lines are found, it returns **three fixed campus facts**. The click fallback also matches the literal `"srm"` (`nodes.py:1052`). **You must remove or generalize this before running any end-to-end evaluation**; otherwise extraction results are invalid. The paper carries a visible `\todo` about it in §IX.
-8. **Repository "results" are not usable as evidence:**
-   - `CERTIFICATION_REPORT.md` was committed as 1 PASS / 4 FAIL (`6a47c8b`), then as 5/5 PASS (`e812a71`) with no run log. Its PASS rule is only "status completed plus any PNG plus `trace.json`".
-   - `VISION_VALIDATION.md` prints its success text unconditionally.
-   - `benchmarks/run.py` hard-codes "Simulated" and "Estimated" figures.
-   - `MEMORY_VALIDATION.md` retrieves 1 document from a 1-document store.
+| Problem found by the audit | Fix |
+|---|---|
+| Extraction fabricated SRM "campus facts" (`nodes.py:1100-1142`), and a click rule matched `"srm"` | Removed. Extraction now keeps only page lines that share terms with the goal, and invents nothing. |
+| The gate accepted any action's reasoning as an answer, and a bare `complete` marked a pending step done | Fixed in `verify_node` |
+| Gate gaps: wrong-query results, soft 404s, login walls, superset text, long irrelevant answers | New checks in `verify_task_completion`: Q, E, T, X, R |
+| CAPTCHA false positives (a "Robot" article, hidden or invisible reCAPTCHA) | Title wording made specific; frames must be visible and not invisible-reCAPTCHA |
+| The exact-text regex hijacked "blood type of…" and "Enter Sandman" | The verb must start a clause |
+| `enable_verification` was ignored | Honoured; the "no gate" ablation now works |
+| Recovery strategies were dropped | Kept in state. `vision_fallback` now acts when a vision model is installed. `alternative_selector` and `replan` are still labels only. |
+| Memory and RAG retrieval never ran | The runner seeds `None`, so retrieval runs. Its effect is **not measured**. |
+| Routing matched substrings ("guide" counted as "gui") | Whole-word matching |
+| Routing stickiness leaked across tasks and into recovery | Stickiness is task-local; recovery is not routed |
+| `main.py --eval` did nothing, and `ExperimentRunner` imported a missing function | `--eval` runs the presets: full, no_verification, no_recovery, vision_only_grounding, single_model, no_memory |
+| No sampling control | `PILOT_LLM_TEMPERATURE`, `PILOT_LLM_SEED` |
+| Tests: a collection error, a headless hang, a broken mock, a missing directory | All fixed; 19 regression tests added in `tests/test_verification_fixes.py` |
 
-   None of these appears in the paper.
-9. **The desktop capability is a prototype that is not connected.** `backend/desktop/executor.py` exists (PyAutoGUI and psutil), but no node, action type or API route calls it. Its only test checks that its methods exist. `code_executor._resolve_safe_path` does not confine paths (`../` escapes). The paper presents the local-system extension as a **design** (§IV-G, Table II), with the current status stated exactly.
-10. **Test hygiene problems:**
-    - `tests/test_task_runner.py` fails to collect on Python 3.11 (`NameError: Database`), which makes a plain `pytest -q` run 0 tests.
-    - `test_action_failure_never_marks_completed` hangs in headless mode.
-    - No test runs the compiled graph.
+### Measured in this session
 
-## 2. What was measured in this session (real numbers)
-
-Environment: Linux container, 4 vCPU Xeon @ 2.8 GHz, 15 GiB, no GPU, Python 3.11.15, Playwright 1.56.0 / Chromium 141, LangGraph 1.2.12, **no Ollama and no live web**.
+Environment: 4 vCPU Xeon, Python 3.11, Playwright 1.56 / Chromium 141, LangGraph 1.2.12. No Ollama, no web.
 
 | What | Result | Source |
 |---|---|---|
-| Completion-gate study, 38 constructed end states (no LLM; offline pages via request interception) | The predicate called directly withheld 15 of 23 unsatisfied states; **the real `verify_node` withheld only 14 (empty planner reasoning) or 13 (verbose reasoning)**, because the planner's reasoning stands in for the answer and steps complete on dispatch. Dispatch-only accepts all 23. 3 of 15 satisfied states were rejected, including 2 pages falsely blocked as CAPTCHAs (a Wikipedia "Robot" article; a login page with a hidden invisible-reCAPTCHA iframe). Median 35.2 ms per full decision. | `artifacts/experiments/verification_gate_study.py` → `results/verification_gate_{cases,summary}.csv`, `verification_gate_run.log` |
-| Router resolution (no LLM) | Default install: the agent's text call sites resolve to `qwen2.5:1.5b` (3 via fallback). However, substring keywords ("gui" in "guide", "image", "screen") send text requests to `moondream`. Full install, in agent call order: stickiness keeps `deepseek-r1:1.5b` for planning, and after a recovery `qwen2.5:7b` is kept, although recovery makes no LLM call. | `artifacts/experiments/routing_default_install.py` → `results/routing_resolution.csv` |
-| Test suite | 108 collected: 104 pass, 4 fail, 1 collection error. Observatory 20/20. Line coverage 62.0%. | `results/junit.xml`, `tests_by_file.csv`, `coverage_by_subsystem.csv` |
+| Gate study, 38 design states (23 unsatisfied) | **Before fixes:** 15 caught by the predicate alone, 13–14 inside the live node; 3 of 15 satisfied states rejected. **After:** 20 of 23 caught and 1 of 15 rejected, the same in every mode. | `artifacts/results/verification_gate_cases{,_before_fixes}.csv` |
+| Gate study, 12 held-out states, written after the fixes | Before: 1 of 5 caught. After: **2 of 5** caught. 1 of 7 rejected both times. **Rule fixes generalize only partially.** | same files, `split=held_out` |
+| Gate latency | Median 30.6 ms per decision | `verification_gate_run.log` |
+| Routing | Fixes confirmed. One trade-off remains: with all models installed, the planner model is never used within a normal task, because of within-task stickiness. | `routing_resolution*.csv` |
+| Tests | 129 tests: 126 pass. The 3 failures need live web (one also needs Ollama). 0 collection errors. Observatory 20/20. Coverage 65.0% (was 62.0%). | `results/junit_after_fixes.xml`, `coverage_after_fixes.txt` |
 
-**Caveat for the gate study.** The fixtures and oracle labels were written by the AI editor. **Review every case and its label** in `verification_gate_study.py` (the `CASES` list). The FCR values depend on that case mix; the paper says so explicitly. The live-node mode stubs I/O and sets the planner's `reasoning` to either an empty or a generic sentence. Real planner reasoning should be sampled from end-to-end runs.
+**Caveat:** I wrote all fixtures and labels, and designed the fixes on the design states. Treat the post-fix design numbers as optimistic; the held-out row is the honest one. Review every case in `artifacts/experiments/verification_gate_study.py`.
 
-## 2b. The mock review (C5) and what changed
+## 2. What you must do (all shown as red `\todo` in the PDF)
 
-A hostile-reviewer agent recommended **Reject** (novelty 2, soundness 2, clarity 4, reproducibility 3, significance 2); see `artifacts/09_mock_review.md`. Every number in the paper survived its check, but it found about 48 wording or behaviour errors. The main ones:
-- the gate is weaker on the live path than in the component study;
-- the browser is headed, not headless;
-- there is no crash resume;
-- routing has substring-keyword bugs;
-- the §VIII sentence about the risk label was wrong.
-
-All were verified against the code and fixed. The gate study was extended to run the real `verify_node` and gained 3 control cases, which changed the headline numbers. Section 7 of `09_mock_review.md` lists each item and its disposition. **The core weakness remains: there is no end-to-end evidence yet.**
-
-## 3. Every `\todo{}` in the PDF (all shown in red)
-
-| Where | What you must do |
+| Where | Action |
 |---|---|
 | Title block | Author names, affiliation, email |
-| §V | Confirm the license; archive the evaluated version (tagged release, ideally with a DOI) |
-| §VI Hardware | Record CPU, GPU/VRAM, RAM, OS, Ollama version and model digests for the end-to-end runs |
-| §VI Task suite | Finalize the 30 tasks and their independent oracles; publish them |
-| §VII End-to-end | Run the protocol. Report success rate, FCR, model calls, wall-clock time, recovery success, vision rate and evidence completeness per configuration, with Wilson 95% CIs |
-| §VII Case study | Add before/after screenshots of one task where the gate rejected a premature completion and the agent then finished |
-| §IX | Remove the case-study extraction and `"srm"` click code (see §1 item 7), list the remaining site-specific rules, and state whether earlier repo figures depended on them |
-| Acknowledgment | Review the AI-assistance disclosure wording |
+| §V | Confirm the license; archive this version (tagged release with a DOI) |
+| §VI | Record hardware, OS, Ollama version and model digests |
+| §VI | Finalize and publish the 30 tasks and their independent oracles |
+| §VII-D | **Run the end-to-end protocol** (below) and report the metrics with 95% CIs |
+| §VII-D | Add a screenshot case study from `~/.pilot/logs/evidence/<task_id>/` |
+| Acknowledgment | Review the AI-assistance wording |
 
-## 4. Before running the end-to-end protocol (§VI), make these code changes
+### Running the end-to-end protocol on your machine
 
-1. Fix `experiment/runner.py` to use `build_graph()` and to connect the database. Alternatively, drive `TaskRunner` directly.
-2. Make `verify_node` honor `enable_verification`: when it is False, accept at `should_verify_completion`.
-3. Pass `options={"temperature": 0, "seed": <n>}` in `llm/gateway.py`.
-4. Add a vision-only switch that withholds the DOM manifest.
-5. Remove the case-study extraction code (item 7 above).
-6. Fix the gate weaknesses measured in §VII-A:
-   - stop using `action.reasoning` as the answer;
-   - check step `expected_outcome`;
-   - use exact match for exact-text requests;
-   - make CAPTCHA detection visibility-aware and remove the bare "robot" title match.
-7. Fix `tests/test_task_runner.py` (import `Database`) and the headless hang in `test_action_failure_never_marks_completed`. That test covers the paper's central property.
-8. Note the latent `running`→`completed` mapping in `complete_node` (`nodes.py:1589-1591`). The compiled routers never reach it with `running`, but removing it makes the gate unconditional.
-9. Optional, but needed before any memory or recovery ablation means anything:
-   - initialize `retrieved_*` to `None` in `runner.py`;
-   - add `recovery_strategy` to `AgentState` and act on it.
-   - If you make these changes, update Table III and §IV-D/F of the paper so that they stay truthful.
+```bash
+ollama pull qwen2.5:1.5b && ollama pull moondream        # default configuration
+# optional full role set: qwen2.5:7b qwen3.5:2b deepseek-r1:1.5b qwen3-vl:2b qwen2.5-coder:3b
+export PILOT_LLM_TEMPERATURE=0 PILOT_LLM_SEED=7 PILOT_HEADLESS_BROWSER=true
+python main.py --eval                 # all presets; or PILOT_EVAL_PRESETS="full_framework,no_verification"
+```
 
-`artifacts/04_results_raw.md` has the full protocol: `ollama pull` commands, the task-suite proposal, a CSV schema and metric definitions.
+The runner writes per-task status, duration and step counts to `~/.pilot/experiments/`. Set `runs_per_task=3` in the presets (`backend/experiment/config.py`) for three trials. Pass the 30-task list via `run_ablation_comparison(tasks=...)`. **FCR needs your independent oracle** applied to the final screenshots; the agent's own status is not the ground truth. `artifacts/04_results_raw.md` has the CSV schema and metric definitions.
 
-## 5. Things to verify yourself
+## 3. Things to verify yourself
 
-- **References.** All 35 were verified to exist via search-index records of primary pages and the authors' own BibTeX; the sandbox blocked direct DOI and arXiv fetches.
+- **References:**
   - Spot-check the ~10 DOIs listed in `artifacts/03_literature_matrix.md`.
-  - Re-read the PDFs for the four claims marked ◐ in `artifacts/06_citation_audit.md` (Voyager, UFO, SeeAct and Table I cells).
-- **Table I (related-work comparison).** Cells come only from what each paper reports, as read from abstracts and venue pages. "–" means not found there.
-- **Chroma default embedding download** (§III): confirm that your installed chromadb version fetches its default embedding model on first use.
-- **Similarity check.** Automatic 6-gram overlap against README/docs/wiki is clean (`artifacts/08_style_report.md`), but cited abstracts could not be compared offline. Run the conference's similarity checker.
+  - Re-read the PDFs for the four claims marked ◐ in `artifacts/06_citation_audit.md`.
+- **Chroma:** confirm the default embedding download and the telemetry behaviour of your installed version (§III).
+- **Similarity check:** run the conference's similarity checker. The local 6-gram check against README/docs/wiki is clean.
+- **Code review:** read the code diff (`git show 5359458`). In particular, check the new checks in `backend/verification/manager.py` against tasks you care about. They are still hand-written rules; see §IX.
 
-## 6. Sections that most need your own rewriting
+## 4. Sections that most need your own voice
 
-1. **Introduction:** the motivation and contribution list should be in your voice, and should reflect whatever you implement from §4 above.
-2. **§VII Results:** once end-to-end data exist, restructure around them. The gate study then becomes a component analysis.
-3. **§IV-G Local-system extension:** if you implement part of it before submission, change the status labels and tense.
-4. **§VIII Ethics:** the draft states a position ("acceptable only for a personal assistant at human pace"). That position must be yours. Consider removing the anti-detection settings (`pool.py:90-93,127,138`) instead.
-5. **Page budget:** the PDF is 9 pages, and the body ends just past page 8, including the red TODO text. End-to-end results will need space. The routing and test tables were folded into the text; their LaTeX is kept in `artifacts/table_*_unused.tex`. Candidates to move to a supplement are Table II (desktop postconditions) and Table III (status).
+1. **Introduction:** motivation and contributions.
+2. **§VII:** restructure around end-to-end results once you have them.
+3. **§VIII Ethics:** the stance on the anti-detection browser settings (`pool.py:90-93,127,138`) must be yours. Consider removing them.
+4. **Page budget:** end-to-end results need space. Move Table II (desktop) or Table III (status) to a supplement.
 
-## 7. Files
+## 5. Files
 
 ```
 paper/            main.tex, sections/, figures/ (TikZ), tables/, references.bib, main.pdf, build.sh
 artifacts/
-  01_system_inventory.md        code-verified module map and discrepancies (A1)
+  01_system_inventory.md        code-verified module map and discrepancies at 2361d50 (A1)
   02_local_system_extension.md  desktop audit and extension design (A2)
   03_literature_matrix.md       35 verified references and comparison table (A3)
-  04_results_raw.md             environment, test runs, eval status, protocol (A4)
-  05_formal_model.tex           formal model (B1; also paper/sections/04c_formal_model.tex)
+  04_results_raw.md             environment, original test runs, eval protocol (A4)
+  05_formal_model.tex           formal model (also paper/sections/04c_formal_model.tex)
   06_citation_audit.md          C1
   07_claims_ledger.md           C2: every claim and its source
   08_style_report.md            C3
-  09_mock_review.md             C5: hostile review, and how it was addressed
+  09_mock_review.md             C5: hostile review and responses
   experiments/                  gate study, routing study, overlap checker (all runnable)
-  results/                      CSVs, logs, junit, coverage
+  results/                      CSVs, logs, junit, coverage (before and after the fixes)
 ```
