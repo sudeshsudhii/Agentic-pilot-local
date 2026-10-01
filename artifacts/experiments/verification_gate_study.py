@@ -15,9 +15,11 @@ outcome are judged by four rules:
                  plan state set as the graph would leave them, and an empty
                  planner `reasoning` string
   live_verbose   as live_empty, but with a generic one-sentence `reasoning`
-                 string. verify_node uses `state.final_answer or
-                 action.reasoning` as the answer (nodes.py:1448), so this shows
-                 how much of the gate survives a talkative planner.
+                 string. At commit 2361d50 verify_node fell back to the last
+                 action's reasoning as the answer; this shows how much of the
+                 gate survives a talkative planner.
+
+Run it against any checkout: results go to <checkout>/artifacts/results/.
 
 What it does NOT measure
 ------------------------
@@ -93,6 +95,7 @@ class Case:
     extracted: dict = field(default_factory=dict)
     task_plan: TaskPlan | None = None
     last_action: str = "complete"  # planner action that preceded verification
+    held_out: bool = False
 
 
 SEARCH_GOAL = "Search Google for 'Alan Turing'"
@@ -167,9 +170,48 @@ CASES: list[Case] = [
          False, "still on the home page; goal wording triggers no conjunct"),
 ]
 
+# Held-out cases, written after the gate fixes and not used to design them. Several target the new
+# rules' blind spots (unquoted queries, error titles without "not found", term overlap with a wrong fact).
+PARIS = page("Paris - Wikipedia", "<h1>Paris</h1><p>Paris had an estimated population of 2,102,650 residents in January 2023.</p>")
+HELDOUT: list[Case] = [
+    Case("H1", "search", "Search Google for Ada Lovelace", "https://www.google.com/search?q=Charles+Babbage",
+         results("Charles Babbage"), False, "results for another, unquoted query"),
+    Case("H2", "search", "Search Bing for 'quantum computing'", "https://www.bing.com/search?q=quantum+computing",
+         results("quantum computing"), True, "results for requested query"),
+    Case("H3", "navigation", "Go to https://example.com/archive", "https://example.com/archive",
+         page("Error 404", "<h1>Error 404</h1>"), False, "error title without 'not found'"),
+    Case("H4", "navigation", "Go to https://github.com/acme/missing", "https://github.com/acme/missing",
+         page("Page not found \u00b7 GitHub", "<h1>404</h1>"), False, "GitHub 404 page"),
+    Case("H5", "navigation", "Go to https://docs.example.com/guide", "https://docs.example.com/guide",
+         page("Guide - Example Docs", "<h1>Guide</h1>"), True, "requested page is open"),
+    Case("H6", "captcha", "Go to https://store.example.com", "https://store.example.com/",
+         page("Attention Required", "<p>Please complete the security check to access store.example.com</p>"), False, "security-check interstitial"),
+    Case("H7", "captcha", "Open the Wikipedia article on CAPTCHA", "https://en.wikipedia.org/wiki/CAPTCHA",
+         page("CAPTCHA - Wikipedia", "<h1>CAPTCHA</h1><p>A CAPTCHA is a type of challenge-response test.</p>"), True, "article about CAPTCHAs"),
+    Case("H8", "text_entry", "Open https://notes.example.com and type hello world into the box", "https://notes.example.com/",
+         page("Notes", "<textarea>hello world</textarea>"), True, "requested text present"),
+    Case("H9", "text_entry", "Go to https://notes.example.com and enter exactly: 'Room 4B'", "https://notes.example.com/",
+         page("Notes", "<input type='text' value=' Room 4B '>"), True, "exact text with surrounding spaces"),
+    Case("H10", "extraction", "Go to wikipedia.org and extract the population of Paris", "https://en.wikipedia.org/wiki/Paris",
+         PARIS, True, "answer states the population", final_answer="Paris has a population of about 2.1 million residents (2023)."),
+    Case("H11", "extraction", "Go to wikipedia.org and extract the population of Paris", "https://en.wikipedia.org/wiki/Paris",
+         PARIS, False, "answer gives another city's population", final_answer="The population of Lyon is about 520,000 inhabitants."),
+    Case("H12", "multi_step", "Go to github.com, then open the Explore page", "https://github.com/explore",
+         page("Explore GitHub", "<h1>Explore</h1>"), True, "both steps done",
+         task_plan=plan(("navigate", "completed"), ("click", "completed"))),
+]
+for _h in HELDOUT:
+    _h.held_out = True
+CASES += HELDOUT
+
 for _c in CASES:
     if _c.category in ("search", "text_entry"):
         _c.last_action = "type_text"
+# Multi-step cases: P1 is a premature `complete` at the pending second step; in P2-P4 the second
+# step's click was dispatched (P3 on the wrong element) and verification follows that click.
+for _c in CASES:
+    if _c.cid in ("P2", "P3", "P4", "H12"):
+        _c.last_action = "click"
 
 
 async def gate_decision(vm: VerificationManager, pg, case: Case) -> tuple[str, str]:
@@ -224,7 +266,10 @@ async def live_decision(nodes, pg, case: Case, reasoning: str) -> tuple[str, str
                                         page_state_after="ready", duration_ms=1)],
         "task_plan": tp, "current_step_index": idx, "retry_count": 0, "llm_call_count": 3,
         "status": "running", "error": None, "approved": False, "blocked_reason": None,
-        "extracted_data": case.extracted, "final_answer": case.final_answer, "vision_called": False,
+        "extracted_data": case.extracted,
+        # execute_action stores a `complete` action's reasoning as the answer unless one exists already.
+        "final_answer": case.final_answer or (reasoning if case.last_action == "complete" and reasoning else None),
+        "vision_called": False,
     }
     out = await nodes.verify_node(state)
     status = out.get("status", "running")
@@ -260,7 +305,7 @@ async def main(reps: int) -> None:
                 times.append((time.perf_counter() - t0) * 1000)
             await pg.close()
             rows.append({
-                "case": case.cid, "category": case.category, "goal": case.goal, "url": case.url,
+                "case": case.cid, "split": "held_out" if case.held_out else "design", "category": case.category, "goal": case.goal, "url": case.url,
                 "oracle_satisfied": int(case.oracle), "oracle_rationale": case.rationale,
                 "dispatch_rule": "completed", "gate_decision": decision,
                 "gate_reports_complete": int(decision == "completed"),
@@ -297,18 +342,22 @@ async def main(reps: int) -> None:
             })
         return out
 
-    summary = summarise(rows, "all")
-    for cat in dict.fromkeys(r["category"] for r in rows):
-        summary += summarise([r for r in rows if r["category"] == cat], cat)
+    design = [r for r in rows if r["split"] == "design"]
+    held = [r for r in rows if r["split"] == "held_out"]
+    summary = summarise(design, "all")
+    for cat in dict.fromkeys(r["category"] for r in design):
+        summary += summarise([r for r in design if r["category"] == cat], cat)
+    if held:
+        summary += summarise(held, "held_out")
     with open(OUT / "verification_gate_summary.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(summary[0].keys()))
         w.writeheader()
         w.writerows(summary)
 
-    full = [r["gate_ms_median"] for r in rows if r["gate_decision"] != "blocked"]
-    blk = [r["gate_ms_median"] for r in rows if r["gate_decision"] == "blocked"]
+    full = [r["gate_ms_median"] for r in design if r["gate_decision"] != "blocked"]
+    blk = [r["gate_ms_median"] for r in design if r["gate_decision"] == "blocked"]
     print(f"python={platform.python_version()} platform={platform.platform()} reps={reps}")
-    print(f"cases={len(rows)} full decisions (pre-check + Phi): n={len(full)} median={statistics.median(full):.2f} ms "
+    print(f"cases={len(design)} (+{len(held)} held-out) full decisions (pre-check + Phi): n={len(full)} median={statistics.median(full):.2f} ms "
           f"max={max(full):.2f}; stopped at pre-check: n={len(blk)} values={sorted(blk)}")
     for s in summary:
         print(s)

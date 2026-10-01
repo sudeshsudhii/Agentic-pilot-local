@@ -26,7 +26,6 @@ CALLS = {
     "decomposition (parse_intent)": dict(task_type="planning", input_text="Go to wikipedia.org, search for 'Alan Turing' and extract his birth year", complexity="high"),
     "action planning, 1-step (plan_action)": dict(task_type="navigate", input_text="Open google.com", action_type="navigate", complexity="medium"),
     "action planning, multi-step (plan_action)": dict(task_type="search", input_text="Go to wikipedia.org, search for 'Alan Turing' and extract his birth year", action_type="search", complexity="high"),
-    "recovery (error_recovery)": dict(task_type="recovery", input_text="Search Google for 'Alan Turing'", complexity="high", is_recovery=True),
     "image input": dict(task_type="vision", input_text="find the button", has_image=True),
 }
 
@@ -67,18 +66,19 @@ def main() -> None:
                      "call": f"intent_parsing: {text}", "role": d.role, "selected_model": d.selected_model,
                      "fallback_used": d.fallback_used, "reason": d.reason[:120]})
         print(f"keyword probe {text!r:45s} role={d.role:11s} model={d.selected_model}")
+    # Cross-task probe: a new task starts with no active model. Since the fix it must not inherit the
+    # previous task's model. (The agent no longer routes recovery: RecoveryEngine makes no model call.)
     reg = ModelRegistry()
     reg.mark_installed(SCENARIOS["full_role_set"])
     r = ModelRouter(registry=reg)
-    a = r.route(task_type="recovery", input_text="Search Google for Alan Turing", complexity="high", is_recovery=True,
-                active_model="deepseek-r1:1.5b")
-    b = r.route(task_type="search", input_text="Go to wikipedia.org and search for Alan Turing", action_type="search",
-                complexity="high", active_model=a.selected_model)
-    for label, d in (("recovery after deepseek-r1:1.5b", a), ("next planning call", b)):
-        rows.append({"scenario": "full_role_set", "mode": "recovery_then_plan", "installed": " ".join(SCENARIOS["full_role_set"]),
+    a = r.route(task_type="intent_parsing", input_text="Open google.com", complexity="low")
+    b = r.route(task_type="planning", input_text="Go to wikipedia.org, then open the Alan Turing article",
+                complexity="high", active_model=None)
+    for label, d in (("task 1: intent parsing", a), ("task 2: first planning call", b)):
+        rows.append({"scenario": "full_role_set", "mode": "cross_task", "installed": " ".join(SCENARIOS["full_role_set"]),
                      "call": label, "role": d.role, "selected_model": d.selected_model,
                      "fallback_used": d.fallback_used, "reason": d.reason[:120]})
-        print(f"recovery probe {label:35s} model={d.selected_model} ({d.reason[:60]})")
+        print(f"cross-task probe {label:30s} model={d.selected_model} ({d.reason[:60]})")
     out = REPO / "artifacts" / "results" / "routing_resolution.csv"
     with open(out, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))

@@ -1,0 +1,311 @@
+F....................................................................... [ 55%]
+....................................FF...................                [100%]
+=================================== FAILURES ===================================
+___________________________ test_certification_suite ___________________________
+
+runner = <backend.agent.runner.TaskRunner object at 0x7f7fec213610>
+setup_db = <backend.db.database.Database object at 0x7f7ffccadfd0>
+
+    @pytest.mark.asyncio
+    async def test_certification_suite(runner, setup_db):
+        # 1. Navigation
+        task_id1 = await runner.submit("Navigate to example.com")
+        task1 = await wait_for_completion(setup_db, task_id1)
+>       assert task1.status == "completed", f"Navigation failed: {task1.error}"
+E       AssertionError: Navigation failed: Recovery exhausted (6 attempts). Last: Unclassified failure during need_help: Max retries exceeded: Missing intent or manifest
+E       assert 'failed' == 'completed'
+E         
+E         - completed
+E         + failed
+
+tests/e2e/test_certification.py:43: AssertionError
+------------------------------ Captured log setup ------------------------------
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.llm:gateway.py:144 OLLAMA_RETRY attempt=1/4 model=deepseek-r1:1.5b retryable=True backoff=0.25s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=68
+WARNING  pilot.llm:gateway.py:144 OLLAMA_RETRY attempt=2/4 model=deepseek-r1:1.5b retryable=True backoff=0.50s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=1
+WARNING  pilot.llm:gateway.py:144 OLLAMA_RETRY attempt=3/4 model=deepseek-r1:1.5b retryable=True backoff=1.00s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=3
+WARNING  pilot.llm:gateway.py:144 OLLAMA_RETRY attempt=4/4 model=deepseek-r1:1.5b retryable=True backoff=2.00s error_type=ConnectionError error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download latency_ms=2
+CRITICAL pilot.llm:gateway.py:153 OLLAMA_EXHAUSTED model=deepseek-r1:1.5b retries=4 last_error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:107 NODE=parse_intent FAILED task_id=ede96bc0-043d-41a6-8279-a41f11bb70d2 error=Ollama completion failed after 4 attempts: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download error_type=RuntimeError duration_ms=3834
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 103, in complete
+    response = await self._client_instance().chat(**request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 1047, in chat
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 819, in _request
+    return cls(**(await self._request_raw(*args, **kwargs)).json())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/.venv-eval/lib/python3.11/site-packages/ollama/_client.py", line 765, in _request_raw
+    raise ConnectionError(CONNECTION_ERROR_MESSAGE) from None
+ConnectionError: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/user/Agentic-pilot-local/backend/agent/nodes.py", line 94, in parse_intent_node
+    parsed = await gateway.complete_structured(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 184, in complete_structured
+    raw = await self.complete(system_with_schema, prompt, json_mode=True, image_bytes=image_bytes, model_override=model_override)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Agentic-pilot-local/backend/llm/gateway.py", line 157, in complete
+    raise RuntimeError(f"Ollama completion failed after {self.config.max_retry_count + 1} attempts: {last_error}") from last_error
+RuntimeError: Ollama completion failed after 4 attempts: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:1378 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.agent.nodes:nodes.py:1378 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.agent.nodes:nodes.py:1378 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.agent.nodes:nodes.py:1378 [TASK]
+step=1/1
+completed=false
+reason=Max retries exceeded
+ERROR    pilot.recovery:engine.py:146 RECOVERY EXHAUSTED task_id=ede96bc0-043d-41a6-8279-a41f11bb70d2 failure_type=unknown retries=6/6
+WARNING  pilot.agent.nodes:nodes.py:1651 NODE=complete_node MEMORY_STORE_FAILED task_id=ede96bc0-043d-41a6-8279-a41f11bb70d2 error='NoneType' object has no attribute 'target'
+________________________ test_low_risk_search_completes ________________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-16/test_low_risk_search_completes0')
+
+    @pytest.mark.asyncio
+    async def test_low_risk_search_completes(tmp_path) -> None:
+        """Low-risk search tasks should complete without approval."""
+    
+        await database.close()
+        database.path = resolve_path(str(tmp_path / "pilot.db"))
+        await database.connect()
+        print(f"DEBUG TEST: test_low_risk_search_completes database id: {id(database)} path: {database.path}")
+        runner = TaskRunner(database)
+        await runner.start()
+        try:
+            task_id = await runner.submit("Search Google for playwright python")
+>           task = await wait_for_status(database, task_id, {"completed", "blocked"})
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_task_runner.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+db = <backend.db.database.Database object at 0x7f7ffccadfd0>
+task_id = 'd808f6ea-44e4-4193-a62d-42a11d2a1843'
+statuses = {'blocked', 'completed'}
+
+    async def wait_for_status(db: Database, task_id: str, statuses: set[str]):
+        """Poll a task until it reaches one of the requested statuses."""
+    
+        for _ in range(60):
+            task = await db.get_task(task_id)
+            if task is not None:
+                if task.status in statuses:
+                    return task
+                if task.status in {"failed", "blocked"} and task.status not in statuses:
+>                   raise AssertionError(f"Task stopped with status {task.status}: {task.error}")
+E                   AssertionError: Task stopped with status failed: Recovery exhausted (6 attempts). Last: Unclassified failure during complete: Max iterations exceeded without satisfying goal: FAIL — task_completed: expected=True, observed=Fals
+
+tests/test_task_runner.py:112: AssertionError
+----------------------------- Captured stdout call -----------------------------
+DEBUG TEST: test_low_risk_search_completes database id: 140187678728144 path: /tmp/pytest-of-root/pytest-16/test_low_risk_search_completes0/pilot.db
+DEBUG MOCK: returning Search intent
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:325 NODE=navigate_node NAVIGATION_FAILED=Failed after 3 attempts: Page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://google.com/search?q=playwright+python
+Call log:
+  - navigating to "https://google.com/search?q=playwright+python", waiting until "domcontentloaded"
+
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+ERROR    pilot.recovery:engine.py:146 RECOVERY EXHAUSTED task_id=d808f6ea-44e4-4193-a62d-42a11d2a1843 failure_type=unknown retries=6/6
+____________________ test_high_risk_post_waits_for_approval ____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-16/test_high_risk_post_waits_for_0')
+
+    @pytest.mark.asyncio
+    async def test_high_risk_post_waits_for_approval(tmp_path) -> None:
+        """High-risk social posts should pause until approved."""
+    
+        await database.close()
+        database.path = resolve_path(str(tmp_path / "pilot.db"))
+        await database.connect()
+        runner = TaskRunner(database)
+        await runner.start()
+        try:
+            task_id = await runner.submit("Post this to Twitter: Hello from Pilot")
+            task = await wait_for_status(database, task_id, {"waiting_approval"})
+            assert task.approval_id is not None
+            await runner.approve(task.approval_id, "approved")
+>           completed = await wait_for_status(database, task_id, {"completed"})
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_task_runner.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+db = <backend.db.database.Database object at 0x7f7ffccadfd0>
+task_id = 'c88754d8-e5ee-4a89-a608-9a3c1ebde6f0', statuses = {'completed'}
+
+    async def wait_for_status(db: Database, task_id: str, statuses: set[str]):
+        """Poll a task until it reaches one of the requested statuses."""
+    
+        for _ in range(60):
+            task = await db.get_task(task_id)
+            if task is not None:
+                if task.status in statuses:
+                    return task
+                if task.status in {"failed", "blocked"} and task.status not in statuses:
+>                   raise AssertionError(f"Task stopped with status {task.status}: {task.error}")
+E                   AssertionError: Task stopped with status failed: Recovery exhausted (6 attempts). Last: Unclassified failure during complete: Max iterations exceeded without satisfying goal: FAIL — task_completed: expected=True, observed=Fals
+
+tests/test_task_runner.py:112: AssertionError
+----------------------------- Captured stdout call -----------------------------
+DEBUG MOCK: returning Twitter intent
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+DEBUG MOCK: returning PlannedAction complete
+------------------------------ Captured log call -------------------------------
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+ERROR    pilot.agent.nodes:nodes.py:325 NODE=navigate_node NAVIGATION_FAILED=Failed after 3 attempts: Page.goto: net::ERR_TUNNEL_CONNECTION_FAILED at https://twitter.com/
+Call log:
+  - navigating to "https://twitter.com/", waiting until "domcontentloaded"
+
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+WARNING  pilot.llm:gateway.py:50 OLLAMA_LIST_MODELS_FAILED error=Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+WARNING  pilot.agent.nodes:nodes.py:1478 NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+ERROR    pilot.recovery:engine.py:146 RECOVERY EXHAUSTED task_id=c88754d8-e5ee-4a89-a608-9a3c1ebde6f0 failure_type=unknown retries=6/6
+=============================== warnings summary ===============================
+tests/test_browser_agent_pipeline.py::test_opening_google_does_not_prematurely_complete_task
+tests/test_browser_agent_pipeline.py::test_google_search_action_executes_and_continues
+tests/test_browser_agent_pipeline.py::test_multistep_navigation_sequence
+tests/test_browser_agent_pipeline.py::test_action_succeeds_but_task_remains_executing
+tests/test_browser_agent_pipeline.py::test_all_task_requirements_satisfied_completes_task
+tests/test_captcha_handling.py::test_1_normal_google_page_continues_normally
+tests/test_captcha_handling.py::test_4_user_clears_captcha_resumes_from_current_step
+tests/test_navigation_transition_and_typing.py::test_7_task_completes_only_after_verification
+tests/test_navigation_transition_and_typing.py::test_9_task_does_not_complete_after_type_text_alone
+  /home/user/Agentic-pilot-local/backend/browser/dom.py:53: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+    pass
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_browser_agent_pipeline.py::test_opening_google_does_not_prematurely_complete_task
+tests/test_browser_agent_pipeline.py::test_google_search_action_executes_and_continues
+tests/test_browser_agent_pipeline.py::test_multistep_navigation_sequence
+tests/test_browser_agent_pipeline.py::test_action_succeeds_but_task_remains_executing
+tests/test_browser_agent_pipeline.py::test_all_task_requirements_satisfied_completes_task
+tests/test_navigation_transition_and_typing.py::test_7_task_completes_only_after_verification
+tests/test_navigation_transition_and_typing.py::test_9_task_does_not_complete_after_type_text_alone
+  /home/user/Agentic-pilot-local/backend/agent/nodes.py:1341: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+    is_captcha, captcha_reason = await detect_captcha(page)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_captcha_handling.py::test_1_normal_google_page_continues_normally
+  /home/user/Agentic-pilot-local/tests/test_captcha_handling.py:121: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+    is_captcha, reason = await detect_captcha(mock_page)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_captcha_handling.py::test_1_normal_google_page_continues_normally
+  /home/user/Agentic-pilot-local/backend/agent/nodes.py:436: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+    is_captcha, captcha_reason = await detect_captcha(page)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_captcha_handling.py::test_4_user_clears_captcha_resumes_from_current_step
+  /home/user/Agentic-pilot-local/backend/agent/runner.py:121: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+    is_captcha, reason = await detect_captcha(page)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+tests/test_task_runner.py::test_low_risk_search_completes
+  /usr/lib/python3.11/functools.py:52: RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited
+    value = getattr(wrapped, attr)
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/e2e/test_certification.py::test_certification_suite - AssertionE...
+FAILED tests/test_task_runner.py::test_low_risk_search_completes - AssertionE...
+FAILED tests/test_task_runner.py::test_high_risk_post_waits_for_approval - As...
+3 failed, 126 passed, 20 warnings in 66.69s (0:01:06)
