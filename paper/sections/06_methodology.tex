@@ -1,0 +1,22 @@
+\section{Experimental Methodology}
+\label{sec:method}
+
+We report component studies that were run for this paper, and specify the end-to-end protocol that the computer-use claim requires but that has not been run.
+
+\subsection{Component Studies (Run)}
+
+The studies need neither a language model nor network access and were run on a Linux container with a 4-core Intel Xeon at 2.8\,GHz, 15\,GiB RAM and no GPU, with Python~3.11.15, Playwright~1.56.0, headless Chromium~141.0.7390.37 and LangGraph~1.2.12, on agent code before (\texttt{2361d50}) and after (\texttt{eb3803e}) the fixes. Scripts and raw results are under \texttt{artifacts/} in the repository.
+
+\paragraph{Gate study} We built 38 terminal browser states in six categories (Table~\ref{tab:gate}), including two satisfied states that resemble bot checks and one request that triggers no conjunct, and used them to find the gate's defects and design the fixes; we then wrote 12 held-out states, not used for the fixes. Each state has a goal, a URL, an HTML document served by Playwright request interception, the answer and plan state where relevant, and an oracle label $\Phi^{\star}$. Every case ends with a dispatched action, so a dispatch-only rule accepts all of them. We judge each state with the pre-check and $\Phi$ called directly, and with the real \texttt{verify} node (database, browser-pool and evidence I/O stubbed) on the state the graph would hold after the last action, with an empty or a generic one-sentence planner reasoning. Latency is the median of 20 repetitions after a warm-up. We wrote all cases and labels ourselves, so the rates describe the gate's coverage, not its expected performance.
+
+\paragraph{Routing and tests} We called the router at each call site with models marked as installed, in isolation and in the agent's call order, and ran the repository's test suite without Ollama or web access.
+
+\subsection{Computer-Use Evaluation Protocol (Proposed)}
+
+\input{tables/protocol}
+
+Table~\ref{tab:protocol} lists the task families. Each task has an oracle $\Phi^{\star}$ written before any run and applied by a person blind to the agent's reported status, using the retained environment or the evidence directory. Desktop, file, process and cross-environment tasks run in a virtual machine restored from a snapshot before each trial, inside a dedicated workspace directory. Safety tasks embed instructions in a web page, a document, a file name or an accessibility label, following the categories of OS-Harm~\cite{kuntz2025osharm}, and include requests that must trigger approval. Models are the default pair (\texttt{qwen2.5:1.5b}, \texttt{moondream}) or the full configured set, with temperature 0, a fixed seed and three trials per task.
+
+\paragraph{Configurations} Full system; no completion gate; no recovery; vision-only grounding (element list withheld from the planner); single model; no memory. All six are presets of the repository's evaluation runner (\texttt{python main.py --eval}) for the browser backend; for the computer backend, accessibility-first versus vision-only grounding is added.
+
+\paragraph{Metrics} Task success under $\Phi^{\star}$; FCR and FRR (Eq.~\ref{eq:fcr}); verification latency and total task latency; actions and model calls per task; recovery count; vision-invocation rate; evidence completeness (actions with before/after evidence and an execution record); human interventions; and safety violations (unapproved T2/T3 actions, actions on paths outside the workspace, and compliance with injected instructions). Rates carry Wilson 95\% intervals over task--trial pairs. \todo{MEASURE: hardware, OS, Ollama version and model digests of the end-to-end runs.} \todo{AUTHOR: finalize and publish the task list and oracles.}

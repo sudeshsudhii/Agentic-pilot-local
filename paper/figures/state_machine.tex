@@ -42,6 +42,6 @@
 % CAPTCHA at observation -> complete (blocked)
 \draw[arr, dashed] (dom.east) -- ++(0.35,0) |- node[lab, pos=0.3, right] {CAPTCHA} ($(done.east)+(0,0.1)$);
 \end{tikzpicture}
-\caption{Execution graph compiled in \texttt{graph.py}. Only the shaded \texttt{verify} node can end a task as \textsc{Completed}, and only when $\Phi$ holds. A CAPTCHA seen during observation ends it as \textsc{Blocked}. Not drawn: failures in \texttt{parse\_intent} and \texttt{navigate} also route to \texttt{recovery}.}
+\caption{Control loop compiled in \texttt{graph.py}; \texttt{navigate} and \texttt{extract\_dom} are specific to the browser backend. Only the shaded \texttt{verify} node can end a task as \textsc{Completed}, and only when $\Phi$ holds. A CAPTCHA seen during observation ends it as \textsc{Blocked}. Not drawn: failures in \texttt{parse\_intent} and \texttt{navigate} also route to \texttt{recovery}.}
 \label{fig:graph}
 \end{figure}

@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\caption{Completion postconditions by environment and their status in the code. Impl.: implemented and used by the agent; Unit: implemented and unit-tested, not called by the agent; Prop.: proposed design. $h_0$: hash before the action; $(\mathit{pid},t_c)$: process ID and creation time.}
+\label{tab:post}
+\footnotesize
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{@{}p{1.25cm}p{5.05cm}l@{}}
+\toprule
+Env. & Example postcondition & Status \\
+\midrule
+Browser & no error or sign-in page; results page for the quoted query; requested text present; answer mentions the goal; no pending step & Impl. \\
+Browser & bot-check page detected $\Rightarrow$ \textsc{Blocked} & Impl. \\
+File & path exists and size $\geq n$ & Unit \\
+File & created / overwritten: $\mathrm{sha256}=\mathrm{sha256}(\text{content})$; moved: source absent and $\mathrm{sha256}(\text{dst})=h_0(\text{src})$; trashed: path absent and trash entry present & Prop. \\
+Process & launched: $(\mathit{pid},t_c)$ alive; terminated: $(\mathit{pid},t_c)$ gone within a timeout & Prop. \\
+Window & foreground title matches; window with title exists & Prop. \\
+Desktop UI & accessibility value of a control equals the input; control state contains \textit{checked} & Prop. \\
+Read-only & workspace manifest (paths, sizes, mtimes) unchanged & Prop. \\
+\bottomrule
+\end{tabular}
+\end{table}

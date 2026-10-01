@@ -61,3 +61,20 @@ They were **not** checked against the full PDFs. The author should re-read the P
 
 - Spot-check the ~10 DOIs flagged in the matrix in a normal browser.
 - Re-read the PDFs for rows 9, 15, 18 and 32.
+
+
+## Additions for the computer-use reframing
+
+| Where | Claim | Key | Check | Verdict |
+|---|---|---|---|---|
+| §I, §II | OSWorld, UFO and Agent S operate computers / desktop applications | xie2024osworld, zhang2025ufo, agashe2025agents | Abstracts | ✓ |
+| §II | OSWorld and Windows Agent Arena use real OSes with execution-based checkers | xie2024osworld, bonatti2024waa | Abstracts (WAA: "reproducible ... real Windows OS") | ◐ confirm in the WAA PDF that it uses execution-based evaluation scripts |
+| §II | Agent S: experience-augmented hierarchical planning and an agent–computer interface | agashe2025agents | Abstract | ✓ |
+| §II | UI-TARS grounds actions from screenshots with an open model | qin2025uitars | Abstract ("solely perceives screenshots"); local use stated in repo | ✓ |
+| §II, §VIII | Pan et al.: model-based evaluators judge and refine web and device agents | pan2024autonomous | Abstract | ✓ |
+| §II, §VIII | Sumyk and Kosovan: VLM judge of task completion for macOS apps | sumyk2025done | Abstract (42 macOS apps, 1,260 tasks) | ✓ |
+| §II | ToolEmu: high-stakes failures in an emulated sandbox | ruan2024toolemu | Abstract | ✓ |
+| §II, §VI, §IX | OS-Harm: misuse, injection, misbehavior categories for computer-use agents | kuntz2025osharm | Abstract | ✓ |
+| §II, §IX | CaMeL separates trusted control flow from untrusted data | debenedetti2025camel | Abstract | ✓ |
+
+**Bibliography:** 43 entries, all cited. `bibtex` reports 0 warnings.

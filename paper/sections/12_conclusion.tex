@@ -1,0 +1,7 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+Agentic Pilot is a local agent built on the rule that an executed action is not a completed task: it may report completion only when a predicate over the observed state passes, and it keeps the inputs of that decision as evidence. Today it acts in the browser, where testing the completion gate inside the live loop exposed concrete defects; fixing them raised the share of withheld premature completions on our design states from at most 15 to 20 of 23, while held-out states show that rule fixes transfer only partially. We have formulated the same gate for desktop applications, windows, files and processes, where postconditions are typed and exact but actions are often irreversible, and designed a computer backend that pairs those postconditions with deterministic, pre-action permission checks. Implementing that backend and measuring the whole system on real tasks are the work that remains.
+
+\section*{Acknowledgment}
+\todo{AUTHOR: review and adapt.} An AI system (Anthropic's Claude) assisted with analyzing the source code, running the reported component experiments, searching and checking references, and drafting the text of this paper. The authors reviewed, verified and revised all content and take full responsibility for it.

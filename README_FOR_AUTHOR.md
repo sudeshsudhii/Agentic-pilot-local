@@ -1,5 +1,7 @@
 # Agentic Pilot IEEE paper — notes for the author
 
+> **Reframed (2026-10-01).** The paper is now "Agentic Pilot: Toward a Local Computer-Use Agent with Evidence-Gated Task Completion". The browser is the implemented backend; the computer backend (desktop, files, processes, windows) is a design with an unintegrated prototype. See `artifacts/11_reframing_report.md` for what changed, what is implemented, missing evidence and reviewer risks, and `artifacts/10_computer_use_audit.md` for the capability audit. The proposed computer-use protocol is Table V; only its browser family can run with the current code.
+
 This branch holds a complete draft paper, `paper/main.pdf` (IEEEtran conference, 9 pages: 8 pages of body plus references). It also holds the code fixes the paper describes and all supporting artifacts in `artifacts/`.
 
 **The draft is yours to verify, revise and own.** An AI system wrote it, and the Acknowledgment says so, as IEEE policy requires. Build it with `paper/build.sh`; it currently builds with 0 LaTeX and 0 BibTeX warnings.

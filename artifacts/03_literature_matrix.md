@@ -121,3 +121,18 @@ The list contains five IEEE or IEEE-co-sponsored venues:
 | GPTQ, QLoRA, SWE-agent, AutoGen, Tree of Thoughts, Plan-and-Solve, ToolLLM, OS-Copilot, Windows Agent Arena, Agent S, DPR, MiniWoB++ (Liu et al. 2018) | Not verified | Not searched, because the cap was reached with stronger-fit items. They are not cited and must not be added without verification. |
 | Greshake et al. arXiv v1 title ("More than you've asked for: A Comprehensive Analysis of Novel Prompt Injection Threats…") | Superseded | The repo BibTeX carries this early arXiv title. The published AISec'23 title "Not What You've Signed Up For…" is used instead. |
 | LangGraph, Playwright, Ollama, ChromaDB | Not papers | Cite as software in footnotes or URLs, not as bibliography papers. |
+
+## Additions for the computer-use reframing (verified 2026-10-01 by the Lead Editor)
+
+As before, arXiv, doi.org and zenodo were blocked, so each entry was verified through primary-source pages found by web search and, where possible, the authors' own BibTeX on GitHub.
+
+| Key | Citation | Venue | Verification | Use in paper |
+|---|---|---|---|---|
+| agashe2025agents | S. Agashe, J. Han, S. Gan, J. Yang, A. Li, X. E. Wang, "Agent S: An Open Agentic Framework that Uses Computers Like a Human" | ICLR 2025 | iclr.cc/virtual/2025/poster/28525; proceedings.iclr.cc PDF; repo BibTeX (github.com/simular-ai/Agent-S) | §II computer-use agents |
+| bonatti2024waa | R. Bonatti, D. Zhao, F. Bonacci, et al., "Windows Agent Arena: Evaluating Multi-Modal OS Agents at Scale" | arXiv:2409.08264, 2024 | arxiv.org/abs/2409.08264 (search index); repo BibTeX (github.com/microsoft/WindowsAgentArena). The author lists differ slightly between the two, hence "et al." | §II |
+| qin2025uitars | Y. Qin, Y. Ye, J. Fang, et al., "UI-TARS: Pioneering Automated GUI Interaction with Native Agents" | arXiv:2501.12326, 2025 | arxiv.org/abs/2501.12326 (search index); repo BibTeX (github.com/bytedance/UI-TARS) | §II |
+| pan2024autonomous | J. Pan, Y. Zhang, N. Tomlin, Y. Zhou, S. Levine, A. Suhr, "Autonomous Evaluation and Refinement of Digital Agents" | COLM 2024 | arxiv.org/abs/2404.06474; nlp.cs.berkeley.edu PDF; github.com/Berkeley-NLP/Agent-Eval-Refine ("[COLM 2024]") | §II completion checking, §VIII |
+| sumyk2025done | M. Sumyk, O. Kosovan, "'Are We Done Yet?': A Vision-Based Judge for Autonomous Task Completion of Computer Use Agents" | arXiv:2511.20067, 2025 (also an AAAI 2026 workshop paper, not cited as such) | arxiv.org/abs/2511.20067 (search index) | §II, §VIII |
+| ruan2024toolemu | Y. Ruan, H. Dong, A. Wang, S. Pitis, Y. Zhou, J. Ba, Y. Dubois, C. J. Maddison, T. Hashimoto, "Identifying the Risks of LM Agents with an LM-Emulated Sandbox" | ICLR 2024 | proceedings.iclr.cc PDF; mlanthology.org/iclr/2024 | §II security |
+| debenedetti2025camel | E. Debenedetti, I. Shumailov, T. Fan, J. Hayes, N. Carlini, D. Fabian, C. Kern, C. Shi, A. Terzis, F. Tramèr, "Defeating Prompt Injections by Design" | arXiv:2503.18813, 2025 | arxiv.org/abs/2503.18813; dblp record (search index) | §II, §IX |
+| kuntz2025osharm | T. Kuntz, A. Duzan, H. Zhao, F. Croce, Z. Kolter, N. Flammarion, M. Andriushchenko, "OS-Harm: A Benchmark for Measuring Safety of Computer Use Agents" | NeurIPS 2025 Datasets and Benchmarks | github.com/tml-epfl/os-harm ("NeurIPS 2025 Spotlight"); mlanthology.org/neurips/2025 | §II, §VI protocol, §IX |

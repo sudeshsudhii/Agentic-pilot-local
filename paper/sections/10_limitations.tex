@@ -1,0 +1,10 @@
+\section{Limitations and Threats to Validity}
+\label{sec:limits}
+
+\paragraph{Internal validity} We wrote all gate fixtures and their labels, and designed the fixes on the same 38 design states, so the post-fix design results are optimistic; the 12 held-out states are a small, partial correction. The live mode stubs the node's I/O and stands in for the planner with an empty or a generic reasoning string, not with model output.
+
+\paragraph{External validity} All measurements concern the browser backend on small, static fixture pages served offline; real pages are larger and change, and latency will grow. No result involves a language model, a live website, a desktop application, a file or a process. The agent is therefore not shown to complete tasks in any environment.
+
+\paragraph{Construct validity} FCR and FRR depend on the oracle, which for real tasks must be written per task and applied blind to the agent's report. The browser predicate is keyed to request wording, so its coverage depends on how users phrase requests; when no keyword fires it reduces to an error check.
+
+\paragraph{System limitations} Planning with 1.5B--7B models is weak, and deterministic overrides, some site-specific, compensate on common patterns. Vision-grounded clicks are not individually checked. Of the recovery strategies only the vision fallback changes behavior. Memory records are thin, and their effect on planning is unmeasured. Evidence files carry no integrity protection, and a retry can overwrite earlier screenshots. The computer backend is a design with an unintegrated prototype.

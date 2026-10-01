@@ -1,0 +1,33 @@
+\section{Architecture}
+\label{sec:arch}
+
+\input{figures/architecture}
+
+Fig.~\ref{fig:arch} shows the components. A desktop client submits a natural-language task to a FastAPI service bound to the loopback interface. The task runner executes the control loop, checkpoints its state after every node, and cancels tasks that exceed a wall-clock limit (5\,min by default). Task events go to SQLite and to a broadcaster that a separate Observatory process displays; it issues only read queries and has no command channel to the agent.
+
+\subsection{Control Loop}
+\label{sec:loop}
+
+The loop is a compiled LangGraph state machine with eleven nodes (Fig.~\ref{fig:graph}). A typed state record carries the intent, the plan and step index, the current observation, the planned action, the action history, retry and model-call counters, routing decisions and the status. Only \texttt{verify} can end a task as \textsc{Completed}, and the terminal node additionally downgrades a completion when the intent named a site but navigation was never verified. Intent parsing, planning, verification, recovery and the terminal node are written against this state and are largely independent of the backend; observation (\texttt{navigate}, \texttt{extract\_dom}) and execution are currently bound to the browser.
+
+\input{figures/state_machine}
+
+\paragraph{Planning} A lightweight model parses the request into an intent (action, site, target, content, risk level). Requests with a connective or more than eight words are decomposed by a planning model into steps with an action type and an expected outcome; a clause that starts with ``type'' or ``enter'' and literal text becomes a single text-entry step. Each iteration, the planner sees the goal, the plan, the current observation and retrieved memory, and returns one action. Deterministic rules then adjust it: exact-text requests are grounded to the best visible text field, repeated navigation becomes a failure, plan steps that name clicking, extracting or reporting map to those actions, and on Google a search is typed rather than loaded as a URL.
+
+\paragraph{Recovery, routing and memory} A failed action is retried through a fresh observation up to three times; later failures are classified into seven types and assigned a strategy (retry, alternative selector, vision fallback, replan), with at most six attempts. A CAPTCHA ends the task as \textsc{Blocked}. Only the vision-fallback strategy changes behavior, by routing the next step to the vision model when one is installed. A deterministic router assigns each model call a role (lightweight, planner, vision, general) and the first installed candidate among small local Qwen2.5, Qwen3.5 and DeepSeek-R1 models (1.5B--7B parameters) or \texttt{qwen3-vl:2b} and \texttt{moondream} for vision, keeping the task's active model when it is capable, to avoid reloads. At termination, outcomes are written to SQLite and a Chroma collection and retrieved into later planning prompts within a 3{,}500-token budget; knowledge chunks are marked untrusted, memories are not.
+
+\subsection{Browser Backend (Implemented)}
+\label{sec:browser}
+
+A pool of Playwright contexts over one Chromium instance gives each task its own page. Each observation is a DOM pass over buttons, inputs, text areas, selects, links, elements with button or link roles and editable regions, recording tag, role, label, up to 120 characters of text, type, visibility, bounding box and selectors; interactable elements are ranked, deduplicated and capped at 50. The planner's actions are navigate, click, type, key press, scroll and extract; text entry is read back. The vision model is used only when the planner returns \texttt{need\_help} or recovery requests it: it receives a screenshot and returns an action with a point in viewport fractions, which is clicked without an individual check. Per task, the evidence directory holds before/after screenshots of each action, the latest DOM manifest, the verification and recovery records, a per-action execution record and the node trace. Bot-check pages halt the task and keep the browser open for the user.
+
+\subsection{Computer Backend (Proposed)}
+\label{sec:computer}
+
+The repository contains a desktop executor that wraps PyAutoGUI (click, type, hotkey, screenshot) and psutil (process listing), a text-file helper, and a file-existence predicate. None is connected to the control loop: no node, action type or API route calls them, the executor's only test checks that its methods exist, and the file helper does not confine paths. The rest of this subsection is a design.
+
+\paragraph{Observation and grounding} The backend observes the foreground window through its accessibility tree (Windows UI Automation, macOS Accessibility, AT-SPI) into a manifest shaped like the DOM manifest, with element names sanitized, and falls back to a vision model on a window screenshot when the tree exposes too few actionable elements. File and process actions are grounded in typed state (paths, hashes, process identity) and need no visual grounding.
+
+\paragraph{Actions and postconditions} Actions cover files (read, hash, create, overwrite with backup, move, trash, delete), processes (launch an allow-listed program, terminate), windows (open, focus, close) and controls (invoke, set value, type, hotkey). Each mutating action carries the exact postconditions of Table~\ref{tab:post}, captured with before/after values as evidence, and a coordinate action counts as done only when its postcondition holds.
+
+\paragraph{Permission tiers} Tiers are computed from the concrete action and arguments, never from the model's risk label. T0 (read-only) runs freely; T1 (reversible, with a recorded inverse) runs automatically only if the user enabled automatic approval; T2 (destructive, such as permanent deletion or terminating a process the agent did not start) and T3 (network-capable programs, password fields, credentials) always need approval, and secrets never pass through the model. Paths outside allow-listed roots, inline-code interpreters and privilege elevation are refused. A new \texttt{action\_gate} node between planning and execution applies the tier, a path jail that resolves symbolic links before testing containment, and a dry-run preview; approvals are bound to a hash of the exact action. A modality router after intent parsing selects the backend, and the verify and recovery routers return to the matching observation node.

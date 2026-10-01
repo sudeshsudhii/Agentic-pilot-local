@@ -1,28 +1,31 @@
 \begin{table}[t]
 \centering
-\caption{Status of each mechanism at commit \texttt{eb3803e}, traced through the code. I+T: implemented and unit-tested; I: implemented, untested; P: proposed or partial. Live: affects the default execution path. $^{\dagger}$Changed by the fixes of Section~\ref{sec:impl}.}
+\caption{Capability status at commit \texttt{eb3803e}, traced through the code. Impl.: code exists (P: prototype or partial). Integ.: on the agent's execution path. Test: Y unit or integration test of behavior; M with a mocked model; I interface only; W needs live web. Eval.: C component study in Section~\ref{sec:results}; R routing resolution only; -- none.}
 \label{tab:status}
 \footnotesize
-\setlength{\tabcolsep}{2.5pt}
-\begin{tabular}{@{}p{3.05cm}ccp{3.3cm}@{}}
+\setlength{\tabcolsep}{2.4pt}
+\begin{tabular}{@{}p{3.55cm}cccc@{}}
 \toprule
-Mechanism & Status & Live & Note \\
+Capability & Impl. & Integ. & Test & Eval. \\
 \midrule
-Graph, checkpoints, re-scheduling & I+T & yes & graph run only by e2e tests \\
-Completion predicate $\Phi^{\dagger}$ & I+T & yes & rule-based (Sec.~\ref{sec:results}) \\
-Per-step predicates, click check & P & -- & steps advance on dispatch \\
-CAPTCHA halt, resume, fallback$^{\dagger}$ & I+T & yes & no solver \\
-DOM grounding, vision fallback & I+T & yes & vision on \texttt{need\_help} \\
-Failure classes, retry bounds & I+T & yes & 7 types; 3+3 attempts \\
-Recovery strategies$^{\dagger}$ & P & partial & only vision fallback acts \\
-Role routing, stickiness$^{\dagger}$ & I+T & yes & task-local; no cool-down \\
-Memory and RAG retrieval$^{\dagger}$ & I+T & yes & effect not measured \\
-Sanitizer on element text & I+T & yes & title, URL unfiltered \\
-Task-level approval gate & I & yes & once per task \\
-Model-call audit log & I+T & yes & browsing not logged \\
-Evidence store & I+T & yes & some files overwritten \\
-Ablation flags, eval runner$^{\dagger}$ & I & yes & not yet run with a model \\
-Desktop executor / extension & I / P & no & not wired (Sec.~\ref{sec:desktop}) \\
+Browser control (Playwright) & Y & Y & Y & C \\
+DOM grounding & Y & Y & Y & -- \\
+Vision grounding (browser screenshot) & Y & Y & M & -- \\
+Completion predicate $\Phi$ (browser) & Y & Y & Y & C \\
+Bot-check halt and hand-off & Y & Y & Y & C \\
+Per-action evidence & Y & Y & Y & -- \\
+Failure classes / recovery strategies & Y / P & Y / P & Y & -- \\
+Model routing & Y & Y & Y & R \\
+Memory and RAG retrieval & Y & Y & Y & -- \\
+Task-level human approval & Y & Y & W & -- \\
+Evaluation harness (6 presets) & Y & -- & I & not run \\
+\midrule
+Desktop mouse, keyboard, screenshot & P & N & I & -- \\
+File read/write helper & Y & N & Y & -- \\
+File-state predicate (exists, size) & Y & N & Y & -- \\
+Process listing & P & N & N & -- \\
+Accessibility tree, windows, native apps & N & N & N & -- \\
+Action gate, permission tiers & N & N & N & -- \\
 \bottomrule
 \end{tabular}
 \end{table}

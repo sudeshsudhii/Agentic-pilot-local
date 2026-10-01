@@ -21,6 +21,25 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{xie2024osworld}
+T.~Xie, D.~Zhang, J.~Chen, X.~Li, S.~Zhao, R.~Cao, T.~J. Hua, Z.~Cheng,
+  D.~Shin, F.~Lei, Y.~Liu, Y.~Xu \emph{et~al.}, ``{OSWorld}: Benchmarking
+  multimodal agents for open-ended tasks in real computer environments,'' in
+  \emph{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS), Datasets and
+  Benchmarks Track}, vol.~37, 2024.
+
+\bibitem{zhang2025ufo}
+C.~Zhang, L.~Li, S.~He, X.~Zhang, B.~Qiao, S.~Qin, M.~Ma, Y.~Kang, Q.~Lin,
+  S.~Rajmohan, D.~Zhang, and Q.~Zhang, ``{UFO}: A {UI}-focused agent for
+  {Windows} {OS} interaction,'' in \emph{Proc. 2025 Conf. Nations of the
+  Americas Chapter Assoc. Comput. Linguistics: Human Language Technologies
+  (NAACL-HLT) (Volume 1: Long Papers)}, 2025, pp. 597--622.
+
+\bibitem{agashe2025agents}
+S.~Agashe, J.~Han, S.~Gan, J.~Yang, A.~Li, and X.~E. Wang, ``Agent {S}: An open
+  agentic framework that uses computers like a human,'' in \emph{Proc. Int.
+  Conf. Learning Representations (ICLR)}, 2025.
+
 \bibitem{he2024webvoyager}
 H.~He, W.~Yao, K.~Ma, W.~Yu, Y.~Dai, H.~Zhang, Z.~Lan, and D.~Yu,
   ``{WebVoyager}: Building an end-to-end web agent with large multimodal
@@ -31,13 +50,6 @@ H.~He, W.~Yao, K.~Ma, W.~Yu, Y.~Dai, H.~Zhang, Z.~Lan, and D.~Yu,
 B.~Zheng, B.~Gou, J.~Kil, H.~Sun, and Y.~Su, ``{GPT-4V(ision)} is a generalist
   web agent, if grounded,'' in \emph{Proc. 41st Int. Conf. Mach. Learn.
   (ICML)}, ser. PMLR, vol. 235, 2024, pp. 61\,349--61\,385.
-
-\bibitem{zhang2025ufo}
-C.~Zhang, L.~Li, S.~He, X.~Zhang, B.~Qiao, S.~Qin, M.~Ma, Y.~Kang, Q.~Lin,
-  S.~Rajmohan, D.~Zhang, and Q.~Zhang, ``{UFO}: A {UI}-focused agent for
-  {Windows} {OS} interaction,'' in \emph{Proc. 2025 Conf. Nations of the
-  Americas Chapter Assoc. Comput. Linguistics: Human Language Technologies
-  (NAACL-HLT) (Volume 1: Long Papers)}, 2025, pp. 597--622.
 
 \bibitem{zhang2025appagent}
 C.~Zhang, Z.~Yang, J.~Liu, Y.~Li, Y.~Han, X.~Chen, Z.~Huang, B.~Fu, and G.~Yu,
@@ -55,13 +67,6 @@ S.~Zhou, F.~F. Xu, H.~Zhu, X.~Zhou, R.~Lo, A.~Sridhar, X.~Cheng, T.~Ou,
   Y.~Bisk, D.~Fried, U.~Alon, and G.~Neubig, ``{WebArena}: A realistic web
   environment for building autonomous agents,'' in \emph{Proc. Int. Conf.
   Learn. Represent. (ICLR)}, 2024.
-
-\bibitem{xie2024osworld}
-T.~Xie, D.~Zhang, J.~Chen, X.~Li, S.~Zhao, R.~Cao, T.~J. Hua, Z.~Cheng,
-  D.~Shin, F.~Lei, Y.~Liu, Y.~Xu \emph{et~al.}, ``{OSWorld}: Benchmarking
-  multimodal agents for open-ended tasks in real computer environments,'' in
-  \emph{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS), Datasets and
-  Benchmarks Track}, vol.~37, 2024.
 
 \bibitem{huang2024cannot}
 J.~Huang, X.~Chen, S.~Mishra, H.~S. Zheng, A.~W. Yu, X.~Song, and D.~Zhou,
@@ -110,6 +115,15 @@ X.~Deng, Y.~Gu, B.~Zheng, S.~Chen, S.~Stevens, B.~Wang, H.~Sun, and Y.~Su,
   Neural Inf. Process. Syst. (NeurIPS), Datasets and Benchmarks Track},
   vol.~36, 2023.
 
+\bibitem{yang2023som}
+J.~Yang, H.~Zhang, F.~Li, X.~Zou, C.~Li, and J.~Gao, ``Set-of-mark prompting
+  unleashes extraordinary visual grounding in {GPT-4V},'' arXiv:2310.11441,
+  2023.
+
+\bibitem{bonatti2024waa}
+R.~Bonatti, D.~Zhao, F.~Bonacci \emph{et~al.}, ``Windows agent arena:
+  Evaluating multi-modal {OS} agents at scale,'' arXiv:2409.08264, 2024.
+
 \bibitem{liu2024gptdroid}
 Z.~Liu, C.~Chen, J.~Wang, M.~Chen, B.~Wu, X.~Che, D.~Wang, and Q.~Wang, ``Make
   {LLM} a testing expert: Bringing human-like interaction to mobile {GUI}
@@ -121,11 +135,6 @@ Z.~Liu, C.~Chen, J.~Wang, X.~Che, Y.~Huang, J.~Hu, and Q.~Wang, ``Fill in the
   blank: Context-aware automated text input generation for mobile {GUI}
   testing,'' in \emph{Proc. IEEE/ACM 45th Int. Conf. Softw. Eng. (ICSE)}, 2023,
   pp. 1355--1367.
-
-\bibitem{yang2023som}
-J.~Yang, H.~Zhang, F.~Li, X.~Zou, C.~Li, and J.~Gao, ``Set-of-mark prompting
-  unleashes extraordinary visual grounding in {GPT-4V},'' arXiv:2310.11441,
-  2023.
 
 \bibitem{hong2024cogagent}
 W.~Hong, W.~Wang, Q.~Lv, J.~Xu, W.~Yu, J.~Ji, Y.~Wang, Z.~Wang, Y.~Dong,
@@ -139,9 +148,22 @@ K.~Cheng, Q.~Sun, Y.~Chu, F.~Xu, L.~YanTao, J.~Zhang, and Z.~Wu, ``{SeeClick}:
   62nd Annu. Meeting Assoc. Comput. Linguistics (ACL) (Volume 1: Long Papers)},
   2024, pp. 9313--9332.
 
+\bibitem{qin2025uitars}
+Y.~Qin, Y.~Ye, J.~Fang \emph{et~al.}, ``{UI-TARS}: Pioneering automated {GUI}
+  interaction with native agents,'' arXiv:2501.12326, 2025.
+
 \bibitem{lu2024omniparser}
 Y.~Lu, J.~Yang, Y.~Shen, and A.~Awadallah, ``{OmniParser} for pure vision based
   {GUI} agent,'' arXiv:2408.00203, 2024.
+
+\bibitem{pan2024autonomous}
+J.~Pan, Y.~Zhang, N.~Tomlin, Y.~Zhou, S.~Levine, and A.~Suhr, ``Autonomous
+  evaluation and refinement of digital agents,'' in \emph{Proc. Conf. Language
+  Modeling (COLM)}, 2024.
+
+\bibitem{sumyk2025done}
+M.~Sumyk and O.~Kosovan, ````are we done yet?'': A vision-based judge for
+  autonomous task completion of computer use agents,'' arXiv:2511.20067, 2025.
 
 \bibitem{lewis2020rag}
 P.~Lewis, E.~Perez, A.~Piktus, F.~Petroni, V.~Karpukhin, N.~Goyal,
@@ -189,6 +211,23 @@ E.~Debenedetti, J.~Zhang, M.~Balunovi{\'c}, L.~Beurer-Kellner, M.~Fischer, and
   F.~Tram{\`e}r, ``{AgentDojo}: A dynamic environment to evaluate prompt
   injection attacks and defenses for {LLM} agents,'' in \emph{Proc. Adv. Neural
   Inf. Process. Syst. (NeurIPS), Datasets and Benchmarks Track}, vol.~37, 2024.
+
+\bibitem{ruan2024toolemu}
+Y.~Ruan, H.~Dong, A.~Wang, S.~Pitis, Y.~Zhou, J.~Ba, Y.~Dubois, C.~J. Maddison,
+  and T.~Hashimoto, ``Identifying the risks of {LM} agents with an
+  {LM}-emulated sandbox,'' in \emph{Proc. Int. Conf. Learning Representations
+  (ICLR)}, 2024.
+
+\bibitem{kuntz2025osharm}
+T.~Kuntz, A.~Duzan, H.~Zhao, F.~Croce, Z.~Kolter, N.~Flammarion, and
+  M.~Andriushchenko, ``{OS-Harm}: A benchmark for measuring safety of computer
+  use agents,'' in \emph{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS)
+  Datasets and Benchmarks Track}, 2025.
+
+\bibitem{debenedetti2025camel}
+E.~Debenedetti, I.~Shumailov, T.~Fan, J.~Hayes, N.~Carlini, D.~Fabian, C.~Kern,
+  C.~Shi, A.~Terzis, and F.~Tram{\`e}r, ``Defeating prompt injections by
+  design,'' arXiv:2503.18813, 2025.
 
 \bibitem{yang2024qwen25}
 A.~Yang, B.~Yang, B.~Zhang, B.~Hui, B.~Zheng, B.~Yu \emph{et~al.}, ``{Qwen2.5}

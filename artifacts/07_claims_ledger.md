@@ -112,6 +112,20 @@ The paper now describes the fixed code. The rows below supersede N1–N5, N9, N1
 | F10 | §IV-F, §VIII | Retrieval now runs; memory is not bannered or sanitized | code | `runner.py` (None seeding); `rag/context_builder.py:108-120` | verified (code); effect not measured |
 | F11 | §VI | Presets exist for all six configurations; `--eval` runs them | code | `experiment/config.py`; `main.py` `run_eval` | verified (code); **not run with a model** |
 
+## Computer-use reframing claims (paper at `eb3803e` code)
+
+| ID | Section | Claim | Source | Status |
+|---|---|---|---|---|
+| CU1 | Title, Abstract, §I | The agent is **toward** computer use; the implemented backend is the browser only | `10_computer_use_audit.md` rows 1, 2, 6, 9–13 | verified |
+| CU2 | §III Tab. II | Browser postconditions are Impl.; the file exists/size predicate is Unit (tested, not called); all others are Prop. | `verification/manager.py` `verify_file_state`; `tests/test_case_study_enhancements.py:127-132`; grep shows no caller | verified |
+| CU3 | §IV-A | The loop's observation and execution nodes are browser-bound | `graph.py` nodes `navigate`, `extract_dom`; `nodes.py` `execute_action_node` uses `PlaywrightExecutor` | verified |
+| CU4 | §IV-C | The desktop executor (PyAutoGUI, psutil), file helper and file predicate exist and are not connected | `desktop/executor.py:47-233`; importers: tests only | verified |
+| CU5 | §V | Tauri native commands only report backend and Ollama status | `src-tauri/src/*.rs` `#[tauri::command]` | verified |
+| CU6 | §V Tab. III | Status of 17 capabilities | `10_computer_use_audit.md` | verified |
+| CU7 | §VI Tab. V | The protocol is proposed; only the browser family is runnable; safety is partly runnable (browser injection and approval) | code; no computer backend | verified (as a statement of status) |
+| CU8 | §IX | The agent exposes no file, process, window or command action | `prompts.py:28-35` action list; `nodes.py` dispatch | verified |
+| CU9 | §IX | Evidence screenshots are not redacted | no redaction code in `evidence/manager.py` or `nodes.py` | verified |
+
 ## Claims about other work
 
 See `06_citation_audit.md` (32 rows). All citations are verified at abstract or venue level; four are flagged for a full-PDF re-read.
