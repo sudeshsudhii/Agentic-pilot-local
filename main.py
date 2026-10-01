@@ -630,7 +630,7 @@ class PilotOrchestrator:
         # The legacy scratch/ scripts are not part of the repository: run the ablation study instead.
         # Presets can be narrowed with PILOT_EVAL_PRESETS="full_framework,no_verification,...".
         presets = [p.strip() for p in os.environ.get("PILOT_EVAL_PRESETS", "").split(",") if p.strip()] or [
-            "full_framework", "no_verification", "no_recovery", "vision_only_grounding", "single_model",
+            "full_framework", "no_verification", "no_recovery", "vision_only_grounding", "single_model", "no_memory",
         ]
         code = (
             "import asyncio, json, sys\n"
