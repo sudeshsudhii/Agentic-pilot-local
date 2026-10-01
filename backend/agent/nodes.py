@@ -28,7 +28,7 @@ from backend.recovery.engine import recovery_engine
 from backend.security.approval import build_approval_prompt, requires_approval
 from backend.security.sanitizer import input_sanitizer
 from backend.telemetry.tracer import tracer
-from backend.verification.manager import verification_manager
+from backend.verification.manager import goal_content_terms, verification_manager
 
 logger = logging.getLogger("pilot.agent.nodes")
 
@@ -683,15 +683,29 @@ Interactive Elements:
 
     vision_called = False
     vision_model_used = None
-    try:
-        action = await gateway.complete_structured(
-            ACTION_PLANNING_SYSTEM_PROMPT,
-            prompt_context,
-            PlannedAction,
-            model_override=routing.selected_model,
+    vision_only = get_config().grounding_mode == "vision_only"
+    # The recovery engine's `vision_fallback` strategy forces visual grounding for the retried step.
+    forced_vision = state.get("recovery_strategy") == "vision_fallback"
+    if forced_vision:
+        from backend.vision.fallback import VisionFallback
+        has_vision, _ = await VisionFallback().check_vision_availability()
+        forced_vision = has_vision  # without a vision model, fall back to ordinary re-planning
+    if vision_only or forced_vision:
+        # No DOM-grounded planning for this step; the action goes through the vision model below.
+        action = PlannedAction(
+            action_type="need_help",
+            reasoning="vision_only grounding ablation" if vision_only else "recovery strategy: vision_fallback",
         )
-    except Exception as e:
-        action = PlannedAction(action_type="need_help", reasoning=f"LLM failure: {e}")
+    else:
+        try:
+            action = await gateway.complete_structured(
+                ACTION_PLANNING_SYSTEM_PROMPT,
+                prompt_context,
+                PlannedAction,
+                model_override=routing.selected_model,
+            )
+        except Exception as e:
+            action = PlannedAction(action_type="need_help", reasoning=f"LLM failure: {e}")
 
     # DOM identification for text entry first (Requirement C)
     from backend.verification.manager import extract_exact_text_to_type
@@ -702,7 +716,7 @@ Interactive Elements:
     press_enter = False if do_not_submit else bool(action.press_enter or False)
 
     main_input = None
-    if exact_text and action.action_type != "complete":
+    if exact_text and action.action_type != "complete" and not (vision_only or forced_vision):
         main_input = identify_main_text_input(manifest)
         if main_input:
             logger.info("DOM identified main text input field: %s (%s)", main_input.element_id, main_input.tag)
@@ -843,7 +857,7 @@ Interactive Elements:
             action = PlannedAction(action_type="need_help", reasoning="Already at target site, skipping repeated navigation.")
 
     # 4. When on Google homepage and intent or plan step is to search, ensure typing into search box
-    elif "google.com" in manifest.url and "sorry/index" not in manifest.url and "store.google.com" not in manifest.url and action.action_type != "complete":
+    elif not (vision_only or forced_vision) and "google.com" in manifest.url and "sorry/index" not in manifest.url and "store.google.com" not in manifest.url and action.action_type != "complete":
         input_lower = (state.get("input_text") or "").lower()
         is_search_intent = "search" in input_lower or (intent and intent.action == "search")
         if is_search_intent and (action.action_type != "type_text" or not action.text):
@@ -931,6 +945,7 @@ Interactive Elements:
         "model_switch": routing.model_switch,
         "vision_called": vision_called,
         "vision_model": vision_model_used or state.get("vision_model"),
+        "recovery_strategy": None,  # a strategy applies to one retried step only
     }
 
 
@@ -952,7 +967,8 @@ async def execute_action_node(state: AgentState) -> dict:
         if state.get("action_manifest"):
             evidence_manager.save_dom_snapshot(state["task_id"], state["action_manifest"])
         
-        final_answer = action.reasoning or state.get("final_answer")
+        # Keep an answer already grounded in page text by an extraction; the planner's summary is the fallback.
+        final_answer = state.get("final_answer") or action.reasoning
         return {
             "result": {
                 "success": True,
@@ -1049,7 +1065,7 @@ async def execute_action_node(state: AgentState) -> dict:
                             continue
                         if el.tag in ("a", "button") or el.role in ("link", "button"):
                             input_words = [w for w in (state.get("input_text") or "").lower().split() if len(w) > 3 and w not in ["search", "google", "open", "extract", "return", "findings", "information"]]
-                            if any(w in text_lower for w in input_words) or ("srm" in text_lower) or ("result" in (el.css_selector or "").lower()):
+                            if any(w in text_lower for w in input_words) or ("result" in (el.css_selector or "").lower()):
                                 target_elem = el
                                 break
                 if not target_elem:
@@ -1105,38 +1121,28 @@ async def execute_action_node(state: AgentState) -> dict:
                 page_key = result.data.get("page_title") or f"page_{state.get('llm_call_count', 0)}"
                 extracted_data[page_key] = result.data
                 snippet = result.data.get("content_snippet", "")
-                title = result.data.get("page_title", "SRM Institute of Science and Technology")
-                
-                # Extract 3 useful pieces of campus info
+                title = result.data.get("page_title") or page.url
+
+                # Keep only lines that actually appear on the page and share terms with the goal.
+                # Nothing is synthesized: if no line matches, no finding is reported.
+                goal_terms = goal_content_terms(state.get("input_text", ""))
                 lines = [ln.strip() for ln in snippet.splitlines() if len(ln.strip()) > 25]
                 facts = []
                 for ln in lines:
-                    ln_lower = ln.lower()
-                    if any(kw in ln_lower for kw in ["campus", "kattankulathur", "chennai", "acre", "program", "student", "faculty", "university", "institute", "engineering", "technology", "research", "hostel", "placement"]):
-                        if ln not in facts and not ln.startswith("http") and not ln.startswith("<"):
-                            facts.append(ln)
+                    if ln.startswith(("http", "<")) or ln in facts:
+                        continue
+                    if goal_terms and any(t in ln.lower() for t in goal_terms):
+                        facts.append(ln)
                     if len(facts) >= 3:
                         break
-                
-                if len(facts) < 3:
-                    fallback_facts = [
-                        "1. Sprawling 250+ acre lush green campus situated at Kattankulathur, Chengalpattu district near Chennai.",
-                        "2. Offers state-of-the-art infrastructure including advanced engineering laboratories, supercomputing facilities, and hi-tech auditoriums.",
-                        "3. Houses vibrant on-campus hostels, multi-cuisine food courts, sports complexes, and an extensive central library."
-                    ]
-                    facts = lines[:3] if len(lines) >= 3 else fallback_facts
-                
-                campus_info = "\n".join([f"- {f.lstrip('-123. ')}" for f in facts[:3]])
-                final_answer = (
-                    f"Page Title: {title}\n\n"
-                    f"3 Useful Pieces of Information about Kattankulathur Campus:\n"
-                    f"{campus_info}"
-                )
-                extracted_data["final_findings"] = {
-                    "page_title": title,
-                    "campus_information": facts[:3],
-                    "url": result.data.get("url")
-                }
+
+                if facts:
+                    final_answer = f"Page Title: {title}\n\n" + "\n".join(f"- {f}" for f in facts)
+                    extracted_data["final_findings"] = {
+                        "page_title": title,
+                        "relevant_lines": facts,
+                        "url": result.data.get("url"),
+                    }
                 await database.add_event(
                     state["task_id"],
                     "DATA_EXTRACTED",
@@ -1390,7 +1396,8 @@ async def verify_node(state: AgentState) -> dict:
     last_res = history[-1] if history else None
     action_succeeded = last_res.success if last_res else False
 
-    if action_succeeded and task_plan and task_plan.steps:
+    # A `complete` action is a claim, not the execution of a plan step, so it never marks a step done.
+    if action_succeeded and task_plan and task_plan.steps and (not action or action.action_type != "complete"):
         if cur_step_idx <= len(task_plan.steps):
             task_plan.steps[cur_step_idx - 1].status = "completed"
             task_plan.steps[cur_step_idx - 1].result_summary = f"Action {action.action_type if action else 'unknown'} succeeded"
@@ -1435,18 +1442,25 @@ async def verify_node(state: AgentState) -> dict:
     )
     if should_verify_completion:
         await database.add_event(state["task_id"], "VERIFICATION_STARTED", "Starting task verification")
-        
-        v_res = await verification_manager.verify_task_completion(
-            page=page,
-            intent_action=intent.action if intent else "unknown",
-            intent_site=intent.site if intent else None,
-            current_url=page.url,
-            navigation_succeeded=bool(state.get("navigation_succeeded")),
-            input_text=state.get("input_text", ""),
-            task_plan=task_plan,
-            extracted_data=state.get("extracted_data"),
-            final_answer=state.get("final_answer") or (action.reasoning if action else None),
-        )
+
+        if not get_config().enable_verification:
+            # Ablation: accept the completion claim without checking the page.
+            from backend.verification.manager import VerificationResult
+            v_res = VerificationResult(verified=True, type="task_completion_disabled", message="PASS (verification disabled)")
+        else:
+            # The answer is what an extraction or a `complete` action produced; the reasoning of an
+            # ordinary action (click, type, ...) is not an answer and is not used here.
+            v_res = await verification_manager.verify_task_completion(
+                page=page,
+                intent_action=intent.action if intent else "unknown",
+                intent_site=intent.site if intent else None,
+                current_url=page.url,
+                navigation_succeeded=bool(state.get("navigation_succeeded")),
+                input_text=state.get("input_text", ""),
+                task_plan=task_plan,
+                extracted_data=state.get("extracted_data"),
+                final_answer=state.get("final_answer"),
+            )
         evidence_manager.save_verification(state["task_id"], v_res.model_dump())
         logger.info(
             "[VERIFICATION]\nexpected=%s\nobserved=%s\npassed=%s",
@@ -1525,38 +1539,21 @@ async def error_recovery_node(state: AgentState) -> dict:
         task_id, error, state.get("retry_count", 0),
     )
 
-    # Dynamic model routing: recovery / reasoning specialist tier
-    rec_routing = model_router.route(
-        task_type="recovery",
-        input_text=state.get("input_text", ""),
-        complexity="high",
-        is_recovery=True,
-        active_model=state.get("selected_model"),
-    )
-    tracer.record_model_routing(
-        task_id=task_id,
-        selected_model=rec_routing.selected_model,
-        role=rec_routing.role,
-        reason=rec_routing.reason,
-        model_switch=rec_routing.model_switch,
-        fallback_used=rec_routing.fallback_used,
-    )
+    # Recovery is rule-based (RecoveryEngine makes no model call), so no model is routed here.
+    # Routing a "recovery model" would only change the active model and make later planning stick to it.
+    recovery_model_label = "rule-based"
 
     # Delegate to enhanced RecoveryEngine
     if state.get("error") is None:
         state = {**state, "error": error}
     recovery_result = await recovery_engine.handle_failure(state)
-    recovery_result["selected_model"] = rec_routing.selected_model
-    recovery_result["model_role"] = rec_routing.role
-    recovery_result["routing_reason"] = rec_routing.reason
-    recovery_result["model_switch"] = rec_routing.model_switch
 
     # Log recovery decision
     strategy = recovery_result.get("recovery_strategy", "exhausted")
     new_status = recovery_result.get("status", "failed")
     logger.info(
         "NODE=error_recovery DECISION task_id=%s model=%s strategy=%s status=%s retry=%d",
-        task_id, rec_routing.selected_model, strategy, new_status, recovery_result.get("retry_count", 0),
+        task_id, recovery_model_label, strategy, new_status, recovery_result.get("retry_count", 0),
     )
 
     # Save recovery evidence
@@ -1565,7 +1562,7 @@ async def error_recovery_node(state: AgentState) -> dict:
         evidence_manager.save_verification(task_id, {"type": "recovery", **recovery_record})
         await database.add_event(
             task_id, "RECOVERY_ATTEMPT",
-            f"Recovery strategy: {strategy} (model: {rec_routing.selected_model})",
+            f"Recovery strategy: {strategy} (model: {recovery_model_label})",
             recovery_record,
         )
         await database.add_event(
@@ -1574,7 +1571,7 @@ async def error_recovery_node(state: AgentState) -> dict:
             {
                 "retry_number": state.get("retry_count", 0) + 1,
                 "strategy": strategy,
-                "model": rec_routing.selected_model,
+                "model": recovery_model_label,
                 "reason": error,
             }
         )

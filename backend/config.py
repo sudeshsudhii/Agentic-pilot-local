@@ -38,6 +38,14 @@ class PilotConfig(BaseSettings):
     enable_memory: bool = True
     enable_rag: bool = True
     enable_multi_model: bool = True
+    # "dom" (default): DOM-first with vision fallback. "vision_only": ablation that withholds the
+    # element manifest from the planner so every action is grounded by the vision model.
+    grounding_mode: str = "dom"
+
+    # --- Sampling (reproducibility) ---
+    # Unset means each Ollama model's own default. Set e.g. PILOT_LLM_TEMPERATURE=0 PILOT_LLM_SEED=7.
+    llm_temperature: float | None = None
+    llm_seed: int | None = None
 
     # --- Multi-Model Routing Config ---
     model_routing_strategy: str = "dynamic"  # "dynamic", "static", "single"

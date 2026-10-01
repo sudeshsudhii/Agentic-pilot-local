@@ -14,6 +14,31 @@ from playwright.async_api import Page, Locator
 logger = logging.getLogger("pilot.verification")
 
 
+# Words that describe the instruction rather than its content; excluded when matching answers to goals.
+_INSTRUCTION_WORDS = {
+    "the", "and", "then", "after", "with", "from", "into", "onto", "for", "that", "this", "these", "those",
+    "his", "her", "its", "their", "about", "what", "which", "who", "when", "where", "page", "site", "website",
+    "go", "goto", "open", "visit", "navigate", "search", "find", "look", "extract", "gather", "collect", "return",
+    "findings", "information", "click", "type", "enter", "exactly", "please", "tell", "show", "give", "some",
+    "useful", "pieces", "result", "results", "first", "google", "bing", "duckduckgo",
+}
+
+
+def goal_content_terms(goal: str) -> set[str]:
+    """Content words of a goal (lower-case, length > 3), excluding URLs, domains and instruction words."""
+    text = re.sub(r"https?://\S+", " ", (goal or "").lower())
+    words = re.findall(r"[a-z0-9]+(?:['\-][a-z0-9]+)*", " ".join(t for t in text.split() if "." not in t))
+    return {w for w in words if len(w) > 3 and w not in _INSTRUCTION_WORDS}
+
+
+def requested_search_query(goal: str) -> str | None:
+    """The quoted query of a search request, e.g. "Search Google for 'Alan Turing'" -> "alan turing"."""
+    if not goal or not re.search(r"\b(search|look up|query)\b", goal, re.IGNORECASE):
+        return None
+    m = re.search(r"[\"'\u2018\u201c]([^\"'\u2019\u201d]{2,})[\"'\u2019\u201d]", goal)
+    return m.group(1).strip().lower() if m else None
+
+
 def extract_exact_text_to_type(prompt: str) -> str | None:
     """Extract exact text string requested to be entered into a form or input."""
     if not prompt:
@@ -34,7 +59,7 @@ def extract_exact_text_to_type(prompt: str) -> str | None:
     if m3:
         return m3.group(1).strip()
     # 3. 'type <text> into ...'
-    m4 = re.search(r'(?:type|enter)\s+(.+?)(?:\s+(?:into|in)\s+|$)', prompt, re.IGNORECASE)
+    m4 = re.search(r'(?:^|[,;.]\s*|\b(?:and|then)\s+)(?:type|enter)\s+(.+?)(?:\s+(?:into|in)\s+|$)', prompt, re.IGNORECASE)
     if m4:
         cand = m4.group(1).strip()
         if cand and not any(kw in cand.lower() for kw in ['url', 'http', 'page', 'google', 'vault.example']):
@@ -206,9 +231,16 @@ class VerificationManager:
             is_multistep = requires_extract or (task_plan and len(getattr(task_plan, "steps", [])) > 1)
 
             is_browser_error = url_lower.startswith("chrome-error://") or "err_" in url_lower
-            is_http_error = any(code in title_lower for code in ("404 not found", "500 internal", "502 bad gateway", "503 service"))
-            is_bot_blocked = ("sorry/index" in url_lower or "recaptcha" in url_lower or "unusual traffic" in title_lower) if is_multistep else False
-            has_error = is_browser_error or is_http_error or is_bot_blocked
+            is_http_error = any(code in title_lower for code in ("404 not found", "500 internal", "502 bad gateway", "503 service", "page not found", "not found"))
+            is_bot_blocked = "sorry/index" in url_lower or "recaptcha" in url_lower or "unusual traffic" in title_lower
+            # Redirected to a sign-in wall although the request named a page that is not a sign-in page.
+            requested_urls = re.findall(r"https?://[^\s'\"]+", input_text or "")
+            login_markers = ("/login", "/signin", "/sign_in", "/sign-in", "/auth", "accounts.google.")
+            is_login_wall = bool(requested_urls) and any(m in url_lower for m in login_markers) and not any(
+                any(m in u.lower() for m in login_markers) for u in requested_urls
+            )
+            observed["login_wall"] = is_login_wall
+            has_error = is_browser_error or is_http_error or is_bot_blocked or is_login_wall
             observed["has_error_state"] = has_error
             expected["has_error_state"] = False
         except Exception as exc:
@@ -237,6 +269,21 @@ class VerificationManager:
             expected["premature_completion_prevented"] = False
             return await self.verify_expected_vs_observed(expected, observed, "task_completion")
 
+        # 2b. A results page must be for the requested query, not just any query.
+        wanted_query = requested_search_query(input_text)
+        if wanted_query and not is_search_homepage:
+            from urllib.parse import parse_qs, urlparse
+            params = parse_qs(urlparse(cur_url).query)
+            got = " ".join(params.get("q", []) + params.get("query", []) + params.get("p", [])).lower()
+            if got:
+                matches = all(w in got for w in wanted_query.split())
+                expected["search_query_matches"] = True
+                observed["search_query_matches"] = matches
+                if not matches:
+                    logger.warning("VERIFY_TASK_COMPLETION REJECTED: results page is for %r, requested %r.", got, wanted_query)
+                    observed["task_completed"] = False
+                    return await self.verify_expected_vs_observed(expected, observed, "task_completion")
+
         # 3. Check if user requested typing/entering specific text
         exact_text = extract_exact_text_to_type(input_text)
         if exact_text:
@@ -250,7 +297,10 @@ class VerificationManager:
                     });
                     return vals;
                 }""")
-                has_exact_text = any(exact_text in v for v in values)
+                if "exactly" in (input_text or "").lower():
+                    has_exact_text = any(v.strip() == exact_text.strip() for v in values)
+                else:
+                    has_exact_text = any(exact_text in v for v in values)
                 observed["text_verified"] = exact_text if has_exact_text else (values[0] if values else "NOT_FOUND")
             except Exception as e:
                 observed["text_verified"] = f"ERROR: {e}"
@@ -265,12 +315,20 @@ class VerificationManager:
 
         # 4. If extraction was requested, verify extracted data is present
         if requires_extract:
+            # An answer counts only if it mentions the goal's content terms; length alone is not evidence.
+            terms = goal_content_terms(input_text)
+
+            def _mentions_goal(text: str) -> bool:
+                return bool(text) and (not terms or any(t in text.lower() for t in terms))
+
             has_substantive_answer = bool(
-                final_answer 
-                and len(final_answer) > 40 
+                final_answer
                 and not any(final_answer.lower().strip().startswith(p) for p in ("navigat", "open", "go to", "start", "search", "click", "select", "type"))
+                and _mentions_goal(final_answer)
             )
-            has_data = bool((extracted_data and len(extracted_data) > 0) or has_substantive_answer)
+            import json as _json
+            has_structured = bool(extracted_data) and _mentions_goal(_json.dumps(extracted_data, default=str))
+            has_data = has_structured or has_substantive_answer
             observed["information_extracted"] = has_data
             expected["information_extracted"] = True
             if not has_data:
@@ -280,9 +338,12 @@ class VerificationManager:
                 return await self.verify_expected_vs_observed(expected, observed, "task_completion")
 
         # 5. Check TaskPlan completion if present
-        if task_plan and hasattr(task_plan, "steps") and task_plan.steps:
+        # For a one-step plan the step *is* the task and the checks above judge it; R only guards
+        # multi-step plans against skipping steps.
+        if task_plan and hasattr(task_plan, "steps") and len(task_plan.steps) > 1:
             uncompleted = [s for s in task_plan.steps if s.status != "completed" and s.action_type not in ["verify", "complete"]]
-            if uncompleted and not (extracted_data or final_answer):
+            # A free-text answer no longer excuses pending steps; only structured extraction does.
+            if uncompleted and not extracted_data:
                 observed["task_completed"] = False
                 observed["remaining_steps"] = len(uncompleted)
                 expected["remaining_steps"] = 0

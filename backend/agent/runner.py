@@ -262,8 +262,9 @@ class TaskRunner:
                 "session_id": session_id,
                 "task_plan": restored_plan,
                 "current_step_index": ckpt.current_step_index if ckpt else 1,
-                "retrieved_knowledge": ckpt.retrieved_knowledge if ckpt and ckpt.retrieved_knowledge else [],
-                "retrieved_memories": ckpt.retrieved_memories if ckpt and ckpt.retrieved_memories else [],
+                # None (not []) means "not retrieved yet", so retrieve_context actually queries RAG and memory.
+                "retrieved_knowledge": ckpt.retrieved_knowledge if ckpt and ckpt.retrieved_knowledge else None,
+                "retrieved_memories": ckpt.retrieved_memories if ckpt and ckpt.retrieved_memories else None,
                 "retrieval_metadata": ckpt.retrieval_metadata if ckpt else {},
                 "selected_model": ckpt.selected_model if ckpt else None,
                 "model_role": ckpt.model_role if ckpt else None,

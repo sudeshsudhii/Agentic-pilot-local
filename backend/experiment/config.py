@@ -165,6 +165,13 @@ ABLATION_PRESETS: dict[str, ExperimentConfig] = {
             "enable_memory": True,
         },
     ),
+    "vision_only_grounding": ExperimentConfig(
+        name="vision_only_grounding",
+        description="Ablation: element manifest withheld from the planner; every action grounded by the vision model",
+        pilot_config_overrides={
+            "grounding_mode": "vision_only",
+        },
+    ),
     "no_recovery": ExperimentConfig(
         name="no_recovery",
         description="Ablation: Strategy escalation and recovery loops disabled (single failure aborts)",

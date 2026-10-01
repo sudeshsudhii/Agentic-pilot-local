@@ -335,12 +335,20 @@ async def test_all_task_requirements_satisfied_completes_task():
 @pytest.mark.asyncio
 async def test_action_failure_never_marks_completed():
     """An execution error or verification failure must increment retry or fail, never complete."""
+    # verify_node looks at the page (CAPTCHA pre-check) before it inspects the error. Stub the page so
+    # the test does not depend on a free browser context in the shared pool, which made it hang headless.
+    mock_page = MagicMock()
+    mock_page.url = "https://www.google.com/"
+    page_patch = patch("backend.agent.nodes._get_task_page", AsyncMock(return_value=mock_page))
+    captcha_patch = patch("backend.browser.dom.detect_captcha", AsyncMock(return_value=(False, "")))
+
     # Sub-case A: First failure triggers retry
     state_retry = make_test_state(
         retry_count=0,
         error="Target element not found: search_input",
     )
-    res_retry = await verify_node(state_retry)
+    with page_patch, captcha_patch:
+        res_retry = await verify_node(state_retry)
     assert res_retry.get("status") == "running"
     assert res_retry.get("retry_count") == 1
     assert res_retry.get("result") is None
@@ -350,7 +358,8 @@ async def test_action_failure_never_marks_completed():
         retry_count=3,
         error="Target element not found: search_input",
     )
-    res_failed = await verify_node(state_failed)
+    with page_patch, captcha_patch:
+        res_failed = await verify_node(state_failed)
     assert res_failed.get("status") == "failed"
     assert "Max retries exceeded" in res_failed.get("error", "")
     assert res_failed.get("result") is None

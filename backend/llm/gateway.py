@@ -93,6 +93,13 @@ class OllamaGateway:
                 request["messages"].append(user_msg)
                 if json_mode:
                     request["format"] = "json"
+                options = {}
+                if self.config.llm_temperature is not None:
+                    options["temperature"] = self.config.llm_temperature
+                if self.config.llm_seed is not None:
+                    options["seed"] = self.config.llm_seed
+                if options:
+                    request["options"] = options
                 response = await self._client_instance().chat(**request)
                 latency_ms = int((time.perf_counter() - started) * 1000)
                 content = response.get("message", {}).get("content", "")

@@ -21,7 +21,10 @@ async def detect_captcha(page: Page) -> tuple[bool, str]:
         # Check page title
         try:
             title = (await page.title()).lower()
-            if "sorry..." in title or "captcha" in title or "robot" in title:
+            # Match challenge wording, not any title that merely contains "robot" (e.g. an article on robots).
+            if "sorry..." in title or "captcha" in title or any(
+                p in title for p in ("not a robot", "are you a robot", "are you human", "human verification")
+            ):
                 return True, f"CAPTCHA page title detected: '{title}'"
         except Exception:
             pass
@@ -63,8 +66,15 @@ async def detect_captcha(page: Page) -> tuple[bool, str]:
                 "form#captcha-form",
             ]
             for selector in captcha_selectors:
-                if await page.locator(selector).count() > 0:
-                    return True, f"CAPTCHA challenge element detected: '{selector}'"
+                loc = page.locator(selector)
+                for i in range(min(await loc.count(), 5)):
+                    el = loc.nth(i)
+                    src = (await el.get_attribute("src")) or ""
+                    # Invisible reCAPTCHA (score-based, no user challenge) and hidden frames are not challenges.
+                    if "size=invisible" in src:
+                        continue
+                    if await el.is_visible():
+                        return True, f"CAPTCHA challenge element detected: '{selector}'"
         except Exception:
             pass
 

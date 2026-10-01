@@ -5,7 +5,7 @@ import asyncio
 import pytest
 
 from backend.agent.runner import TaskRunner
-from backend.db.database import database, resolve_path
+from backend.db.database import Database, database, resolve_path
 from backend.config import get_config
 
 

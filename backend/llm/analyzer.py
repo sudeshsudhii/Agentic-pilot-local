@@ -12,12 +12,18 @@ Analyzes natural language tasks, parsed intents, and environment context to esta
 from __future__ import annotations
 
 import logging
+import re
 from typing import Any
 from pydantic import BaseModel, Field
 
 from backend.llm.registry import ModelCapability, ModelRole
 
 logger = logging.getLogger("pilot.llm.analyzer")
+
+
+def _has_keyword(text: str, keywords: set[str]) -> bool:
+    """Whole-word / whole-phrase match, so "gui" does not fire on "guide" nor "ast" on "fastest"."""
+    return any(re.search(rf"(?<![a-z0-9]){re.escape(kw)}(?![a-z0-9])", text) for kw in keywords)
 
 CODING_KEYWORDS = {
     "code", "python", "script", "syntax", "refactor", "bug", "debug", "unit test",
@@ -112,7 +118,7 @@ class CapabilityAnalyzer:
             )
 
         # 2. Vision Perception Check
-        if has_image or act_lower == "screenshot" or type_lower in ("vision", "gui_understanding", "visual_interaction") or any(kw in text_lower for kw in VISION_KEYWORDS):
+        if has_image or act_lower == "screenshot" or type_lower in ("vision", "gui_understanding", "visual_interaction") or _has_keyword(text_lower, VISION_KEYWORDS):
             return TaskCapabilityRequirements(
                 target_role=ModelRole.VISION,
                 required_capabilities=[ModelCapability.VISION, ModelCapability.GUI_UNDERSTANDING],
@@ -126,7 +132,7 @@ class CapabilityAnalyzer:
         if (
             type_lower in ("coding", "code_generation", "debugging", "test_generation")
             or act_lower in ("code", "modify_file", "debug", "test_code", "run_script")
-            or any(kw in text_lower for kw in CODING_KEYWORDS)
+            or _has_keyword(text_lower, CODING_KEYWORDS)
         ):
             return TaskCapabilityRequirements(
                 target_role=ModelRole.CODER,
@@ -146,7 +152,7 @@ class CapabilityAnalyzer:
             or complexity == "high"
             or any(w in text_lower for w in [" and ", " then ", " after ", " followed by ", ",", ";"])
             or len(text_lower.split()) > 10
-            or any(kw in text_lower for kw in REASONING_KEYWORDS)
+            or _has_keyword(text_lower, REASONING_KEYWORDS)
         )
 
         # 6. Fast / Lightweight Tier for Routine Operations

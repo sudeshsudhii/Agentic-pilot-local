@@ -617,15 +617,30 @@ class PilotOrchestrator:
         ]
         env = os.environ.copy()
         env["PYTHONPATH"] = str(BASE_DIR)
-        for script in eval_scripts:
-            path = BASE_DIR / script
-            if path.exists():
-                logger.info(f"Running {script}...")
-                res = subprocess.run([sys.executable, str(path)], cwd=str(BASE_DIR), env=env)
-                if res.returncode != 0:
-                    logger.error(f"Evaluation script {script} failed with code {res.returncode}")
-                    return res.returncode
-        return 0
+        present = [s for s in eval_scripts if (BASE_DIR / s).exists()]
+        for script in present:
+            logger.info(f"Running {script}...")
+            res = subprocess.run([sys.executable, str(BASE_DIR / script)], cwd=str(BASE_DIR), env=env)
+            if res.returncode != 0:
+                logger.error(f"Evaluation script {script} failed with code {res.returncode}")
+                return res.returncode
+        if present:
+            return 0
+
+        # The legacy scratch/ scripts are not part of the repository: run the ablation study instead.
+        # Presets can be narrowed with PILOT_EVAL_PRESETS="full_framework,no_verification,...".
+        presets = [p.strip() for p in os.environ.get("PILOT_EVAL_PRESETS", "").split(",") if p.strip()] or [
+            "full_framework", "no_verification", "no_recovery", "vision_only_grounding", "single_model",
+        ]
+        code = (
+            "import asyncio, json, sys\n"
+            "from backend.experiment.runner import experiment_runner\n"
+            f"res = asyncio.run(experiment_runner.run_ablation_comparison({presets!r}))\n"
+            "print(json.dumps(res, indent=2))\n"
+        )
+        logger.info(f"Running ablation presets: {', '.join(presets)} (requires a running Ollama server)")
+        res = subprocess.run([sys.executable, "-c", code], cwd=str(BASE_DIR), env=env)
+        return res.returncode
 
     # -------------------------------------------------------------------------
     # Shutdown & Process Tree Termination

@@ -45,5 +45,6 @@ class AgentState(TypedDict):
     step_progress: str | None
     blocked_reason: str | None
     recovery_options: list[str] | None
+    recovery_strategy: str | None
 
 

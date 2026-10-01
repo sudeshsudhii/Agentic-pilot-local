@@ -213,7 +213,9 @@ async def test_vision_fallback_screenshot_caching():
     vf = VisionFallback()
     dummy_screenshot = b"test_image_bytes_12345"
 
-    with patch("backend.vision.fallback.OllamaGateway.complete_structured", new_callable=AsyncMock) as mock_complete:
+    # plan_action first checks which vision model is installed; stub that too so no Ollama is needed.
+    with patch.object(VisionFallback, "check_vision_availability", AsyncMock(return_value=(True, "moondream"))), \
+         patch("backend.vision.fallback.OllamaGateway.complete_structured", new_callable=AsyncMock) as mock_complete:
         mock_complete.return_value = VisionAction(
             action_type="click",
             x_percent=0.5,

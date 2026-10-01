@@ -84,12 +84,12 @@ def test_cli_argument_parsing(monkeypatch):
     assert args.port == 9000
 
 
-def test_different_working_directory():
+def test_different_working_directory(tmp_path):
     """Verify the launcher resolves paths correctly when run from another directory."""
-    scratch_dir = BASE_DIR / "scratch"
+    # Any directory other than the repo root will do; scratch/ is gitignored and may not exist.
     res = subprocess.run(
         [sys.executable, str(BASE_DIR / "main.py"), "--help"],
-        cwd=str(scratch_dir),
+        cwd=str(tmp_path),
         capture_output=True,
         text=True,
     )

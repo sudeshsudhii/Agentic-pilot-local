@@ -118,7 +118,8 @@ class ModelRouter:
 
         # 3. Stage 3: Model Stickiness (Anti-Thrashing)
         # If active model already satisfies the required capabilities and this is not recovery escalation, retain it
-        current_active = active_model or self._last_selected_model
+        # Only the model active in *this* task is sticky; a choice made in an earlier task is not.
+        current_active = active_model
         if current_active and not is_recovery:
             active_meta = self.registry.get_model(current_active)
             if active_meta and (not has_probed_installed or active_meta.installed):

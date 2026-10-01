@@ -58,6 +58,10 @@ class ExperimentRunner:
             "rag_hybrid_search": base_cfg.rag_hybrid_search,
             "rag_reranking": base_cfg.rag_reranking,
         }
+        # Also back up any other field an override touches (e.g. grounding_mode), so it is restored.
+        for k in config.pilot_config_overrides:
+            if hasattr(base_cfg, k) and k not in original_flags:
+                original_flags[k] = getattr(base_cfg, k)
 
         # Apply experiment overrides
         for k, v in config.pilot_config_overrides.items():
@@ -67,9 +71,18 @@ class ExperimentRunner:
         task_records: list[dict[str, Any]] = []
         started_at = datetime.now(UTC).isoformat()
 
+        # The graph's nodes write task rows and events, so the database must be connected.
+        if database.connection is None:
+            await database.connect()
+        from backend.agent.graph import build_graph
+        graph = build_graph()
+        if graph is None:
+            raise RuntimeError("LangGraph is not installed; cannot run experiments")
+
+        runs = [(t, r) for t in benchmark_tasks for r in range(1, max(1, config.runs_per_task) + 1)]
         try:
-            for i, task_text in enumerate(benchmark_tasks, 1):
-                logger.info("Executing experiment task [%d/%d]: %s", i, len(benchmark_tasks), task_text[:60])
+            for i, (task_text, trial) in enumerate(runs, 1):
+                logger.info("Executing experiment task [%d/%d] trial=%d: %s", i, len(runs), trial, task_text[:60])
                 task_id = str(uuid.uuid4())
                 task_start = time.perf_counter()
 
@@ -79,8 +92,7 @@ class ExperimentRunner:
                 step_count = 1
 
                 try:
-                    from backend.agent.graph import create_agent_graph
-                    graph = create_agent_graph()
+                    await database.create_task(task_id, task_text)
                     state: dict[str, Any] = {
                         "task_id": task_id,
                         "input_text": task_text,
@@ -101,8 +113,8 @@ class ExperimentRunner:
                         "session_id": None,
                         "task_plan": None,
                         "current_step_index": 1,
-                        "retrieved_knowledge": [],
-                        "retrieved_memories": [],
+                        "retrieved_knowledge": None,  # None = not yet retrieved
+                        "retrieved_memories": None,
                         "retrieval_metadata": {},
                         "selected_model": None,
                         "model_role": None,
@@ -112,7 +124,7 @@ class ExperimentRunner:
 
 
                     # Execute graph
-                    final_state = await graph.ainvoke(state)
+                    final_state = await graph.ainvoke(state, config={"recursion_limit": 200})
                     task_status = final_state.get("status", "failed")
                     error_msg = final_state.get("error")
                     step_count = final_state.get("llm_call_count", 1)
@@ -127,6 +139,7 @@ class ExperimentRunner:
                 task_records.append({
                     "task_id": task_id,
                     "task_text": task_text,
+                    "trial": trial,
                     "status": task_status,
                     "duration_ms": duration_ms,
                     "step_count": step_count,
