@@ -42,7 +42,7 @@ Environment: 4 vCPU Xeon, Python 3.11, Playwright 1.56 / Chromium 141, LangGraph
 
 **Caveat:** I wrote all fixtures and labels, and designed the fixes on the design states. Treat the post-fix design numbers as optimistic; the held-out row is the honest one. Review every case in `artifacts/experiments/verification_gate_study.py`.
 
-## 2. What you must do (all shown as red `\todo` in the PDF)
+## 2. What you must do (each is a `\todo` in the source, printed as "[Pending]" in the PDF)
 
 | Where | Action |
 |---|---|

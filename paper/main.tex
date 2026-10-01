@@ -13,9 +13,10 @@
 \usetikzlibrary{positioning,arrows.meta,shapes.geometric,fit,backgrounds,calc}
 \usepackage[hidelinks]{hyperref}
 
-% Visible markers for anything that still needs the author's attention.
-% Switch \todo to \newcommand{\todo}[1]{} ONLY after every item is resolved.
-\newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+% Review copy: each open item prints as plain "[Pending]". The \todo commands
+% stay in the source and keep their notes; replace each with the real value.
+% For a draft with visible notes, use \textcolor{red}{\textbf{[TODO: #1]}}.
+\newcommand{\todo}[1]{[Pending]}
 \newcommand{\status}[1]{\textsc{#1}}
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
