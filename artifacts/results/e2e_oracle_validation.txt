@@ -1,0 +1,4 @@
+golden   : 40/40 verdicts as intended
+idle     : 40/40 verdicts as intended
+perturbed: 34/34 verdicts as intended
+oracle false negatives 0/37, false positives 0/77; script errors: 0
