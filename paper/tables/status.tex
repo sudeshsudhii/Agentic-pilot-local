@@ -1,31 +1,29 @@
 \begin{table}[t]
 \centering
-\caption{Capability status at commit \texttt{eb3803e}, traced through the code. Impl.: code exists (P: prototype or partial). Integ.: on the agent's execution path. Test: Y unit or integration test of behavior; M with a mocked model; I interface only; W needs live web. Eval.: C component study in Section~\ref{sec:results}; R routing resolution only; -- none.}
+\caption{Component status, traced through the code. Impl.: code exists (P prototype or partial). Integ.: on the agent's execution path. Test: Y behavior test; M with a mocked model; S scripted stand-in model; I interface only; W needs live web. Eval.: evidence in this paper---C component study, O oracle validation, E egress test, R routing resolution; -- none. Claims in this paper are limited to rows with an entry under Eval.}
 \label{tab:status}
 \footnotesize
 \setlength{\tabcolsep}{2.4pt}
-\begin{tabular}{@{}p{3.55cm}cccc@{}}
+\begin{tabular}{@{}p{3.65cm}cccc@{}}
 \toprule
-Capability & Impl. & Integ. & Test & Eval. \\
+Component & Impl. & Integ. & Test & Eval. \\
 \midrule
+Completion predicate $\Phi$, bot-check halt & Y & Y & Y & C \\
 Browser control (Playwright) & Y & Y & Y & C \\
-DOM grounding & Y & Y & Y & -- \\
-Vision grounding (browser screenshot) & Y & Y & M & -- \\
-Completion predicate $\Phi$ (browser) & Y & Y & Y & C \\
-Bot-check halt and hand-off & Y & Y & Y & C \\
-Per-action evidence & Y & Y & Y & -- \\
-Failure classes / recovery strategies & Y / P & Y / P & Y & -- \\
+Local-only model endpoint, no telemetry & Y & Y & Y & E \\
+End-to-end harness and oracle $\Phi^{\star}$ & Y & -- & S & O \\
 Model routing & Y & Y & Y & R \\
+LLM planner in the full loop & Y & Y & M, S & -- \\
+DOM grounding; vision fallback & Y & Y & Y; M & -- \\
+Per-action evidence & Y & Y & Y & -- \\
+Recovery: retry, vision fallback & Y & Y & Y & -- \\
+Recovery: alt.\ selector, replan & P & P & Y & -- \\
 Memory and RAG retrieval & Y & Y & Y & -- \\
+Self-verification baseline mode & Y & Y & S & -- \\
 Task-level human approval & Y & Y & W & -- \\
-Evaluation harness (6 presets) & Y & -- & I & not run \\
 \midrule
-Desktop mouse, keyboard, screenshot & P & N & I & -- \\
-File read/write helper & Y & N & Y & -- \\
-File-state predicate (exists, size) & Y & N & Y & -- \\
-Process listing & P & N & N & -- \\
-Accessibility tree, windows, native apps & N & N & N & -- \\
-Action gate, permission tiers & N & N & N & -- \\
+Desktop input, files, processes & P & N & I & -- \\
+Accessibility tree, action gate, tiers & N & N & N & -- \\
 \bottomrule
 \end{tabular}
 \end{table}

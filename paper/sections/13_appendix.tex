@@ -1,0 +1,17 @@
+\appendices
+
+\section{Computer Backend (Design, Not Implemented)}
+\label{app:computer}
+
+The repository contains a desktop executor that wraps PyAutoGUI and psutil, a text-file helper and a file-existence predicate. None is connected to the control loop: no node, action type or API route calls them, and the file helper does not confine paths. The rest of this appendix is a design.
+
+\paragraph{Observation and grounding} The backend would observe the foreground window through its accessibility tree (Windows UI Automation, macOS Accessibility, AT-SPI) into a manifest shaped like the DOM manifest, falling back to a vision model on a window screenshot. File and process actions are grounded in typed state (paths, hashes, process identity).
+
+\paragraph{Postconditions and permission tiers} Each mutating action carries exact postconditions (Table~\ref{tab:post}) captured with before/after values. Because many local actions cannot be undone, a postcondition checked afterwards is no protection on its own, so an \texttt{action\_gate} node between planning and execution would compute a tier from the concrete action: T0 (read-only) runs freely; T1 (reversible, with a recorded inverse) runs automatically only if the user enabled it; T2 (destructive) and T3 (network-capable programs, credentials) always need approval bound to a hash of the exact action. Paths outside allow-listed roots, inline interpreters and privilege elevation would be refused. A design in which untrusted content cannot change the control flow~\cite{debenedetti2025camel} is a stronger alternative.
+
+\input{tables/postconditions}
+
+\section{End-to-End Task Set}
+\label{app:tasks}
+
+The 40 tasks (\texttt{benchmarks/e2e/tasks.json}) are distributed as follows (development/test): extraction 2/8, form submission 2/7, multi-step 1/5, navigation 2/2, search 1/2, text entry 1/2, unsatisfiable 1/4; tiers 1--4 contain 3/6, 4/11, 3/12 and 0/1 tasks. The test split uses all five sites; the notes site appears only there. The harness (\texttt{run\_e2e.py}) takes the split, the number of trials and a list of the configurations of Table~\ref{tab:e2e}; the analysis script (\texttt{analyze\_e2e.py}) writes result tables with Wilson intervals, McNemar tests and bootstrap intervals.

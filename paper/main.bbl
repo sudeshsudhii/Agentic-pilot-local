@@ -21,12 +21,29 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{zhou2024webarena}
+S.~Zhou, F.~F. Xu, H.~Zhu, X.~Zhou, R.~Lo, A.~Sridhar, X.~Cheng, T.~Ou,
+  Y.~Bisk, D.~Fried, U.~Alon, and G.~Neubig, ``{WebArena}: A realistic web
+  environment for building autonomous agents,'' in \emph{Proc. Int. Conf.
+  Learn. Represent. (ICLR)}, 2024.
+
+\bibitem{he2024webvoyager}
+H.~He, W.~Yao, K.~Ma, W.~Yu, Y.~Dai, H.~Zhang, Z.~Lan, and D.~Yu,
+  ``{WebVoyager}: Building an end-to-end web agent with large multimodal
+  models,'' in \emph{Proc. 62nd Annu. Meeting Assoc. Comput. Linguistics (ACL)
+  (Volume 1: Long Papers)}, 2024, pp. 6864--6890.
+
 \bibitem{xie2024osworld}
 T.~Xie, D.~Zhang, J.~Chen, X.~Li, S.~Zhao, R.~Cao, T.~J. Hua, Z.~Cheng,
   D.~Shin, F.~Lei, Y.~Liu, Y.~Xu \emph{et~al.}, ``{OSWorld}: Benchmarking
   multimodal agents for open-ended tasks in real computer environments,'' in
   \emph{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS), Datasets and
   Benchmarks Track}, vol.~37, 2024.
+
+\bibitem{zheng2024seeact}
+B.~Zheng, B.~Gou, J.~Kil, H.~Sun, and Y.~Su, ``{GPT-4V(ision)} is a generalist
+  web agent, if grounded,'' in \emph{Proc. 41st Int. Conf. Mach. Learn.
+  (ICML)}, ser. PMLR, vol. 235, 2024, pp. 61\,349--61\,385.
 
 \bibitem{zhang2025ufo}
 C.~Zhang, L.~Li, S.~He, X.~Zhang, B.~Qiao, S.~Qin, M.~Ma, Y.~Kang, Q.~Lin,
@@ -35,48 +52,26 @@ C.~Zhang, L.~Li, S.~He, X.~Zhang, B.~Qiao, S.~Qin, M.~Ma, Y.~Kang, Q.~Lin,
   Americas Chapter Assoc. Comput. Linguistics: Human Language Technologies
   (NAACL-HLT) (Volume 1: Long Papers)}, 2025, pp. 597--622.
 
-\bibitem{agashe2025agents}
-S.~Agashe, J.~Han, S.~Gan, J.~Yang, A.~Li, and X.~E. Wang, ``Agent {S}: An open
-  agentic framework that uses computers like a human,'' in \emph{Proc. Int.
-  Conf. Learning Representations (ICLR)}, 2025.
-
-\bibitem{he2024webvoyager}
-H.~He, W.~Yao, K.~Ma, W.~Yu, Y.~Dai, H.~Zhang, Z.~Lan, and D.~Yu,
-  ``{WebVoyager}: Building an end-to-end web agent with large multimodal
-  models,'' in \emph{Proc. 62nd Annu. Meeting Assoc. Comput. Linguistics (ACL)
-  (Volume 1: Long Papers)}, 2024, pp. 6864--6890.
-
-\bibitem{zheng2024seeact}
-B.~Zheng, B.~Gou, J.~Kil, H.~Sun, and Y.~Su, ``{GPT-4V(ision)} is a generalist
-  web agent, if grounded,'' in \emph{Proc. 41st Int. Conf. Mach. Learn.
-  (ICML)}, ser. PMLR, vol. 235, 2024, pp. 61\,349--61\,385.
-
-\bibitem{zhang2025appagent}
-C.~Zhang, Z.~Yang, J.~Liu, Y.~Li, Y.~Han, X.~Chen, Z.~Huang, B.~Fu, and G.~Yu,
-  ``{AppAgent}: Multimodal agents as smartphone users,'' in \emph{Proc. 2025
-  CHI Conf. Human Factors Comput. Syst. (CHI)}, 2025, pp. 70:1--70:20.
-
 \bibitem{lukas2023pii}
 N.~Lukas, A.~Salem, R.~Sim, S.~Tople, L.~Wutschitz, and
   S.~Zanella-B{\'e}guelin, ``Analyzing leakage of personally identifiable
   information in language models,'' in \emph{Proc. IEEE Symp. Secur. Privacy
   (SP)}, 2023, pp. 346--363.
 
-\bibitem{zhou2024webarena}
-S.~Zhou, F.~F. Xu, H.~Zhu, X.~Zhou, R.~Lo, A.~Sridhar, X.~Cheng, T.~Ou,
-  Y.~Bisk, D.~Fried, U.~Alon, and G.~Neubig, ``{WebArena}: A realistic web
-  environment for building autonomous agents,'' in \emph{Proc. Int. Conf.
-  Learn. Represent. (ICLR)}, 2024.
-
-\bibitem{huang2024cannot}
-J.~Huang, X.~Chen, S.~Mishra, H.~S. Zheng, A.~W. Yu, X.~Song, and D.~Zhou,
-  ``Large language models cannot self-correct reasoning yet,'' in \emph{Proc.
-  Int. Conf. Learn. Represent. (ICLR)}, 2024.
+\bibitem{pan2024autonomous}
+J.~Pan, Y.~Zhang, N.~Tomlin, Y.~Zhou, S.~Levine, and A.~Suhr, ``Autonomous
+  evaluation and refinement of digital agents,'' in \emph{Proc. Conf. Language
+  Modeling (COLM)}, 2024.
 
 \bibitem{yao2023react}
 S.~Yao, J.~Zhao, D.~Yu, N.~Du, I.~Shafran, K.~Narasimhan, and Y.~Cao,
   ``{ReAct}: Synergizing reasoning and acting in language models,'' in
   \emph{Proc. Int. Conf. Learn. Represent. (ICLR)}, 2023.
+
+\bibitem{huang2024cannot}
+J.~Huang, X.~Chen, S.~Mishra, H.~S. Zheng, A.~W. Yu, X.~Song, and D.~Zhou,
+  ``Large language models cannot self-correct reasoning yet,'' in \emph{Proc.
+  Int. Conf. Learn. Represent. (ICLR)}, 2024.
 
 \bibitem{wei2022chain}
 J.~Wei, X.~Wang, D.~Schuurmans, M.~Bosma, B.~Ichter, F.~Xia, E.~Chi, Q.~V. Le,
@@ -104,11 +99,6 @@ G.~Wang, Y.~Xie, Y.~Jiang, A.~Mandlekar, C.~Xiao, Y.~Zhu, L.~Fan, and
   A.~Anandkumar, ``Voyager: An open-ended embodied agent with large language
   models,'' \emph{Trans. Mach. Learn. Res. (TMLR)}, 2024.
 
-\bibitem{shi2017wob}
-T.~Shi, A.~Karpathy, L.~Fan, J.~Hernandez, and P.~Liang, ``World of bits: An
-  open-domain platform for web-based agents,'' in \emph{Proc. 34th Int. Conf.
-  Mach. Learn. (ICML)}, ser. PMLR, vol.~70, 2017, pp. 3135--3144.
-
 \bibitem{deng2023mind2web}
 X.~Deng, Y.~Gu, B.~Zheng, S.~Chen, S.~Stevens, B.~Wang, H.~Sun, and Y.~Su,
   ``{Mind2Web}: Towards a generalist agent for the web,'' in \emph{Proc. Adv.
@@ -120,21 +110,31 @@ J.~Yang, H.~Zhang, F.~Li, X.~Zou, C.~Li, and J.~Gao, ``Set-of-mark prompting
   unleashes extraordinary visual grounding in {GPT-4V},'' arXiv:2310.11441,
   2023.
 
+\bibitem{koh2024visualwebarena}
+J.~Y. Koh, R.~Lo, L.~Jang, V.~Duvvur, M.~C. Lim, P.-Y. Huang, G.~Neubig,
+  S.~Zhou, R.~Salakhutdinov, and D.~Fried, ``{VisualWebArena}: Evaluating
+  multimodal agents on realistic visual web tasks,'' in \emph{Proc. 62nd Annu.
+  Meeting Assoc. Comput. Linguistics (ACL)}, 2024, pp. 881--905.
+
+\bibitem{drouin2024workarena}
+A.~Drouin, M.~Gasse, M.~Caccia, I.~H. Laradji, M.~Del~Verme, T.~Marty,
+  D.~Vazquez, N.~Chapados, and A.~Lacoste, ``{WorkArena}: How capable are web
+  agents at solving common knowledge work tasks?'' in \emph{Proc. 41st Int.
+  Conf. Mach. Learn. (ICML)}, ser. PMLR, vol. 235, 2024, pp. 11\,642--11\,662.
+
 \bibitem{bonatti2024waa}
 R.~Bonatti, D.~Zhao, F.~Bonacci \emph{et~al.}, ``Windows agent arena:
   Evaluating multi-modal {OS} agents at scale,'' arXiv:2409.08264, 2024.
 
-\bibitem{liu2024gptdroid}
-Z.~Liu, C.~Chen, J.~Wang, M.~Chen, B.~Wu, X.~Che, D.~Wang, and Q.~Wang, ``Make
-  {LLM} a testing expert: Bringing human-like interaction to mobile {GUI}
-  testing via functionality-aware decisions,'' in \emph{Proc. IEEE/ACM 46th
-  Int. Conf. Softw. Eng. (ICSE)}, 2024, pp. 100:1--100:13.
+\bibitem{agashe2025agents}
+S.~Agashe, J.~Han, S.~Gan, J.~Yang, A.~Li, and X.~E. Wang, ``Agent {S}: An open
+  agentic framework that uses computers like a human,'' in \emph{Proc. Int.
+  Conf. Learning Representations (ICLR)}, 2025.
 
-\bibitem{liu2023qtypist}
-Z.~Liu, C.~Chen, J.~Wang, X.~Che, Y.~Huang, J.~Hu, and Q.~Wang, ``Fill in the
-  blank: Context-aware automated text input generation for mobile {GUI}
-  testing,'' in \emph{Proc. IEEE/ACM 45th Int. Conf. Softw. Eng. (ICSE)}, 2023,
-  pp. 1355--1367.
+\bibitem{zhang2025appagent}
+C.~Zhang, Z.~Yang, J.~Liu, Y.~Li, Y.~Han, X.~Chen, Z.~Huang, B.~Fu, and G.~Yu,
+  ``{AppAgent}: Multimodal agents as smartphone users,'' in \emph{Proc. 2025
+  CHI Conf. Human Factors Comput. Syst. (CHI)}, 2025, pp. 70:1--70:20.
 
 \bibitem{hong2024cogagent}
 W.~Hong, W.~Wang, Q.~Lv, J.~Xu, W.~Yu, J.~Ji, Y.~Wang, Z.~Wang, Y.~Dong,
@@ -155,11 +155,6 @@ Y.~Qin, Y.~Ye, J.~Fang \emph{et~al.}, ``{UI-TARS}: Pioneering automated {GUI}
 \bibitem{lu2024omniparser}
 Y.~Lu, J.~Yang, Y.~Shen, and A.~Awadallah, ``{OmniParser} for pure vision based
   {GUI} agent,'' arXiv:2408.00203, 2024.
-
-\bibitem{pan2024autonomous}
-J.~Pan, Y.~Zhang, N.~Tomlin, Y.~Zhou, S.~Levine, and A.~Suhr, ``Autonomous
-  evaluation and refinement of digital agents,'' in \emph{Proc. Conf. Language
-  Modeling (COLM)}, 2024.
 
 \bibitem{sumyk2025done}
 M.~Sumyk and O.~Kosovan, ````are we done yet?'': A vision-based judge for
@@ -254,5 +249,28 @@ L.~Wang, C.~Ma, X.~Feng, Z.~Zhang, H.~Yang, J.~Zhang, Z.~Chen, J.~Tang,
 Z.~Xi, W.~Chen, X.~Guo, W.~He, Y.~Ding, B.~Hong \emph{et~al.}, ``The rise and
   potential of large language model based agents: A survey,'' \emph{Sci. China
   Inf. Sci.}, vol.~68, p. 121101, 2025.
+
+\bibitem{wilson1927probable}
+E.~B. Wilson, ``Probable inference, the law of succession, and statistical
+  inference,'' \emph{Journal of the American Statistical Association}, vol.~22,
+  no. 158, pp. 209--212, 1927.
+
+\bibitem{cohen1960coefficient}
+J.~Cohen, ``A coefficient of agreement for nominal scales,'' \emph{Educational
+  and Psychological Measurement}, vol.~20, no.~1, pp. 37--46, 1960.
+
+\bibitem{clopper1934use}
+C.~J. Clopper and E.~S. Pearson, ``The use of confidence or fiducial limits
+  illustrated in the case of the binomial,'' \emph{Biometrika}, vol.~26, no.~4,
+  pp. 404--413, 1934.
+
+\bibitem{mcnemar1947note}
+Q.~McNemar, ``Note on the sampling error of the difference between correlated
+  proportions or percentages,'' \emph{Psychometrika}, vol.~12, no.~2, pp.
+  153--157, 1947.
+
+\bibitem{efron1979bootstrap}
+B.~Efron, ``Bootstrap methods: Another look at the jackknife,'' \emph{The
+  Annals of Statistics}, vol.~7, no.~1, pp. 1--26, 1979.
 
 \end{thebibliography}

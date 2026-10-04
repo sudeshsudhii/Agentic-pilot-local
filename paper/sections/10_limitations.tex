@@ -1,10 +1,12 @@
 \section{Limitations and Threats to Validity}
 \label{sec:limits}
 
-\paragraph{Internal validity} We wrote all gate fixtures and their labels, and designed the fixes on the same 38 design states, so the post-fix design results are optimistic; the 12 held-out states are a small, partial correction. The live mode stubs the node's I/O and stands in for the planner with an empty or a generic reasoning string, not with model output.
+\paragraph{Internal validity} One author wrote all gate states and labels and designed the fixes on the design states, so the design results are optimistic. Held-out~2 was frozen before testing, but its author knew the gate's rules; independent states and labels would give a less biased estimate. The live mode stands in for the planner with empty or generic reasoning, not model output.
 
-\paragraph{External validity} All measurements concern the browser backend on small, static fixture pages served offline; real pages are larger and change, and latency will grow. No result involves a language model, a live website, a desktop application, a file or a process. The agent is therefore not shown to complete tasks in any environment.
+\paragraph{External validity} All gate measurements use small, static pages served offline; real pages are larger and change, and latency will grow. No result involves a language model or a live website, so the agent is not shown to complete tasks. The end-to-end harness uses fictional, self-hosted sites, which avoids memorized answers and site drift but is simpler than real sites.
 
-\paragraph{Construct validity} FCR and FRR depend on the oracle, which for real tasks must be written per task and applied blind to the agent's report. The browser predicate is keyed to request wording, so its coverage depends on how users phrase requests; when no keyword fires it reduces to an error check.
+\paragraph{Statistical power} The sets are small: with 22 unsatisfied held-out~2 states the 95\% interval of the withheld share spans 0.23--0.61, and the ablation cannot separate conjuncts that change one or two decisions.
 
-\paragraph{System limitations} Planning with 1.5B--7B models is weak, and deterministic overrides, some site-specific, compensate on common patterns. Vision-grounded clicks are not individually checked. Of the recovery strategies only the vision fallback changes behavior. Memory records are thin, and their effect on planning is unmeasured. Evidence files carry no integrity protection, and a retry can overwrite earlier screenshots. The computer backend is a design with an unintegrated prototype.
+\paragraph{Construct validity} FCR and FRR depend on the oracle. The browser predicate is keyed to request wording, so its coverage depends on how users phrase requests; when no keyword fires, it reduces to an error check.
+
+\paragraph{System limitations} Planning with 1.5B--7B models is weak, and deterministic overrides compensate on common patterns. Vision-grounded clicks are not individually checked. Two of the four recovery strategies have no distinct behavior. Evidence files carry no integrity protection.

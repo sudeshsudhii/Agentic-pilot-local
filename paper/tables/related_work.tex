@@ -1,31 +1,31 @@
 \begin{table}[t]
 \centering
-\caption{Capabilities reported by representative systems. Loc: runs on open or locally hostable models; Web/Desk: target environment; Gate: completion gated at run time by an in-agent environment check; Evid: persists state artifacts; Mem: cross-step or cross-episode memory; Inj: prompt-injection defense; Appr: human approval for risky actions. \textbf{Y} reported, \textbf{P} partial or weaker form, \textbf{N} not supported, -- not reported. The last row reflects the audited code (Section~\ref{sec:impl}).}
+\caption{Comparison with representative systems, from what each paper reports. Kind: A agent, B benchmark, M model. Environment: W live websites, Wr self-hosted or cached web pages, Ws simulated web, tool or text environment, D desktop OS, Mo mobile. Completion: who decides that a task is done---the agent's model (model), a checker of the benchmark after the episode (benchmark), a model judge after the episode (judge), or a rule over observed state inside the loop (in-loop rule); n/a for systems that do not end tasks. Evid.: persists state artifacts of each step. Mem.: memory across steps or episodes. Open: open-weight models used or supported. Y yes, P partial, N no, n.r. not reported. All listed systems released code.}
 \label{tab:related}
-\setlength{\tabcolsep}{2.6pt}
+\setlength{\tabcolsep}{2.2pt}
 \footnotesize
-\begin{tabular}{@{}lcccccccc@{}}
+\begin{tabular}{@{}llllccc@{}}
 \toprule
-System & Loc & Web & Desk & Gate & Evid & Mem & Inj & Appr \\
+System & Kind & Env. & Completion & Evid. & Mem. & Open \\
 \midrule
-ReAct~\cite{yao2023react}               & N & P & N & N & N & N & N & N \\
-Reflexion~\cite{shinn2023reflexion}     & -- & P & N & P & N & Y & N & N \\
-WebArena~\cite{zhou2024webarena}        & -- & Y & N & N & -- & N & N & N \\
-Mind2Web~\cite{deng2023mind2web}        & Y & Y & N & N & P & N & N & N \\
-WebVoyager~\cite{he2024webvoyager}      & N & Y & N & N & Y & N & N & N \\
-SeeAct~\cite{zheng2024seeact}           & P & Y & N & N & -- & N & N & P \\
-OSWorld~\cite{xie2024osworld}           & Y & Y & Y & N & -- & N & N & N \\
-UFO~\cite{zhang2025ufo}                 & N & P & Y & -- & -- & P & N & Y \\
-AppAgent~\cite{zhang2025appagent}       & N & N & N & -- & -- & Y & N & N \\
-CogAgent~\cite{hong2024cogagent}        & Y & Y & -- & N & N & N & N & N \\
-MemGPT~\cite{packer2023memgpt}          & -- & N & N & N & N & Y & N & N \\
-AgentDojo~\cite{debenedetti2024agentdojo} & Y & N & N & N & -- & N & Y & -- \\
+ReAct~\cite{yao2023react}               & A & Ws & model & N & N & N \\
+Reflexion~\cite{shinn2023reflexion}     & A & Ws & model$^{a}$ & N & Y & n.r. \\
+WebArena~\cite{zhou2024webarena}        & B & Wr & benchmark & n.r. & N & n.r. \\
+Mind2Web~\cite{deng2023mind2web}        & B & Wr & n/a & P & N & Y \\
+WebVoyager~\cite{he2024webvoyager}      & A & W & model; judge$^{b}$ & Y & N & N \\
+SeeAct~\cite{zheng2024seeact}           & A & W, Wr & model & n.r. & N & P \\
+OSWorld~\cite{xie2024osworld}           & B & D & benchmark & n.r. & N & Y \\
+UFO~\cite{zhang2025ufo}                 & A & D & model & n.r. & P & N \\
+AppAgent~\cite{zhang2025appagent}       & A & Mo & model & n.r. & Y & N \\
+CogAgent~\cite{hong2024cogagent}        & M & Wr, Mo & n/a & N & N & Y \\
+MemGPT~\cite{packer2023memgpt}          & A & n/a & n/a & N & Y & n.r. \\
+AgentDojo~\cite{debenedetti2024agentdojo} & B & Ws & benchmark & n.r. & N & Y \\
 \midrule
-Agentic Pilot                           & Y & Y & P$^{a}$ & P$^{b}$ & Y & P$^{c}$ & P$^{d}$ & P$^{e}$ \\
+Agentic Pilot (ours)                    & A & W$^{c}$ & in-loop rule & Y & P$^{d}$ & Y \\
 \bottomrule
 \end{tabular}
 \vspace{2pt}
 
 \raggedright\scriptsize
-$^{a}$Designed (Section~\ref{sec:computer}); a prototype executor exists but is not wired into the agent. $^{b}$Rule-based predicate $\Phi$ with measured misses (Section~\ref{sec:results}). Benchmark-side checkers (WebArena, OSWorld, AgentDojo) and post-hoc judges (WebVoyager) are not in-agent gates. $^{c}$Outcome records are stored and retrieved; their effect is not yet measured. $^{d}$Pattern denylist on element text. $^{e}$Task-level, triggered by the intent's action type or model-assigned risk level. AppAgent targets Android, which we do not count as desktop.
+$^{a}$An evaluator gives feedback between trials. $^{b}$Used for evaluation. $^{c}$Implemented backend; a desktop backend is designed (Appendix~\ref{app:computer}) and not integrated; our end-to-end harness uses self-hosted sites (Wr), not yet run with a model. $^{d}$Implemented and retrieved; its effect is not measured.
 \end{table}

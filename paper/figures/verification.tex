@@ -1,0 +1,51 @@
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  x=0.99cm, y=1.12cm,
+  font=\scriptsize,
+  b/.style={draw, rounded corners=1.5pt, align=center, inner sep=2pt, minimum height=0.5cm, fill=white},
+  e/.style={draw, align=left, inner sep=1.5pt, font=\tiny, minimum width=2.4cm, fill=gray!6},
+  c/.style={draw, circle, inner sep=0.5pt, minimum size=0.42cm, font=\tiny, fill=white},
+  arr/.style={-{Stealth[length=1.4mm]}, semithick},
+  lab/.style={font=\tiny, inner sep=1pt}]
+
+\node[b] (act) at (0,0) {action $a_t$\\executed};
+\node[b] (alpha) at (0,-1.15) {dispatch\\$\alpha_t\in\{0,1\}$};
+\node[b] (rec) at (0,-2.45) {recovery: retry,\\vision, \dots};
+
+\node[e] (ev1) at (2.35, 0.55) {URL, title, frames\\(error, sign-in, bot check)};
+\node[e] (ev2) at (2.35,-0.15) {search parameters\\of the results page};
+\node[e] (ev3) at (2.35,-0.85) {values of inputs\\and editable regions};
+\node[e] (ev4) at (2.35,-1.55) {answer / structured\\extraction};
+\node[e] (ev5) at (2.35,-2.25) {plan and step\\status};
+
+\node[c] (cB) at (4.15, 0.75) {$\beta$};
+\node[c] (cE) at (4.15, 0.25) {$E$};
+\node[c] (cH) at (4.15,-0.25) {$H$};
+\node[c] (cQ) at (4.15,-0.75) {$Q$};
+\node[c] (cT) at (4.15,-1.25) {$T$};
+\node[c] (cX) at (4.15,-1.75) {$X$};
+\node[c] (cR) at (4.15,-2.25) {$R$};
+
+\node[b, fill=gray!20, very thick] (and) at (5.35,-1.0) {$\Phi$\\$=\bigwedge$};
+\node[b] (ok) at (6.95,-0.35) {\textsc{Completed}\\proof, memory};
+\node[b] (no) at (6.95,-1.45) {reject: observe\\and replan};
+\node[b] (blk) at (6.95,0.75) {\textsc{Blocked}: hand-off};
+\node[draw, dashed, align=center, inner sep=2pt, font=\tiny] (store) at (6.95,-2.45) {evidence: decision +\\observed values};
+
+\draw[arr] (act) -- (alpha);
+\draw[arr] (alpha) -- node[lab, left] {0} (rec);
+\draw[arr] (alpha.east) -- node[lab, below] {1} ++(0.35,0) |- (ev1.west);
+\foreach \n in {ev2,ev3,ev4,ev5} \draw[arr] ($(alpha.east)+(0.35,0)$) |- (\n.west);
+\draw[arr] (ev1.east) -- (cB.west); \draw[arr] (ev1.east) -- (cE.west); \draw[arr] (ev1.east) -- (cH.west);
+\draw[arr] (ev2.east) -- (cQ.west); \draw[arr] (ev3.east) -- (cT.west);
+\draw[arr] (ev4.east) -- (cX.west); \draw[arr] (ev5.east) -- (cR.west);
+\foreach \n in {cE,cH,cQ,cT,cX,cR} \draw[arr] (\n.east) -- (and.west);
+\draw[arr] (cB.east) -- (blk.west);
+\draw[arr] (and.east) -- ++(0.25,0) |- node[lab, right, pos=0.3] {holds} (ok.west);
+\draw[arr] (and.east) -- ++(0.25,0) |- node[lab, right, pos=0.3] {fails} (no.west);
+\draw[arr, dashed] (and.south) |- (store.west);
+\end{tikzpicture}
+\caption{Evidence-gated verification after an action (Algorithm~\ref{alg:loop}, lines~\ref{alg:beta} and~\ref{alg:phi}). A failed dispatch goes to recovery and never to $\Phi$. A successful dispatch makes the observed values available to the conjuncts of the browser predicate, each triggered by the wording of the goal (Section~\ref{sec:problem}); the bot-check condition $\beta$ is tested first and hands the task to the user. Every decision is stored with the values it used.}
+\label{fig:verify}
+\end{figure}

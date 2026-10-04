@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\caption{End-to-end evaluation design (implemented in \texttt{benchmarks/e2e}, not yet run with a model). Each configuration changes one factor of the full system; all use the same tasks, model, sampling and budget.}
+\label{tab:e2e}
+\footnotesize
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{@{}p{2.95cm}p{2.85cm}p{2.6cm}@{}}
+\toprule
+Configuration & Change & Question \\
+\midrule
+\texttt{full} & -- & task success, FCR, FRR, cost \\
+\texttt{no\_verification} & every completion claim accepted & baseline (a); gain and overhead of $\Phi$ \\
+\texttt{self\_verification} & planner model judges its own completion & baseline (b) \\
+\texttt{gate\_without\_}$c$ & conjunct $c$ removed & per-evidence ablation \\
+\texttt{no\_memory} & memory and RAG off & contribution of memory \\
+\texttt{no\_recovery} & failures not retried & contribution of recovery \\
+\texttt{recovery\_}$s$\texttt{\_only} & strategy $s$ pinned & per-strategy recovery \\
+\texttt{single\_model}, \texttt{vision\_only} & routing off; no element list & routing, grounding \\
+\bottomrule
+\end{tabular}
+\end{table}
