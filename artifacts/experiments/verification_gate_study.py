@@ -96,6 +96,7 @@ class Case:
     task_plan: TaskPlan | None = None
     last_action: str = "complete"  # planner action that preceded verification
     held_out: bool = False
+    split: str = "design"
 
 
 SEARCH_GOAL = "Search Google for 'Alan Turing'"
@@ -202,7 +203,17 @@ HELDOUT: list[Case] = [
 ]
 for _h in HELDOUT:
     _h.held_out = True
+    _h.split = "held_out"
 CASES += HELDOUT
+
+# Second held-out set, frozen in its own commit before the gate was run on it (gate_heldout2.py).
+sys.path.insert(0, str(Path(__file__).parent))
+from gate_heldout2 import build as _build_heldout2  # noqa: E402
+
+HELDOUT2 = _build_heldout2(Case, page, results, plan)
+for _h in HELDOUT2:
+    _h.held_out = True
+    _h.split = "held_out_2"
 
 for _c in CASES:
     if _c.category in ("search", "text_entry"):
@@ -212,12 +223,13 @@ for _c in CASES:
 for _c in CASES:
     if _c.cid in ("P2", "P3", "P4", "H12"):
         _c.last_action = "click"
+CASES += HELDOUT2  # their last actions are set in gate_heldout2.py
 
 
-async def gate_decision(vm: VerificationManager, pg, case: Case) -> tuple[str, str]:
+async def gate_decision(vm: VerificationManager, pg, case: Case, skip_bot_check: bool = False) -> tuple[str, str]:
     """Replicates verify_node's completion decision (nodes.py) for a terminal step."""
     is_captcha, reason = await detect_captcha(pg)
-    if is_captcha or "/sorry/" in (pg.url or "").lower():
+    if not skip_bot_check and (is_captcha or "/sorry/" in (pg.url or "").lower()):
         return "blocked", reason or "sorry url"
     res = await vm.verify_task_completion(
         page=pg, intent_action="fixture", intent_site=None, current_url=pg.url, navigation_succeeded=True,
@@ -305,7 +317,7 @@ async def main(reps: int) -> None:
                 times.append((time.perf_counter() - t0) * 1000)
             await pg.close()
             rows.append({
-                "case": case.cid, "split": "held_out" if case.held_out else "design", "category": case.category, "goal": case.goal, "url": case.url,
+                "case": case.cid, "split": case.split, "category": case.category, "goal": case.goal, "url": case.url,
                 "oracle_satisfied": int(case.oracle), "oracle_rationale": case.rationale,
                 "dispatch_rule": "completed", "gate_decision": decision,
                 "gate_reports_complete": int(decision == "completed"),
@@ -344,11 +356,16 @@ async def main(reps: int) -> None:
 
     design = [r for r in rows if r["split"] == "design"]
     held = [r for r in rows if r["split"] == "held_out"]
+    held2 = [r for r in rows if r["split"] == "held_out_2"]
     summary = summarise(design, "all")
     for cat in dict.fromkeys(r["category"] for r in design):
         summary += summarise([r for r in design if r["category"] == cat], cat)
     if held:
         summary += summarise(held, "held_out")
+    if held2:
+        summary += summarise(held2, "held_out_2")
+        for cat in dict.fromkeys(r["category"] for r in held2):
+            summary += summarise([r for r in held2 if r["category"] == cat], "held_out_2:" + cat)
     with open(OUT / "verification_gate_summary.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(summary[0].keys()))
         w.writeheader()
@@ -366,7 +383,54 @@ async def main(reps: int) -> None:
               f'live_empty={r["live_empty_decision"]:9s} live_verbose={r["live_verbose_decision"]:9s} {r["oracle_rationale"]}')
 
 
+ABLATIONS = ["none", "E", "H", "Q", "T", "X", "R", "B"]
+
+
+async def ablation() -> None:
+    """Component decision on every state with one conjunct of Phi (or the bot-check halt B) removed."""
+    from backend.config import get_config
+
+    cfg = get_config()
+    vm = VerificationManager()
+    rows = []
+    async with async_playwright() as pw:
+        browser = await pw.chromium.launch(headless=True)
+        ctx = await browser.new_context()
+        for case in CASES:
+            pg = await ctx.new_page()
+
+            def make_handler(html: str):
+                async def handler(route):
+                    await route.fulfill(status=200, content_type="text/html", body=html)
+                return handler
+
+            await pg.route("**/*", make_handler(case.html))
+            await pg.goto(case.url)
+            row = {"case": case.cid, "split": case.split, "category": case.category, "oracle_satisfied": int(case.oracle)}
+            for removed in ABLATIONS:
+                cfg.verification_disabled_checks = [removed] if removed not in ("none", "B") else []
+                decision, _ = await gate_decision(vm, pg, case, skip_bot_check=(removed == "B"))
+                row[f"without_{removed}"] = int(decision == "completed")
+            cfg.verification_disabled_checks = []
+            rows.append(row)
+            await pg.close()
+        await browser.close()
+    with open(OUT / "verification_gate_ablation.csv", "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+        w.writeheader()
+        w.writerows(rows)
+    for split in ("design", "held_out", "held_out_2"):
+        sub = [r for r in rows if r["split"] == split]
+        for removed in ABLATIONS:
+            fc = sum(1 for r in sub if r[f"without_{removed}"] and not r["oracle_satisfied"])
+            fr = sum(1 for r in sub if not r[f"without_{removed}"] and r["oracle_satisfied"])
+            print(f"{split:10s} without {removed:4s}: false completions {fc:2d}/{sum(1 for r in sub if not r['oracle_satisfied'])}"
+                  f"  false rejections {fr:2d}/{sum(1 for r in sub if r['oracle_satisfied'])}")
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--reps", type=int, default=20)
-    asyncio.run(main(ap.parse_args().reps))
+    ap.add_argument("--ablation", action="store_true", help="run the per-conjunct ablation instead")
+    a = ap.parse_args()
+    asyncio.run(ablation() if a.ablation else main(a.reps))

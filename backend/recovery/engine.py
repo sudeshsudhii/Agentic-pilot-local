@@ -98,6 +98,12 @@ class RecoveryEngine:
         if retry_count >= self.max_total_retries:
             return "exhausted"
 
+        # Experiments can pin one strategy to compare strategies (PILOT_RECOVERY_FIXED_STRATEGY).
+        from backend.config import get_config
+        fixed = get_config().recovery_fixed_strategy
+        if fixed:
+            return fixed
+
         # Determine which strategy level based on retries
         strategy_index = min(retry_count // self.max_retries_per_strategy, len(STRATEGY_LEVELS) - 1)
 

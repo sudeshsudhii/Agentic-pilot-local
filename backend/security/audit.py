@@ -65,7 +65,9 @@ class PrivacyAuditor:
         self._stats["total_prompt_bytes"] += prompt_bytes
         self._stats["total_response_bytes"] += response_bytes
 
-        is_local = "127.0.0.1" in destination or "localhost" in destination
+        from backend.security.locality import is_loopback_url
+
+        is_local = is_loopback_url(destination)
         entry = {
             "timestamp": datetime.now(UTC).isoformat(),
             "type": "llm_call",

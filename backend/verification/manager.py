@@ -214,6 +214,9 @@ class VerificationManager:
         """
         expected: dict[str, Any] = {"task_completed": True}
         observed: dict[str, Any] = {}
+        # Conjuncts switched off for the ablation study (E, H, Q, T, X, R); empty in normal use.
+        from backend.config import get_config
+        disabled = {c.upper() for c in get_config().verification_disabled_checks}
 
         # 1. Page responsiveness & error checking
         try:
@@ -249,7 +252,9 @@ class VerificationManager:
             observed["has_error_state"] = True
             expected["has_error_state"] = False
 
-        if observed.get("has_error_state"):
+        if "E" in disabled:
+            expected.pop("has_error_state", None)  # ablation: the error conjunct is not part of Phi
+        elif observed.get("has_error_state"):
             observed["task_completed"] = False
             return await self.verify_expected_vs_observed(expected, observed, "task_completion")
 
@@ -262,7 +267,7 @@ class VerificationManager:
         cur_url = observed.get("page_url", "")
         is_search_homepage = cur_url.rstrip("/").endswith(("google.com", "google.co.in", "bing.com", "duckduckgo.com")) and "search" not in cur_url and "q=" not in cur_url
 
-        if is_multistep and is_search_homepage:
+        if is_multistep and is_search_homepage and "H" not in disabled:
             logger.warning("VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.")
             observed["task_completed"] = False
             observed["premature_completion_prevented"] = True
@@ -271,7 +276,7 @@ class VerificationManager:
 
         # 2b. A results page must be for the requested query, not just any query.
         wanted_query = requested_search_query(input_text)
-        if wanted_query and not is_search_homepage:
+        if wanted_query and not is_search_homepage and "Q" not in disabled:
             from urllib.parse import parse_qs, urlparse
             params = parse_qs(urlparse(cur_url).query)
             got = " ".join(params.get("q", []) + params.get("query", []) + params.get("p", [])).lower()
@@ -286,7 +291,7 @@ class VerificationManager:
 
         # 3. Check if user requested typing/entering specific text
         exact_text = extract_exact_text_to_type(input_text)
-        if exact_text:
+        if exact_text and "T" not in disabled:
             expected["text_verified"] = exact_text
             try:
                 values = await page.evaluate("""() => {
@@ -314,7 +319,7 @@ class VerificationManager:
                 return await self.verify_expected_vs_observed(expected, observed, "task_completion")
 
         # 4. If extraction was requested, verify extracted data is present
-        if requires_extract:
+        if requires_extract and "X" not in disabled:
             # An answer counts only if it mentions the goal's content terms; length alone is not evidence.
             terms = goal_content_terms(input_text)
 
@@ -340,7 +345,7 @@ class VerificationManager:
         # 5. Check TaskPlan completion if present
         # For a one-step plan the step *is* the task and the checks above judge it; R only guards
         # multi-step plans against skipping steps.
-        if task_plan and hasattr(task_plan, "steps") and len(task_plan.steps) > 1:
+        if task_plan and hasattr(task_plan, "steps") and len(task_plan.steps) > 1 and "R" not in disabled:
             uncompleted = [s for s in task_plan.steps if s.status != "completed" and s.action_type not in ["verify", "complete"]]
             # A free-text answer no longer excuses pending steps; only structured extraction does.
             if uncompleted and not extracted_data:
@@ -374,6 +379,74 @@ class VerificationManager:
             observed["is_file"] = path.is_file()
 
         return await self.verify_expected_vs_observed(expected, observed, "file_state")
+
+    async def self_verify_completion(
+        self,
+        page: Page,
+        input_text: str,
+        final_answer: str | None = None,
+        extracted_data: Any | None = None,
+        model_override: str | None = None,
+    ) -> VerificationResult:
+        """Baseline completion check: ask the planner model whether the task is done.
+
+        The model sees the same observation the rule gate uses (URL, title, input values,
+        visible text, the agent's answer). It is a self-verification baseline, not part of Phi.
+        """
+        import json as _json
+
+        from backend.llm.gateway import OllamaGateway
+
+        gateway = OllamaGateway()
+        try:
+            title = await page.title()
+            url = page.url
+            snapshot = await page.evaluate("""() => {
+                const vals = [];
+                document.querySelectorAll('input, textarea').forEach(el => { if (el.value) vals.push(el.value); });
+                return {inputs: vals, text: (document.body ? document.body.innerText : '').slice(0, 2000)};
+            }""")
+        except Exception as exc:
+            return VerificationResult(verified=False, type="task_completion_self", message=f"FAIL: page unreadable ({exc})")
+
+        user = (
+            f"Task: {input_text}\n"
+            f"Current URL: {url}\nPage title: {title}\n"
+            f"Values in input fields: {snapshot.get('inputs')}\n"
+            f"Agent's answer: {final_answer or ''}\n"
+            f"Agent's extracted data: {_json.dumps(extracted_data, default=str)[:500] if extracted_data else ''}\n"
+            f"Visible page text (truncated):\n{snapshot.get('text', '')}"
+        )
+        observed: dict[str, Any] = {"page_url": url, "page_title": title}
+        try:
+            judgement = await gateway.complete_structured(
+                SELF_CHECK_SYSTEM_PROMPT, user, SelfCheck, model_override=model_override
+            )
+            observed["task_completed"] = bool(judgement.done)
+            observed["self_check_reason"] = judgement.reason
+        except Exception as exc:
+            observed["task_completed"] = False
+            observed["self_check_error"] = str(exc)
+        return VerificationResult(
+            verified=bool(observed["task_completed"]),
+            type="task_completion_self",
+            expected={"task_completed": True},
+            observed=observed,
+            message="PASS (self-check)" if observed["task_completed"] else "FAIL (self-check)",
+        )
+
+
+SELF_CHECK_SYSTEM_PROMPT = (
+    "You check whether a browser agent has finished the user's task. Judge only from the observation "
+    "given. Answer done=true only if the task as stated is fully achieved on this page or by the agent's answer."
+)
+
+
+class SelfCheck(BaseModel):
+    """Answer of the self-verification baseline."""
+
+    done: bool = Field(description="true if the task is fully achieved")
+    reason: str = Field(default="", description="one sentence")
 
 
 

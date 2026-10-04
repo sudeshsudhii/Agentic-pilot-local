@@ -12,6 +12,8 @@ class PilotConfig(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="PILOT_", extra="ignore")
 
     ollama_base_url: str = "http://127.0.0.1:11434"
+    # A non-loopback model endpoint is refused unless this is set (PILOT_ALLOW_REMOTE_MODEL=true).
+    allow_remote_model: bool = False
     ollama_model: str = "qwen2.5:1.5b"
     ollama_vision_model: str = "moondream"
     db_path: str = "~/.pilot/data.db"
@@ -41,6 +43,13 @@ class PilotConfig(BaseSettings):
     # "dom" (default): DOM-first with vision fallback. "vision_only": ablation that withholds the
     # element manifest from the planner so every action is grounded by the vision model.
     grounding_mode: str = "dom"
+    # Completion check: "rule" (the predicate Phi), "self" (the planner model judges its own
+    # completion; baseline) or "none" (accept every completion claim; same as enable_verification=False).
+    verification_mode: str = "rule"
+    # Conjuncts of Phi to switch off for ablations: any of E, H, Q, T, X, R, and B (bot-check halt).
+    verification_disabled_checks: list[str] = Field(default_factory=list)
+    # Pin one recovery strategy (retry, alternative_selector, vision_fallback, replan) for experiments.
+    recovery_fixed_strategy: str | None = None
 
     # --- Sampling (reproducibility) ---
     # Unset means each Ollama model's own default. Set e.g. PILOT_LLM_TEMPERATURE=0 PILOT_LLM_SEED=7.

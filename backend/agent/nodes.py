@@ -1340,7 +1340,8 @@ async def verify_node(state: AgentState) -> dict:
     from backend.browser.dom import detect_captcha
     is_captcha, captcha_reason = await detect_captcha(page)
     manifest = state.get("action_manifest")
-    if is_captcha or (manifest and manifest.page_state == "captcha") or ("/sorry/" in (page.url or "").lower()):
+    bot_check_disabled = "B" in {c.upper() for c in get_config().verification_disabled_checks}
+    if not bot_check_disabled and (is_captcha or (manifest and manifest.page_state == "captcha") or ("/sorry/" in (page.url or "").lower())):
         logger.warning(
             "[OBSERVATION]\nCAPTCHA detected\n\n"
             "[BROWSER]\nURL=%s\n\n"
@@ -1443,10 +1444,25 @@ async def verify_node(state: AgentState) -> dict:
     if should_verify_completion:
         await database.add_event(state["task_id"], "VERIFICATION_STARTED", "Starting task verification")
 
+        verification_mode = get_config().verification_mode
         if not get_config().enable_verification:
+            verification_mode = "none"
+        check_started = time.perf_counter()
+        self_check_calls = 0
+        if verification_mode == "none":
             # Ablation: accept the completion claim without checking the page.
             from backend.verification.manager import VerificationResult
             v_res = VerificationResult(verified=True, type="task_completion_disabled", message="PASS (verification disabled)")
+        elif verification_mode == "self":
+            # Baseline: the planner model judges its own completion from the same observation.
+            v_res = await verification_manager.self_verify_completion(
+                page=page,
+                input_text=state.get("input_text", ""),
+                final_answer=state.get("final_answer"),
+                extracted_data=state.get("extracted_data"),
+                model_override=state.get("selected_model"),
+            )
+            self_check_calls = 1
         else:
             # The answer is what an extraction or a `complete` action produced; the reasoning of an
             # ordinary action (click, type, ...) is not an answer and is not used here.
@@ -1461,6 +1477,7 @@ async def verify_node(state: AgentState) -> dict:
                 extracted_data=state.get("extracted_data"),
                 final_answer=state.get("final_answer"),
             )
+        check_latency_ms = round((time.perf_counter() - check_started) * 1000, 2)
         evidence_manager.save_verification(state["task_id"], v_res.model_dump())
         logger.info(
             "[VERIFICATION]\nexpected=%s\nobserved=%s\npassed=%s",
@@ -1470,8 +1487,10 @@ async def verify_node(state: AgentState) -> dict:
             state["task_id"],
             "VERIFICATION_RESULT",
             f"Verification {'passed' if v_res.verified else 'rejected'}: {v_res.message}",
-            {"passed": v_res.verified, "message": v_res.message, "expected": v_res.expected, "observed": v_res.observed}
+            {"passed": v_res.verified, "message": v_res.message, "expected": v_res.expected, "observed": v_res.observed,
+             "mode": verification_mode, "latency_ms": check_latency_ms, "model_calls": self_check_calls}
         )
+        llm_calls = state.get("llm_call_count", 0) + self_check_calls
 
         if not v_res.verified:
             # PREMATURE TASK COMPLETION PREVENTED: Continue loop!
@@ -1480,9 +1499,9 @@ async def verify_node(state: AgentState) -> dict:
                 "[TASK]\nstep=%d/%d\ncompleted=false\nreason=Premature completion prevented: %s",
                 cur_step_idx, total_steps, v_res.message,
             )
-            if state.get("llm_call_count", 0) >= 15:
-                return {"status": "failed", "error": f"Max iterations exceeded without satisfying goal: {v_res.message}"}
-            return {"status": "running", "error": None}
+            if llm_calls >= 15:
+                return {"status": "failed", "error": f"Max iterations exceeded without satisfying goal: {v_res.message}", "llm_call_count": llm_calls}
+            return {"status": "running", "error": None, "llm_call_count": llm_calls}
 
         # Objective is verified and completed
         logger.info(
@@ -1510,6 +1529,7 @@ async def verify_node(state: AgentState) -> dict:
         
         final_answer = state.get("final_answer") or (action.reasoning if action else "Task completed successfully.")
         return {
+            "llm_call_count": llm_calls,
             "status": "waiting_approval" if requires_approval(intent) and not state.get("approved") else "completed",
             "result": {
                 "success": True,

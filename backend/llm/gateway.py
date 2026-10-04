@@ -13,6 +13,19 @@ from backend.llm.parser import parse_model_response
 
 logger = logging.getLogger("pilot.llm")
 
+# Process-wide model usage counters, read and reset by the experiment harness between tasks.
+# Token counts are those Ollama reports (prompt_eval_count, eval_count).
+usage = {"calls": 0, "prompt_tokens": 0, "completion_tokens": 0, "latency_ms": 0}
+
+
+def reset_usage() -> dict:
+    """Return the counters accumulated so far and reset them."""
+
+    snapshot = dict(usage)
+    for key in usage:
+        usage[key] = 0
+    return snapshot
+
 
 class OllamaGateway:
     """Async wrapper around the Ollama Python client."""
@@ -29,6 +42,9 @@ class OllamaGateway:
         if self._client is None:
             import ollama
 
+            from backend.security.locality import require_local_endpoint
+
+            require_local_endpoint(self.config.ollama_base_url, self.config.allow_remote_model)
             self._client = ollama.AsyncClient(host=self.config.ollama_base_url)
         return self._client
 
@@ -103,6 +119,10 @@ class OllamaGateway:
                 response = await self._client_instance().chat(**request)
                 latency_ms = int((time.perf_counter() - started) * 1000)
                 content = response.get("message", {}).get("content", "")
+                usage["calls"] += 1
+                usage["prompt_tokens"] += int(response.get("prompt_eval_count") or 0)
+                usage["completion_tokens"] += int(response.get("eval_count") or 0)
+                usage["latency_ms"] += latency_ms
                 logger.info(
                     "OLLAMA_CALL model=%s latency_ms=%d tokens_in~=%d tokens_out~=%d",
                     model_name, latency_ms,

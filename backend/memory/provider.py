@@ -13,6 +13,7 @@ from pydantic import BaseModel
 
 from backend.config import get_config
 from backend.db.database import database, resolve_path
+from backend.security.locality import local_chroma_settings
 
 class MemoryRecord(BaseModel):
     """A single episodic or semantic memory."""
@@ -57,7 +58,7 @@ class ChromaProvider(MemoryProvider):
 
     def __init__(self) -> None:
         db_path = resolve_path(get_config().db_path).parent / "chroma"
-        self.chroma = chromadb.PersistentClient(path=str(db_path))
+        self.chroma = chromadb.PersistentClient(path=str(db_path), settings=local_chroma_settings())
         self.collection = self.chroma.get_or_create_collection("pilot_memories")
 
     async def store_memory(self, content: str, memory_type: str = "semantic", task_id: str | None = None, tags: list[str] | None = None) -> MemoryRecord | None:

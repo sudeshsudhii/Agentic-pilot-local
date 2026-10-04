@@ -11,6 +11,7 @@ import chromadb
 
 from backend.config import get_config
 from backend.db.database import resolve_path
+from backend.security.locality import local_chroma_settings
 from backend.rag.models import KnowledgeChunk, RetrievedChunk
 
 logger = logging.getLogger("pilot.rag.store")
@@ -33,7 +34,7 @@ class KnowledgeStore:
             self.db_path = resolve_path(config.db_path).parent / "chroma"
 
         self.db_path.mkdir(parents=True, exist_ok=True)
-        self.chroma = chromadb.PersistentClient(path=str(self.db_path))
+        self.chroma = chromadb.PersistentClient(path=str(self.db_path), settings=local_chroma_settings())
         self.collection = self.chroma.get_or_create_collection(self.collection_name)
 
     async def add_chunks(self, chunks: list[KnowledgeChunk]) -> int:

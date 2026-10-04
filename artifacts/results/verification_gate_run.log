@@ -330,8 +330,177 @@ Bot verification required
 
 [TASK]
 status=blocked
-python=3.11.15 platform=Linux-6.18.44-fc-v50-x86_64-with-glibc2.39 reps=20
-cases=38 (+12 held-out) full decisions (pre-check + Phi): n=35 median=30.60 ms max=39.48; stopped at pre-check: n=3 values=[0.0, 5.49, 6.31]
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; premature_completion_prevented: expected=False, observed=True - continuing loop
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; premature_completion_prevented: expected=False, observed=True - continuing loop
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; premature_completion_prevented: expected=False, observed=True - continuing loop
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; premature_completion_prevented: expected=False, observed=True - continuing loop
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+VERIFY_TASK_COMPLETION REJECTED: Browser is only at search engine homepage, but user requested search/extract.
+NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; has_error_state: expected=False, observed=True - continuing loop
+[OBSERVATION]
+CAPTCHA detected
+
+[BROWSER]
+URL=https://search.example.com/?q=news
+
+[VERIFICATION]
+Bot verification required
+
+[TASK]
+status=blocked
+[OBSERVATION]
+CAPTCHA detected
+
+[BROWSER]
+URL=https://search.example.com/?q=news
+
+[VERIFICATION]
+Bot verification required
+
+[TASK]
+status=blocked
+[OBSERVATION]
+CAPTCHA detected
+
+[BROWSER]
+URL=https://www.example.com/security
+
+[VERIFICATION]
+Bot verification required
+
+[TASK]
+status=blocked
+[OBSERVATION]
+CAPTCHA detected
+
+[BROWSER]
+URL=https://www.example.com/security
+
+[VERIFICATION]
+Bot verification required
+
+[TASK]
+status=blocked
+[OBSERVATION]
+CAPTCHA detected
+
+[BROWSER]
+URL=https://forum.example.org/
+
+[VERIFICATION]
+Bot verification required
+
+[TASK]
+status=blocked
+[OBSERVATION]
+CAPTCHA detected
+
+[BROWSER]
+URL=https://forum.example.org/
+
+[VERIFICATION]
+Bot verification required
+
+[TASK]
+status=blocked
+[OBSERVATION]
+CAPTCHA detected
+
+[BROWSER]
+URL=https://www.google.com/sorry/index?continue=x
+
+[VERIFICATION]
+Bot verification required
+
+[TASK]
+status=blocked
+[OBSERVATION]
+CAPTCHA detected
+
+[BROWSER]
+URL=https://www.google.com/sorry/index?continue=x
+
+[VERIFICATION]
+Bot verification required
+
+[TASK]
+status=blocked
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; text_verified: expected=Order #4471, observed=Order #4417; premature_completion_prevented: expected=False, observed=True - continuing loop
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; text_verified: expected=Order #4471, observed=Order #4417; premature_completion_prevented: expected=False, observed=True - continuing loop
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+VERIFY_TASK_COMPLETION REJECTED: Requested text 'Order #4471' not verified on page.
+NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; remaining_steps: expected=0, observed=1 - continuing loop
+NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; remaining_steps: expected=0, observed=1 - continuing loop
+NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; remaining_steps: expected=0, observed=1 - continuing loop
+NODE=verify_node COMPLETION_REJECTED: FAIL — task_completed: expected=True, observed=False; remaining_steps: expected=0, observed=1 - continuing loop
+python=3.11.15 platform=Linux-6.18.44-fc-v64-x86_64-with-glibc2.39 reps=20
+cases=38 (+12 held-out) full decisions (pre-check + Phi): n=35 median=27.95 ms max=34.64; stopped at pre-check: n=3 values=[0.0, 4.52, 4.88]
 {'subset': 'all', 'rule': 'dispatch_only', 'n_cases': 38, 'n_oracle_true': 15, 'n_oracle_false': 23, 'reported_complete': 38, 'false_completions': 23, 'FCR': 0.605, 'false_rejections': 0, 'false_rejection_rate': 0.0}
 {'subset': 'all', 'rule': 'component', 'n_cases': 38, 'n_oracle_true': 15, 'n_oracle_false': 23, 'reported_complete': 17, 'false_completions': 3, 'FCR': 0.176, 'false_rejections': 1, 'false_rejection_rate': 0.067}
 {'subset': 'all', 'rule': 'live_empty', 'n_cases': 38, 'n_oracle_true': 15, 'n_oracle_false': 23, 'reported_complete': 17, 'false_completions': 3, 'FCR': 0.176, 'false_rejections': 1, 'false_rejection_rate': 0.067}
@@ -364,6 +533,34 @@ cases=38 (+12 held-out) full decisions (pre-check + Phi): n=35 median=30.60 ms m
 {'subset': 'held_out', 'rule': 'component', 'n_cases': 12, 'n_oracle_true': 7, 'n_oracle_false': 5, 'reported_complete': 9, 'false_completions': 3, 'FCR': 0.333, 'false_rejections': 1, 'false_rejection_rate': 0.143}
 {'subset': 'held_out', 'rule': 'live_empty', 'n_cases': 12, 'n_oracle_true': 7, 'n_oracle_false': 5, 'reported_complete': 9, 'false_completions': 3, 'FCR': 0.333, 'false_rejections': 1, 'false_rejection_rate': 0.143}
 {'subset': 'held_out', 'rule': 'live_verbose', 'n_cases': 12, 'n_oracle_true': 7, 'n_oracle_false': 5, 'reported_complete': 9, 'false_completions': 3, 'FCR': 0.333, 'false_rejections': 1, 'false_rejection_rate': 0.143}
+{'subset': 'held_out_2', 'rule': 'dispatch_only', 'n_cases': 42, 'n_oracle_true': 20, 'n_oracle_false': 22, 'reported_complete': 42, 'false_completions': 22, 'FCR': 0.524, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2', 'rule': 'component', 'n_cases': 42, 'n_oracle_true': 20, 'n_oracle_false': 22, 'reported_complete': 32, 'false_completions': 13, 'FCR': 0.406, 'false_rejections': 1, 'false_rejection_rate': 0.05}
+{'subset': 'held_out_2', 'rule': 'live_empty', 'n_cases': 42, 'n_oracle_true': 20, 'n_oracle_false': 22, 'reported_complete': 32, 'false_completions': 13, 'FCR': 0.406, 'false_rejections': 1, 'false_rejection_rate': 0.05}
+{'subset': 'held_out_2', 'rule': 'live_verbose', 'n_cases': 42, 'n_oracle_true': 20, 'n_oracle_false': 22, 'reported_complete': 32, 'false_completions': 13, 'FCR': 0.406, 'false_rejections': 1, 'false_rejection_rate': 0.05}
+{'subset': 'held_out_2:search', 'rule': 'dispatch_only', 'n_cases': 6, 'n_oracle_true': 3, 'n_oracle_false': 3, 'reported_complete': 6, 'false_completions': 3, 'FCR': 0.5, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:search', 'rule': 'component', 'n_cases': 6, 'n_oracle_true': 3, 'n_oracle_false': 3, 'reported_complete': 4, 'false_completions': 1, 'FCR': 0.25, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:search', 'rule': 'live_empty', 'n_cases': 6, 'n_oracle_true': 3, 'n_oracle_false': 3, 'reported_complete': 4, 'false_completions': 1, 'FCR': 0.25, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:search', 'rule': 'live_verbose', 'n_cases': 6, 'n_oracle_true': 3, 'n_oracle_false': 3, 'reported_complete': 4, 'false_completions': 1, 'FCR': 0.25, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:navigation', 'rule': 'dispatch_only', 'n_cases': 8, 'n_oracle_true': 4, 'n_oracle_false': 4, 'reported_complete': 8, 'false_completions': 4, 'FCR': 0.5, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:navigation', 'rule': 'component', 'n_cases': 8, 'n_oracle_true': 4, 'n_oracle_false': 4, 'reported_complete': 7, 'false_completions': 3, 'FCR': 0.429, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:navigation', 'rule': 'live_empty', 'n_cases': 8, 'n_oracle_true': 4, 'n_oracle_false': 4, 'reported_complete': 7, 'false_completions': 3, 'FCR': 0.429, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:navigation', 'rule': 'live_verbose', 'n_cases': 8, 'n_oracle_true': 4, 'n_oracle_false': 4, 'reported_complete': 7, 'false_completions': 3, 'FCR': 0.429, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:captcha', 'rule': 'dispatch_only', 'n_cases': 6, 'n_oracle_true': 2, 'n_oracle_false': 4, 'reported_complete': 6, 'false_completions': 4, 'FCR': 0.667, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:captcha', 'rule': 'component', 'n_cases': 6, 'n_oracle_true': 2, 'n_oracle_false': 4, 'reported_complete': 2, 'false_completions': 1, 'FCR': 0.5, 'false_rejections': 1, 'false_rejection_rate': 0.5}
+{'subset': 'held_out_2:captcha', 'rule': 'live_empty', 'n_cases': 6, 'n_oracle_true': 2, 'n_oracle_false': 4, 'reported_complete': 2, 'false_completions': 1, 'FCR': 0.5, 'false_rejections': 1, 'false_rejection_rate': 0.5}
+{'subset': 'held_out_2:captcha', 'rule': 'live_verbose', 'n_cases': 6, 'n_oracle_true': 2, 'n_oracle_false': 4, 'reported_complete': 2, 'false_completions': 1, 'FCR': 0.5, 'false_rejections': 1, 'false_rejection_rate': 0.5}
+{'subset': 'held_out_2:text_entry', 'rule': 'dispatch_only', 'n_cases': 6, 'n_oracle_true': 3, 'n_oracle_false': 3, 'reported_complete': 6, 'false_completions': 3, 'FCR': 0.5, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:text_entry', 'rule': 'component', 'n_cases': 6, 'n_oracle_true': 3, 'n_oracle_false': 3, 'reported_complete': 5, 'false_completions': 2, 'FCR': 0.4, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:text_entry', 'rule': 'live_empty', 'n_cases': 6, 'n_oracle_true': 3, 'n_oracle_false': 3, 'reported_complete': 5, 'false_completions': 2, 'FCR': 0.4, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:text_entry', 'rule': 'live_verbose', 'n_cases': 6, 'n_oracle_true': 3, 'n_oracle_false': 3, 'reported_complete': 5, 'false_completions': 2, 'FCR': 0.4, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:extraction', 'rule': 'dispatch_only', 'n_cases': 10, 'n_oracle_true': 5, 'n_oracle_false': 5, 'reported_complete': 10, 'false_completions': 5, 'FCR': 0.5, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:extraction', 'rule': 'component', 'n_cases': 10, 'n_oracle_true': 5, 'n_oracle_false': 5, 'reported_complete': 10, 'false_completions': 5, 'FCR': 0.5, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:extraction', 'rule': 'live_empty', 'n_cases': 10, 'n_oracle_true': 5, 'n_oracle_false': 5, 'reported_complete': 10, 'false_completions': 5, 'FCR': 0.5, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:extraction', 'rule': 'live_verbose', 'n_cases': 10, 'n_oracle_true': 5, 'n_oracle_false': 5, 'reported_complete': 10, 'false_completions': 5, 'FCR': 0.5, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:multi_step', 'rule': 'dispatch_only', 'n_cases': 6, 'n_oracle_true': 3, 'n_oracle_false': 3, 'reported_complete': 6, 'false_completions': 3, 'FCR': 0.5, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:multi_step', 'rule': 'component', 'n_cases': 6, 'n_oracle_true': 3, 'n_oracle_false': 3, 'reported_complete': 4, 'false_completions': 1, 'FCR': 0.25, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:multi_step', 'rule': 'live_empty', 'n_cases': 6, 'n_oracle_true': 3, 'n_oracle_false': 3, 'reported_complete': 4, 'false_completions': 1, 'FCR': 0.25, 'false_rejections': 0, 'false_rejection_rate': 0.0}
+{'subset': 'held_out_2:multi_step', 'rule': 'live_verbose', 'n_cases': 6, 'n_oracle_true': 3, 'n_oracle_false': 3, 'reported_complete': 4, 'false_completions': 1, 'FCR': 0.25, 'false_rejections': 0, 'false_rejection_rate': 0.0}
 S1  oracle=0 component=rejected  live_empty=rejected  live_verbose=rejected  home page, no query issued
 S2  oracle=0 component=rejected  live_empty=rejected  live_verbose=rejected  home page, no query issued
 S3  oracle=0 component=rejected  live_empty=rejected  live_verbose=rejected  home page, no query issued
@@ -414,3 +611,45 @@ H9  oracle=1 component=completed live_empty=completed live_verbose=completed exa
 H10 oracle=1 component=completed live_empty=completed live_verbose=completed answer states the population
 H11 oracle=0 component=completed live_empty=completed live_verbose=completed answer gives another city's population
 H12 oracle=1 component=completed live_empty=completed live_verbose=completed both steps done
+G1  oracle=1 component=completed live_empty=completed live_verbose=completed results for the requested query
+G2  oracle=0 component=rejected  live_empty=rejected  live_verbose=rejected  home page, nothing searched
+G3  oracle=1 component=completed live_empty=completed live_verbose=completed results for the requested query
+G4  oracle=0 component=completed live_empty=completed live_verbose=completed results for a different destination
+G5  oracle=1 component=completed live_empty=completed live_verbose=completed results for the requested query
+G6  oracle=0 component=rejected  live_empty=rejected  live_verbose=rejected  query typed but not submitted
+V1  oracle=1 component=completed live_empty=completed live_verbose=completed requested page is open
+V2  oracle=1 component=completed live_empty=completed live_verbose=completed requested page is open
+V3  oracle=0 component=completed live_empty=completed live_verbose=completed generic error page
+V4  oracle=0 component=completed live_empty=completed live_verbose=completed redirected to a different page
+V5  oracle=1 component=completed live_empty=completed live_verbose=completed contact page is open
+V6  oracle=0 component=rejected  live_empty=rejected  live_verbose=rejected  login wall
+V7  oracle=0 component=completed live_empty=completed live_verbose=completed HTTP 410
+V8  oracle=1 component=completed live_empty=completed live_verbose=completed requested page is open
+B1  oracle=0 component=completed live_empty=completed live_verbose=completed press-and-hold human check
+B2  oracle=1 component=completed live_empty=completed live_verbose=completed article about the topic
+B3  oracle=0 component=blocked   live_empty=blocked   live_verbose=blocked   text CAPTCHA
+B4  oracle=1 component=blocked   live_empty=blocked   live_verbose=blocked   page only mentions reCAPTCHA
+B5  oracle=0 component=blocked   live_empty=blocked   live_verbose=blocked   visible hCaptcha challenge
+B6  oracle=0 component=blocked   live_empty=blocked   live_verbose=blocked   Google bot challenge
+E1  oracle=1 component=completed live_empty=completed live_verbose=completed text present
+E2  oracle=0 component=completed live_empty=completed live_verbose=completed field empty
+E3  oracle=1 component=completed live_empty=completed live_verbose=completed subject filled
+E4  oracle=0 component=rejected  live_empty=rejected  live_verbose=rejected  digits transposed
+E5  oracle=0 component=completed live_empty=completed live_verbose=completed only part of the text
+E6  oracle=1 component=completed live_empty=completed live_verbose=completed name filled
+Xa  oracle=1 component=completed live_empty=completed live_verbose=completed answer gives the height
+Xb  oracle=0 component=completed live_empty=completed live_verbose=completed answer lacks the height
+Xc  oracle=1 component=completed live_empty=completed live_verbose=completed correct year
+Xd  oracle=0 component=completed live_empty=completed live_verbose=completed wrong year
+Xe  oracle=0 component=completed live_empty=completed live_verbose=completed wrong city
+Xf  oracle=1 component=completed live_empty=completed live_verbose=completed correct city
+Xg  oracle=1 component=completed live_empty=completed live_verbose=completed structured extraction has the value
+Xh  oracle=0 component=completed live_empty=completed live_verbose=completed no answer produced
+Xi  oracle=1 component=completed live_empty=completed live_verbose=completed correct count
+Xj  oracle=0 component=completed live_empty=completed live_verbose=completed answer lacks the population
+M1  oracle=1 component=completed live_empty=completed live_verbose=completed both steps done
+M2  oracle=0 component=rejected  live_empty=rejected  live_verbose=rejected  second step pending
+M3  oracle=0 component=rejected  live_empty=rejected  live_verbose=rejected  third step pending
+M4  oracle=1 component=completed live_empty=completed live_verbose=completed all steps done
+M5  oracle=0 component=completed live_empty=completed live_verbose=completed add-to-cart click dispatched but nothing was added
+M6  oracle=1 component=completed live_empty=completed live_verbose=completed all steps done

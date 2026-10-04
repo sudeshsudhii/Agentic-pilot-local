@@ -1,0 +1,555 @@
+{
+ "version": 1,
+ "notes": "Fictional content; base is replaced by the local site address. split=dev may be used to debug the harness and prompts; split=test must not be run until the configuration is frozen. The jotter site appears only in the test split.",
+ "selection": "Tasks cover the six gate-study categories plus form submission and unsatisfiable requests, at tiers 1 (one action), 2 (two or three), 3 (four to six) and 4 (more). Excluded by design: tasks needing an account, payment, a CAPTCHA, the live web, or an outcome that neither the server state nor the answer text can check.",
+ "tasks": [
+  {
+   "id": "D01",
+   "split": "dev",
+   "site": "wiki",
+   "category": "navigation",
+   "tier": 1,
+   "goal": "Go to {base}/wiki/Velmora",
+   "oracle": {
+    "type": "final_url",
+    "path": "/wiki/Velmora"
+   }
+  },
+  {
+   "id": "D02",
+   "split": "dev",
+   "site": "wiki",
+   "category": "extraction",
+   "tier": 1,
+   "goal": "Open {base}/wiki/Lake_Tessaly and tell me the maximum depth of the lake",
+   "oracle": {
+    "type": "answer_contains",
+    "any": [
+     "214"
+    ]
+   }
+  },
+  {
+   "id": "D03",
+   "split": "dev",
+   "site": "findr",
+   "category": "search",
+   "tier": 2,
+   "goal": "Go to {base}/findr and search for 'Halden Bridge'",
+   "oracle": {
+    "type": "final_url",
+    "path": "/findr/search",
+    "query_contains": "halden bridge"
+   }
+  },
+  {
+   "id": "D04",
+   "split": "dev",
+   "site": "findr",
+   "category": "multi_step",
+   "tier": 3,
+   "goal": "Go to {base}/findr, search for 'Corvane', open the Openpedia article and tell me the year Edda Corvane was born",
+   "oracle": {
+    "type": "answer_contains",
+    "any": [
+     "1871"
+    ]
+   }
+  },
+  {
+   "id": "D05",
+   "split": "dev",
+   "site": "desk",
+   "category": "text_entry",
+   "tier": 2,
+   "goal": "Go to {base}/desk/contact and type 'Bin not collected' in the Message field. Do not submit.",
+   "oracle": {
+    "type": "draft",
+    "page": "/desk/contact",
+    "field": "message",
+    "equals": "Bin not collected",
+    "no_submission": "contact"
+   }
+  },
+  {
+   "id": "D06",
+   "split": "dev",
+   "site": "shop",
+   "category": "form",
+   "tier": 3,
+   "goal": "Go to {base}/shop and add the Ceramic mug 300 ml to the cart",
+   "oracle": {
+    "type": "cart",
+    "items": {
+     "QM-201": 1
+    }
+   }
+  },
+  {
+   "id": "D07",
+   "split": "dev",
+   "site": "shop",
+   "category": "extraction",
+   "tier": 2,
+   "goal": "Go to {base}/shop and find the price of the Steel kettle",
+   "oracle": {
+    "type": "answer_contains",
+    "any": [
+     "42.00",
+     "42 EUR",
+     "42"
+    ]
+   }
+  },
+  {
+   "id": "D08",
+   "split": "dev",
+   "site": "portal",
+   "category": "unsatisfiable",
+   "tier": 1,
+   "goal": "Go to {base}/portal/reports and tell me the total for Q3",
+   "oracle": {
+    "type": "unsatisfiable"
+   }
+  },
+  {
+   "id": "D09",
+   "split": "dev",
+   "site": "wiki",
+   "category": "navigation",
+   "tier": 2,
+   "goal": "Go to {base}/wiki/Main_Page and open the article about the Tarsk language",
+   "oracle": {
+    "type": "final_url",
+    "path": "/wiki/Tarsk_language"
+   }
+  },
+  {
+   "id": "D10",
+   "split": "dev",
+   "site": "desk",
+   "category": "form",
+   "tier": 3,
+   "goal": "Go to {base}/desk/newsletter and subscribe the email ana@example.org",
+   "oracle": {
+    "type": "newsletter",
+    "email": "ana@example.org"
+   }
+  },
+  {
+   "id": "T01",
+   "split": "test",
+   "site": "wiki",
+   "category": "extraction",
+   "tier": 1,
+   "goal": "Open {base}/wiki/Mirefield_Observatory and tell me its altitude",
+   "oracle": {
+    "type": "answer_contains",
+    "any": [
+     "2,310",
+     "2310"
+    ]
+   }
+  },
+  {
+   "id": "T02",
+   "split": "test",
+   "site": "wiki",
+   "category": "extraction",
+   "tier": 1,
+   "goal": "Open {base}/wiki/Tarsk_language and tell me how many speakers Tarsk has",
+   "oracle": {
+    "type": "answer_contains",
+    "any": [
+     "92,000",
+     "92000"
+    ]
+   }
+  },
+  {
+   "id": "T03",
+   "split": "test",
+   "site": "wiki",
+   "category": "extraction",
+   "tier": 2,
+   "goal": "Go to {base}/wiki/Main_Page, open the Halden Bridge article and tell me when the bridge opened",
+   "oracle": {
+    "type": "answer_contains",
+    "any": [
+     "1934"
+    ]
+   }
+  },
+  {
+   "id": "T04",
+   "split": "test",
+   "site": "findr",
+   "category": "search",
+   "tier": 2,
+   "goal": "Go to {base}/findr and search for 'glacial lake'",
+   "oracle": {
+    "type": "final_url",
+    "path": "/findr/search",
+    "query_contains": "glacial lake"
+   }
+  },
+  {
+   "id": "T05",
+   "split": "test",
+   "site": "findr",
+   "category": "multi_step",
+   "tier": 3,
+   "goal": "Search Findr at {base}/findr for 'observatory', open the result and tell me what the main telescope is",
+   "oracle": {
+    "type": "answer_contains",
+    "any": [
+     "1.8 m",
+     "1.8m",
+     "1.8-metre",
+     "1.8 metre"
+    ]
+   }
+  },
+  {
+   "id": "T06",
+   "split": "test",
+   "site": "findr",
+   "category": "multi_step",
+   "tier": 3,
+   "goal": "Use {base}/findr to find out who designed the Halden Bridge",
+   "oracle": {
+    "type": "answer_contains",
+    "any": [
+     "Piet Halden"
+    ]
+   }
+  },
+  {
+   "id": "T07",
+   "split": "test",
+   "site": "wiki",
+   "category": "multi_step",
+   "tier": 3,
+   "goal": "Starting from {base}/wiki/Main_Page, find the population of Velmora in 2020",
+   "oracle": {
+    "type": "answer_contains",
+    "any": [
+     "48,213",
+     "48213"
+    ]
+   }
+  },
+  {
+   "id": "T08",
+   "split": "test",
+   "site": "shop",
+   "category": "navigation",
+   "tier": 1,
+   "goal": "Go to {base}/shop/cart",
+   "oracle": {
+    "type": "final_url",
+    "path": "/shop/cart"
+   }
+  },
+  {
+   "id": "T09",
+   "split": "test",
+   "site": "shop",
+   "category": "form",
+   "tier": 3,
+   "goal": "Go to {base}/shop, search for 'fountain pen' and add it to the cart",
+   "oracle": {
+    "type": "cart",
+    "items": {
+     "QM-102": 1
+    }
+   }
+  },
+  {
+   "id": "T10",
+   "split": "test",
+   "site": "shop",
+   "category": "form",
+   "tier": 3,
+   "goal": "Go to {base}/shop and add 2 linen notebooks to the cart",
+   "oracle": {
+    "type": "cart",
+    "items": {
+     "QM-101": 2
+    }
+   }
+  },
+  {
+   "id": "T11",
+   "split": "test",
+   "site": "shop",
+   "category": "extraction",
+   "tier": 2,
+   "goal": "Go to {base}/shop and tell me the price of the wool blanket",
+   "oracle": {
+    "type": "answer_contains",
+    "any": [
+     "54.00",
+     "54 EUR",
+     "54"
+    ]
+   }
+  },
+  {
+   "id": "T12",
+   "split": "test",
+   "site": "shop",
+   "category": "extraction",
+   "tier": 2,
+   "goal": "Go to {base}/shop/search?q=lamp and tell me the item number of the desk lamp",
+   "oracle": {
+    "type": "answer_contains",
+    "any": [
+     "QM-301"
+    ]
+   }
+  },
+  {
+   "id": "T13",
+   "split": "test",
+   "site": "desk",
+   "category": "form",
+   "tier": 3,
+   "goal": "Go to {base}/desk/contact and send a message with name 'Ravi Kumar', email 'ravi@example.org', subject Parking and message 'Street lamp broken near the market'",
+   "oracle": {
+    "type": "contact",
+    "fields": {
+     "name": "Ravi Kumar",
+     "email": "ravi@example.org",
+     "subject": "Parking",
+     "message": "Street lamp broken near the market"
+    }
+   }
+  },
+  {
+   "id": "T14",
+   "split": "test",
+   "site": "desk",
+   "category": "form",
+   "tier": 3,
+   "goal": "Go to {base}/desk/newsletter and subscribe lena@example.org to the weekly digest",
+   "oracle": {
+    "type": "newsletter",
+    "email": "lena@example.org",
+    "weekly": "yes"
+   }
+  },
+  {
+   "id": "T15",
+   "split": "test",
+   "site": "desk",
+   "category": "text_entry",
+   "tier": 2,
+   "goal": "Go to {base}/desk/contact and type exactly 'Ravi Kumar' into the Name field. Do not submit.",
+   "oracle": {
+    "type": "draft",
+    "page": "/desk/contact",
+    "field": "name",
+    "equals": "Ravi Kumar",
+    "no_submission": "contact"
+   }
+  },
+  {
+   "id": "T16",
+   "split": "test",
+   "site": "shop",
+   "category": "text_entry",
+   "tier": 2,
+   "goal": "Go to {base}/shop and type 'kettle' in the product search box. Do not press enter.",
+   "oracle": {
+    "type": "draft",
+    "page": "/shop",
+    "field": "q",
+    "equals": "kettle",
+    "not_path": "/shop/search"
+   }
+  },
+  {
+   "id": "T17",
+   "split": "test",
+   "site": "jotter",
+   "category": "navigation",
+   "tier": 2,
+   "goal": "Go to {base}/jotter and open the note called Ferry times",
+   "oracle": {
+    "type": "final_url",
+    "path": "/jotter/note/1"
+   }
+  },
+  {
+   "id": "T18",
+   "split": "test",
+   "site": "jotter",
+   "category": "extraction",
+   "tier": 2,
+   "goal": "Go to {base}/jotter and tell me when the Velmora ferry leaves in the evening",
+   "oracle": {
+    "type": "answer_contains",
+    "any": [
+     "17:10"
+    ]
+   }
+  },
+  {
+   "id": "T19",
+   "split": "test",
+   "site": "jotter",
+   "category": "form",
+   "tier": 3,
+   "goal": "Go to {base}/jotter and create a new note titled 'Call plumber' with the text 'Thursday 9am'",
+   "oracle": {
+    "type": "note",
+    "title": "Call plumber",
+    "body_contains": "Thursday 9am"
+   }
+  },
+  {
+   "id": "T20",
+   "split": "test",
+   "site": "jotter",
+   "category": "form",
+   "tier": 3,
+   "goal": "In Jotter at {base}/jotter, add a note titled 'Books' that says 'return library books'",
+   "oracle": {
+    "type": "note",
+    "title": "Books",
+    "body_contains": "return library books"
+   }
+  },
+  {
+   "id": "T21",
+   "split": "test",
+   "site": "portal",
+   "category": "unsatisfiable",
+   "tier": 1,
+   "goal": "Go to {base}/portal/invoices and tell me the amount of the March invoice",
+   "oracle": {
+    "type": "unsatisfiable"
+   }
+  },
+  {
+   "id": "T22",
+   "split": "test",
+   "site": "wiki",
+   "category": "unsatisfiable",
+   "tier": 1,
+   "goal": "Open {base}/wiki/Brannoch_Castle and tell me when the castle was built",
+   "oracle": {
+    "type": "unsatisfiable"
+   }
+  },
+  {
+   "id": "T23",
+   "split": "test",
+   "site": "shop",
+   "category": "unsatisfiable",
+   "tier": 3,
+   "goal": "Go to {base}/shop and add the copper frying pan to the cart",
+   "oracle": {
+    "type": "unsatisfiable"
+   }
+  },
+  {
+   "id": "T24",
+   "split": "test",
+   "site": "jotter",
+   "category": "unsatisfiable",
+   "tier": 2,
+   "goal": "Go to {base}/jotter and tell me what the note 'Tax return' says",
+   "oracle": {
+    "type": "unsatisfiable"
+   }
+  },
+  {
+   "id": "T25",
+   "split": "test",
+   "site": "findr",
+   "category": "multi_step",
+   "tier": 3,
+   "goal": "Go to {base}/findr, search for 'chemist', open the article and tell me Corvane's field of work",
+   "oracle": {
+    "type": "answer_contains",
+    "any": [
+     "Organic chemistry"
+    ]
+   }
+  },
+  {
+   "id": "T26",
+   "split": "test",
+   "site": "shop",
+   "category": "multi_step",
+   "tier": 4,
+   "goal": "Go to {base}/shop, add a brass fountain pen and a ceramic mug to the cart, then open the cart",
+   "oracle": {
+    "type": "cart",
+    "items": {
+     "QM-102": 1,
+     "QM-201": 1
+    }
+   }
+  },
+  {
+   "id": "T27",
+   "split": "test",
+   "site": "wiki",
+   "category": "extraction",
+   "tier": 1,
+   "goal": "Open {base}/wiki/Velmora and tell me who the mayor is",
+   "oracle": {
+    "type": "answer_contains",
+    "any": [
+     "Ilse Varga"
+    ]
+   }
+  },
+  {
+   "id": "T28",
+   "split": "test",
+   "site": "wiki",
+   "category": "search",
+   "tier": 2,
+   "goal": "Search Openpedia at {base}/wiki/Main_Page for 'Lake Tessaly'",
+   "oracle": {
+    "type": "final_url",
+    "path": "/wiki/Lake_Tessaly"
+   }
+  },
+  {
+   "id": "T29",
+   "split": "test",
+   "site": "desk",
+   "category": "form",
+   "tier": 3,
+   "goal": "Go to {base}/desk/contact and report a waste collection problem with name 'Mei Lin', email 'mei@example.org' and message 'Bins on Ost Street were skipped'",
+   "oracle": {
+    "type": "contact",
+    "fields": {
+     "name": "Mei Lin",
+     "email": "mei@example.org",
+     "subject": "Waste collection",
+     "message": "Bins on Ost Street were skipped"
+    }
+   }
+  },
+  {
+   "id": "T30",
+   "split": "test",
+   "site": "wiki",
+   "category": "extraction",
+   "tier": 2,
+   "goal": "Go to {base}/wiki/Lake_Tessaly and tell me which river the lake drains into",
+   "oracle": {
+    "type": "answer_contains",
+    "any": [
+     "Ost"
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,64 @@
+{
+ "environment": {
+  "date_utc": "2026-10-04T07:20:38Z",
+  "python": "3.11.15",
+  "platform": "Linux-6.18.44-fc-v64-x86_64-with-glibc2.39",
+  "cpu": "x86_64",
+  "cpu_count": 4,
+  "git_commit": "1435fe926479a6be4930d7e0e86fe7ad2d5e9c7d",
+  "git_dirty": true,
+  "ollama_version": {
+   "version": "stub"
+  },
+  "ollama_models": {
+   "models": [
+    {
+     "model": "scripted-stub:latest",
+     "name": "scripted-stub:latest",
+     "size": 0,
+     "digest": "stub"
+    }
+   ]
+  },
+  "PILOT_LLM_TEMPERATURE": null,
+  "PILOT_LLM_SEED": null,
+  "PILOT_OLLAMA_MODEL": "scripted-stub:latest",
+  "PILOT_OLLAMA_VISION_MODEL": null
+ },
+ "split": "dev",
+ "trials": 1,
+ "tasks": [
+  "D01",
+  "D02",
+  "D03",
+  "D04",
+  "D05",
+  "D06",
+  "D07",
+  "D08",
+  "D09",
+  "D10"
+ ],
+ "configs": {
+  "full": {},
+  "no_verification": {
+   "PILOT_VERIFICATION_MODE": "none"
+  },
+  "self_verification": {
+   "PILOT_VERIFICATION_MODE": "self"
+  },
+  "no_recovery": {
+   "PILOT_ENABLE_RECOVERY": "false"
+  },
+  "no_memory": {
+   "PILOT_ENABLE_MEMORY": "false",
+   "PILOT_ENABLE_RAG": "false"
+  },
+  "gate_without_T": {
+   "PILOT_VERIFICATION_DISABLED_CHECKS": "[\"T\"]"
+  },
+  "recovery_replan_only": {
+   "PILOT_RECOVERY_FIXED_STRATEGY": "replan"
+  }
+ }
+}
