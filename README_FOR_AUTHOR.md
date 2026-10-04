@@ -1,3 +1,10 @@
+> **Revision for reviewer requirements R1–R18 (2026-10-04).** Start with `RESPONSE_TO_REVIEWERS.md`, then:
+> - `CHANGE_LOG.md` lists every edit and the source of every number;
+> - `AUTHOR_ACTIONS.md` gives the end-to-end runs and checks you must do yourself (no model weights could be downloaded in this session);
+> - `results/README.md` indexes the experiments.
+>
+> The paper has no placeholders. Where data is missing, the claim is scoped down. Some notes below predate this revision. Where they differ, the four files above take precedence.
+
 # Agentic Pilot IEEE paper — notes for the author
 
 > **Reframed (2026-10-01).** Title restored at the author's request to "Agentic Pilot: An Evidence-Driven Local Autonomous AI Agent Framework for Privacy-Preserving Intelligent Task Automation". The Introduction now defines *autonomous* (no step-by-step instructions; high-risk tasks and CAPTCHAs still go to the user) and *privacy-preserving* (by default no prompt or screenshot leaves the machine for a model provider), and §IX lists what this does not cover. Expect reviewers to probe both words. The browser is the implemented backend; the computer backend (desktop, files, processes, windows) is a design with an unintegrated prototype. See `artifacts/11_reframing_report.md` for what changed, what is implemented, missing evidence and reviewer risks, and `artifacts/10_computer_use_audit.md` for the capability audit. The proposed computer-use protocol is Table V; only its browser family can run with the current code.
