@@ -214,11 +214,18 @@ class TaskRunner:
         """Execute a task through the LangGraph state machine."""
 
         from backend.agent.graph import build_graph
+        from backend.llm.gateway import get_llm_provider
+
         graph = build_graph()
         if not graph:
             raise RuntimeError("LangGraph could not be built")
 
         try:
+            # Verify LLM provider health before proceeding
+            gateway = get_llm_provider()
+            if not await gateway.health_check():
+                raise RuntimeError(f"Configured LLM provider ({gateway.provider_name}) is unavailable or offline.")
+
             await self.db.update_task(task_id, status="running")
             await self.db.add_event(task_id, "started", "Task started via LangGraph")
             await self.db.add_event(task_id, "TASK_STARTED", f"Task execution started: {input_text[:100]}", {"input_text": input_text, "status": "running"})

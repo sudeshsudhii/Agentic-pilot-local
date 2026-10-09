@@ -139,7 +139,7 @@ async def request_logging(request: Request, call_next):
 async def validation_exception_handler(_: Request, exc: RequestValidationError) -> JSONResponse:
     """Return structured validation errors."""
 
-    return JSONResponse(status_code=422, content={"detail": json.loads(exc.json())})
+    return JSONResponse(status_code=422, content={"detail": exc.errors()})
 
 
 @app.exception_handler(Exception)

@@ -55,7 +55,7 @@ async def detailed_health(request: Request) -> DetailedHealthResponse:
             "memory": config.enable_memory,
         },
     }
-    status = "healthy" if ollama_ok else "degraded"
+    status = "healthy" if llm_ok else "degraded"
     uptime = int(time.time() - request.app.state.started_at)
     return DetailedHealthResponse(
         status=status,

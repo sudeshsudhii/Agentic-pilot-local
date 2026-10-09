@@ -825,9 +825,13 @@ async def desktop_verify_node(state: AgentState) -> dict:
                 }
             else:
                 logger.warning(
-                    "DESKTOP_VERIFY COMPLETING_DESPITE_NO_STATE task_id=%s — max retries reached",
+                    "DESKTOP_VERIFY FAILING_DUE_TO_NO_STATE task_id=%s — max retries reached without observable state",
                     task_id,
                 )
+                return {
+                    "status": "failed",
+                    "error": "Task execution resulted in no observable desktop state after max retries."
+                }
 
         # Take completion proof
         try:
