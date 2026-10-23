@@ -149,3 +149,28 @@
 - Basic error-only detection withholds 3 of 27 held-out false completions (Φ: 11 of 27).
 - The recovery engine classifies a missing confirmation as "unknown".
 - Memory retrieval has no relevance threshold: 3 of 10 queries return an irrelevant record or a failed attempt first.
+
+**Independent QA review** (`artifacts/results/qa_review_report.md`, by a separate reviewer agent) found 22 issues (1 high, 6 medium, 15 low). All are fixed:
+- **H-1:** the latency correction made after the freeze is now disclosed in §VII-C.
+- **M-1:** the provenance of the egress run is given.
+- **M-2:** the hypotheses section now names the actual component evidence for H1 and H2.
+- **M-3:** the outcomes for H4 and for enhanced H2 are marked "by assumption", and their synthetic p-values are removed from the text.
+- **M-4:** the scope of the ledger and of the independent validation is now stated precisely.
+- **M-5:** the category mapping and the missing-confirmation proxy (3 states) are stated.
+- **M-6:** the `no_evidence` row is no longer labelled H3.
+- **L-1 to L-15:**
+  - Rounding fixed: Monte Carlo TSR is 0.44.
+  - Memory ablation changes two outcomes, not one.
+  - Retrieval metrics are now stated as over 9 queries.
+  - The realised count of permanent failures is given: 27/120, none of them a missing confirmation.
+  - Φ latency now has consistent provenance and percentiles.
+  - Studies A–H are defined.
+  - Measurement environment for the inputs is stated: 2026-10-23, Xeon 2.8 GHz.
+  - Held-out count corrected to 54.
+  - The self-verification baseline is described as "will measure", since it has not been run.
+  - The abstract now credits the memory and recovery findings to measurements, not to the simulation.
+  - The synthetic p-value in the hypotheses table is labelled synthetic.
+  - Mean vs median self-check overhead is stated.
+  - The paired Monte Carlo ΔFC replaces the overlapping marginal ranges: mean 0.11 [0.05, 0.17]; p < 0.05 in 96% of sets.
+  - The gate-code change after the held-out-2 freeze is described (default-off switches).
+  - The pytest failure cause is corrected: the failures need live web or a running local model.

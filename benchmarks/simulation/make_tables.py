@@ -112,9 +112,9 @@ led("retrieval recall@3", round(r3, 3), "inputs/m4_memory.csv", "ACTUAL (synthet
 led("retrieval MRR", round(mrr, 3), "inputs/m4_memory.csv", "ACTUAL (synthetic corpus)", "Table sim-memory")
 led("queries with misleading top-1", f"{mis['k']}/{mis['n']}", "inputs/m4_memory.csv", "ACTUAL (synthetic corpus)", "Table sim-memory")
 M = R["memory"]
-rows = [["\\multicolumn{5}{@{}l}{\\emph{ACTUAL retrieval by the Chroma store, synthetic corpus of 23 records, 10 queries}}"],
+rows = [["\\multicolumn{5}{@{}l}{\\emph{ACTUAL retrieval, real store, 23 synthetic records; 9 queries with a relevant record}}"],
         ["Precision@3 / Recall@3 / MRR", f"{p3:.2f}", f"{r3:.2f}", f"{mrr:.2f}", ""],
-        ["Top-1 irrelevant or failed attempt", f"{mis['k']}/{mis['n']}", "", "", ""],
+        ["Top-1 irrelevant or failed (all 10 queries)", f"{mis['k']}/{mis['n']}", "", "", ""],
         ["MIDRULE"],
         ["\\multicolumn{5}{@{}l}{\\emph{SYNTHETIC repeated workflows (n=" + str(M['evidence_gated']['N']) + ")}}"],
         ["Configuration", "TSR", "FCR", "Ctx.\\ acc.", ""]]
@@ -126,6 +126,7 @@ table("memory", f"Study~D, memory and retrieval. Upper block ACTUAL (real store,
 
 # ---- Table: recovery (Study E)
 REC = R["recovery"]
+REC_ROWS = [r for r in csv.DictReader(open(HERE / "out" / "heldout" / "recovery_scenarios.csv")) if r["config"] == "retry_based"]
 rows = []
 for c, nm in (("no_recovery", "No recovery"), ("retry_based", "Retry-based (implemented)"), ("evidence_guided", "Evidence-guided$^{\\ddagger}$")):
     d = REC[c]
@@ -140,7 +141,7 @@ rows.append(["\\multicolumn{6}{@{}l}{\\emph{Recovered / recoverable by failure m
 cells = [f"{short[m]} {REC['retry_based']['by_mode'][m][0]}/{REC['retry_based']['by_mode'][m][1]}; {REC['evidence_guided']['by_mode'][m][0]}" for m in modes]
 rows.append(["\\multicolumn{6}{@{}l}{" + ", ".join(cells[:3]) + "}"])
 rows.append(["\\multicolumn{6}{@{}l}{" + ", ".join(cells[3:]) + "}"])
-table("recovery", f"{SIM} Study~E: 120 failure scenarios (20 per mode, {int(P['recovery']['permanent_share']['value']*100)}\\% permanent). Detected: failure noticed by the agent; FC: undetected missing confirmations reported complete; Unnec.: attempts spent on permanent failures; Cost: mean seconds per scenario. Strategy sequences are those of the real recovery engine. $^{{\\ddagger}}$Not implemented.",
+table("recovery", f"{SIM} Study~E: 120 failure scenarios, 20 per mode; {sum(int(r['permanent']) for r in REC_ROWS)} drawn as permanent ({int(P['recovery']['permanent_share']['value']*100)}\\% expected), none of them a missing confirmation. Detected: failure noticed by the agent; FC: undetected missing confirmations reported complete; Unnec.: attempts spent on permanent failures; Cost: mean seconds per scenario. Strategy sequences are those of the real recovery engine. $^{{\\ddagger}}$Not implemented.",
       "tab:sim-recovery", "lccccc", ["Recovery", "Detected", "Recovered", "FC", "Unnec.", "Cost"], rows, size="\\scriptsize", sep="2pt")
 
 # ---- Table: overhead (Study F) — ACTUAL components + SYNTHETIC totals, separate blocks
@@ -153,7 +154,7 @@ for k, nm in (("navigate", "navigate"), ("click", "click + load"), ("fill", "fil
               ("screenshot", "screenshot (evidence)"), ("phi", "$\\Phi$ on a site page")):
     rows.append([nm, f"{lat[k]['median_ms']:.1f}", f"{lat[k]['p95_ms']:.1f}", ""])
     led(f"actual latency {k} median ms", lat[k]["median_ms"], "inputs/m2_latency.json", "ACTUAL", "Table sim-overhead")
-rows.append(["$\\Phi$ on gate states (83)", f"{statistics.median(gate):.1f}", f"{gate[int(round(0.95*(len(gate)-1)))]:.1f}", ""])
+rows.append(["$\\Phi$ on gate states$^{*}$", f"{statistics.median(gate):.1f}", f"{gate[int(round(0.95*(len(gate)-1)))]:.1f}", ""])
 rows.append(["MIDRULE"])
 rows.append(["\\multicolumn{4}{@{}l}{\\emph{SYNTHETIC episode time (s), inference median " + str(P['latency']['inference_median_s']['value']) + " s assumed}}"])
 rows.append(["Configuration", "median", "p95", "verif.\\ share"])
@@ -163,7 +164,7 @@ for c, nm in (("no_verification", "No verification"), ("evidence_gated", "Eviden
     d = L[c]
     rows.append([nm, f"{d['median_s']:.1f}", f"{d['p95_s']:.1f}", f"{100*d['share']['verification']:.1f}\\%"])
     led(f"sim latency {c} median s", round(d["median_s"], 2), "latency_study", "SYNTHETIC", "Table sim-overhead")
-table("overhead", f"Study~F, verification overhead. Upper block ACTUAL; lower block {SIM}, built from the ACTUAL component samples and an ASSUMED inference time; the two blocks are not combined into one claim. Inference dominates every synthetic episode ({100*L['evidence_gated']['share']['inference']:.0f}\\% of time under $\\Phi$); evidence screenshots take {100*L['evidence_gated']['share']['evidence']:.1f}\\%. $^{{\\ddagger}}$Not implemented.",
+table("overhead", f"Study~F, verification overhead. Upper block ACTUAL; lower block {SIM}, built from the ACTUAL component samples and an ASSUMED inference time; the two blocks are not combined into one claim. $^{{*}}$83 decisions on the constructed gate states, each the median of 20 repetitions (Section~\\ref{{sec:res-overhead}}). All times are medians. Inference dominates every synthetic episode ({100*L['evidence_gated']['share']['inference']:.0f}\\% of time under $\\Phi$); evidence screenshots take {100*L['evidence_gated']['share']['evidence']:.1f}\\%. $^{{\\ddagger}}$Not implemented.",
       "tab:sim-overhead", "lccc", ["", "", "", ""], rows, size="\\scriptsize", sep="3pt")
 
 # ---- Sensitivity figure data (Study H)
