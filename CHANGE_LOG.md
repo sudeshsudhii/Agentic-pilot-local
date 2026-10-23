@@ -123,3 +123,29 @@
 - No new references; all 47 are unchanged. The build has 0 LaTeX errors, 0 undefined references and 0 BibTeX warnings. The body takes pages 1–8, the appendices pages 9–10 and the references pages 10–11.
 
 **Recommendation:** remove Appendix C, or replace its values, once the end-to-end runs (AUTHOR_ACTIONS A1) produce measured data. Many IEEE venues count appendices toward the page limit.
+
+---
+
+# Addendum (2026-10-23, later): simulation-based evaluation
+
+**Why:** no language model can be installed in the drafting environment. The missing evaluations are therefore studied by a seeded simulation, labelled SYNTHETIC everywhere. The illustrative Appendix C, which used hand-chosen values, was removed and replaced by this.
+
+**Commits:**
+- `3a0aa8e`: measured inputs and frozen parameters, committed before the held-out set was generated.
+- `41a6097`: simulation results and paper integration.
+
+| Path | Change |
+|---|---|
+| `benchmarks/simulation/measure_inputs.py` | ACTUAL measurements with no model:<br>M1, decisions of Φ and of basic error-only detection on 92 gate states;<br>M2, latency of browser operations, DOM extraction, screenshots and Φ on the local sites (30 repetitions);<br>M3, the real recovery engine's classification and strategy sequence for 6 failure messages;<br>M4, real Chroma retrieval over a 23-record synthetic memory corpus with 10 queries |
+| `benchmarks/simulation/params.json` | Every assumption, tagged ACTUAL, DERIVED, ASSUMED or PROPOSED |
+| `benchmarks/simulation/simulate.py` | Studies A–F and H. Dev seed 101 (debugging only), held-out seed 202 (reported), 1,000 Monte Carlo replications, sensitivity sweeps, per-scenario CSVs |
+| `benchmarks/simulation/make_tables.py` | Writes every simulation table in `paper/tables/sim/`, plus the ledger `out/heldout/ledger_simulation.csv` |
+| `benchmarks/simulation/independent_validator.py`, `artifacts/results/simulation_validation_report.md` | Independent recomputation by a separate validation agent: **0 discrepancies** |
+| Paper | §VI Research Questions and Hypotheses (H0/H1, simulated outcomes); §VII-C Simulation-Based Evaluation and Data Provenance; new §IX Simulation-Based Evaluation (Tables VI–XII, Fig. 3); privacy threat table (Study G); implementation audit with classes IE/IS/IN/PI/PR; Table I with the requested dimensions; Appendix C (simulation parameters) |
+
+**Bug found and fixed after the freeze:** the latency study did not use common random numbers, so Φ appeared faster than no verification. Only the latency function changed; Studies A–E and H were unaffected (their outputs were identical before and after).
+
+**Findings from the ACTUAL measurements:**
+- Basic error-only detection withholds 3 of 27 held-out false completions (Φ: 11 of 27).
+- The recovery engine classifies a missing confirmation as "unknown".
+- Memory retrieval has no relevance threshold: 3 of 10 queries return an irrelevant record or a failed attempt first.
