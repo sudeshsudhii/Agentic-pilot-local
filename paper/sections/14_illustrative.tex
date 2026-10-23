@@ -1,0 +1,72 @@
+\section{Illustrative Evaluation and Discussion}
+\label{app:illustrative}
+
+\noindent\fbox{\parbox{0.96\columnwidth}{\small\textbf{Disclaimer.} The numerical values presented in this section are hypothetical and illustrative, intended solely to demonstrate the proposed evaluation framework. They are not obtained from actual experimental execution or empirical measurements. They are not results of this paper, and no statistical test was applied to them.}}
+
+\medskip
+This appendix shows how the design of Section~\ref{sec:method-hyp} would report evidence on H1--H5. The values were chosen by hand to be plausible and internally consistent: every row of Table~\ref{tab:illus-verif} sums to $N=90$ episodes (78 on satisfiable and 12 on unsatisfiable tasks), and every rate follows from its counts by Eqs.~\eqref{eq:fcr}--\eqref{eq:tcr}. Approaches 4 and 5 and the unstructured baseline of Table~\ref{tab:illus-h345} are not implemented.
+
+\begin{table}[h]
+\centering
+\caption{\textbf{Hypothetical values} for H1 and H2: completion decisions of five verification approaches over $N=90$ episodes. TP: reported and achieved; FC: reported, not achieved; FR: achieved, not reported; TN: neither. $^{*}$Not implemented. The decision time of approach~3 is set to the component latency measured in Section~\ref{sec:res-overhead}; all other values are not measured.}
+\label{tab:illus-verif}
+\footnotesize
+\setlength{\tabcolsep}{2.1pt}
+\begin{tabular}{@{}lcccccccc@{}}
+\toprule
+Approach & TP & FC & FR & TN & TCR & FCR & FRR & VA \\
+\midrule
+1 No verification & 41 & 37 & 0 & 12 & .456 & .474 & .000 & .589 \\
+2 LLM self-verification & 40 & 24 & 5 & 21 & .444 & .375 & .111 & .678 \\
+3 Rule-based ($\Phi$) & 44 & 8 & 4 & 34 & .489 & .154 & .083 & .867 \\
+4 Per-step evidence$^{*}$ & 45 & 5 & 5 & 35 & .500 & .100 & .100 & .889 \\
+5 Combined (3 and 2)$^{*}$ & 44 & 3 & 7 & 36 & .489 & .064 & .137 & .889 \\
+\bottomrule
+\end{tabular}
+
+\vspace{3pt}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Approach & 1 & 2 & 3 & 4$^{*}$ & 5$^{*}$ \\
+\midrule
+Median episode time (s) & 48 & 61 & 55 & 58 & 67 \\
+Median decision time (ms) & 0 & 1{,}900 & 27 & 35 & 1{,}930 \\
+Model calls per episode & 6.1 & 8.4 & 7.2 & 7.5 & 9.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{\textbf{Hypothetical values} for H3--H5, full system against one changed factor. $^{*}$Not implemented. Not measured.}
+\label{tab:illus-h345}
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{@{}llcc@{}}
+\toprule
+H & Metric & Full system & Changed factor \\
+\midrule
+H3 & ETR (reported completions) & 49/52 (.94) & 42/52 (.81) \\
+   & median audit time per episode & 1.6 min & 2.9 min \\
+\midrule
+H4 & TCR, trial 1 & 14/30 (.47) & 14/30 (.47) \\
+   & TCR, trials 2--3 & 30/60 (.50) & 29/60 (.48) \\
+   & MCS & 22/30 (.73) & 20/30 (.67) \\
+   & actions per success & 6.2 & 6.6 \\
+   & episodes misled by memory & 3 & -- \\
+\midrule
+H5 & AER & 88/90 (.98) & 76/90 (.84)$^{*}$ \\
+   & TCR & 44/90 (.49) & 35/90 (.39)$^{*}$ \\
+   & recovery rate & 11/29 (.38) & --$^{*}$ \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}\raggedright\scriptsize Changed factor: H3 \texttt{no\_evidence}; H4 \texttt{no\_memory}; H5 unstructured loop$^{*}$.
+\end{table}
+
+\paragraph{Illustrative interpretation (not findings)} If measured values resembled Table~\ref{tab:illus-verif}, H1 would be supported: the rule-based check would lower FCR from .474 to .154 while TCR stays similar, because a rejected claim returns control to the planner rather than ending the episode. H2 would be supported on accuracy (.867 against .678) and latency (27\,ms against a model call), and the self-check's false rejections would show the cost of a model judging from truncated page text. Approach~5 would trade a lower FCR for a higher FRR, the trade-off already seen when $\beta$ is removed (Section~\ref{sec:res-ablation}). In Table~\ref{tab:illus-h345}, H3 would be supported if the auditor resolves more episodes with execution records; H4 would rest on a small difference on repeated trials that $N=60$ episodes could not separate from noise, and the episodes misled by memory would need inspection; H5 could be tested only after the unstructured baseline is built.
+
+\paragraph{Possible outcomes and failure scenarios} The measured data may differ in ways the design is meant to reveal. The rule-based check may gain little end to end if the planner rarely claims completion prematurely, or if requests use wordings that trigger no conjunct (Section~\ref{sec:res-gate}); its FCR would then approach that of approach~1. The self-check may outperform the rules on extraction tasks, where the rules missed every unsatisfied held-out state. Memory may lower success if failed outcomes are retrieved as guidance. Episode time-outs on CPU inference would lower AER for every configuration and mask differences between them.
+
+\paragraph{Requirements for validation} Each hypothesis is supported only by measured data from the protocol of Sections~\ref{sec:method-e2e} and~\ref{sec:method-hyp}, with the paired tests stated there; these illustrative values must then be replaced, not combined with measurements. H3 additionally needs a blind human auditor, and H5 an implemented unstructured baseline. With 90 episodes per configuration, differences of a few percentage points, as in H4 above, are below the resolution of the design.

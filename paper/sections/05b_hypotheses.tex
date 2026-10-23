@@ -1,0 +1,33 @@
+\section{Research Hypotheses}
+\label{sec:hypotheses}
+
+The following hypotheses state what the full agent is expected to show. \emph{None has been tested end to end}; Section~\ref{sec:method-hyp} gives the design for testing them, and Appendix~\ref{app:illustrative} shows, with hypothetical numbers only, how the results would be reported. Table~\ref{tab:hyp} summarizes the variables.
+
+\paragraph{H1, completion verification} Because a successful dispatch does not imply a completed task (Eq.~\eqref{eq:phi-general}), and the gate withheld most premature completions on constructed states, evidence-gated completion is expected to reduce the false completion rate of the full agent relative to accepting every completion claim, without a comparable loss in task completion.
+
+\paragraph{H2, verification reliability} A planner model that judges its own completion shares the errors of its own plan~\cite{huang2024cannot}, whereas $\Phi$ is deterministic given the observation. Rule-based verification is therefore expected to give a higher verification accuracy and a lower variance across trials than self-verification by the same model, at a lower latency. The held-out misses (Section~\ref{sec:res-gate}) make the accuracy part uncertain.
+
+\paragraph{H3, execution traceability} The evidence directory stores before/after screenshots, the DOM manifest, verification and recovery records and per-action execution records. With this evidence, an auditor is expected to decide whether a reported completion was correct for more episodes, and faster, than from the event log alone. The configuration switch \texttt{enable\_evidence} disables only the per-action execution records, so H3 as testable today compares full evidence with evidence lacking those records.
+
+\paragraph{H4, persistent memory} Outcomes stored in Chroma and SQLite are retrieved into later planning prompts. When a task is repeated, memory is expected to raise success on later trials and the consistency of outcomes across trials, and to reduce actions per successful task. Memory may also mislead the planner when a stored outcome was wrong, so H4 also counts such cases.
+
+\paragraph{H5, structured orchestration} The agent is a single LangGraph state machine with explicit nodes, retry limits, recovery and a model-call budget, not a set of cooperating agents. This structure is expected to raise execution reliability---the share of episodes ending in a defined terminal state without a crash or time-out---compared with an unstructured loop in which the model is called repeatedly with the page and history until it emits \texttt{complete}. \emph{The unstructured baseline is not implemented}; testing H5 first requires building it with the same models and budget.
+
+\begin{table}[t]
+\centering
+\caption{Research hypotheses (untested). IV: independent variable; DV: dependent variables (Section~\ref{sec:method-hyp}). Comparison: configurations of Table~\ref{tab:e2e} against \texttt{full}; $^{\dagger}$not yet implemented.}
+\label{tab:hyp}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}lp{1.95cm}p{1.95cm}p{1.35cm}p{1.75cm}@{}}
+\toprule
+ & IV & DV & Expected & Comparison \\
+\midrule
+H1 & completion check on/off & FCR, TCR, FRR & FCR $\downarrow$, TCR $\approx$ & no verification \\
+H2 & rule check vs model self-check & VA, FCR, spread over trials, latency & VA $\uparrow$, latency $\downarrow$ & self-verification \\
+H3 & execution records on/off & ETR, audit time & ETR $\uparrow$ & no evidence \\
+H4 & memory and RAG on/off & TCR on trials 2--3, MCS, actions & TCR $\uparrow$, MCS $\uparrow$ & no memory \\
+H5 & state machine vs unstructured loop & AER, recovery rate & AER $\uparrow$ & unstructured loop$^{\dagger}$ \\
+\bottomrule
+\end{tabular}
+\end{table}

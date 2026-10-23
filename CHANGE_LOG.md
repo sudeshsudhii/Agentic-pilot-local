@@ -95,3 +95,31 @@
 | 40 tasks, 10/30, 5 unsatisfiable, tier and category counts | `benchmarks/e2e/tasks.json` |
 | Held-out 2 frozen before testing | commit `b9d5088` precedes `55ac1ea`; SHA-256 in `gate_heldout2_freeze.txt` |
 | 17 sanitizer patterns, approval triggers, recovery behaviour, router models | code (unchanged from the earlier audit, `artifacts/07_claims_ledger.md`) |
+
+---
+
+# Addendum (2026-10-23): research hypotheses and illustrative evaluation
+
+| Location | Change |
+|---|---|
+| New §VI "Research Hypotheses" (`05b_hypotheses.tex`) | H1–H5 with rationale; Table III gives the independent variable, dependent variables, expected direction and comparison configuration for each. All are marked untested. |
+| §VII-C "Hypothesis Evaluation Design" (`06_methodology.tex`) | Objectives; scenarios (30 test tasks × 3 trials, N = 90); metric formulas TCR, VA, ETR, MCS and AER (Eq. 3), plus FCR/FRR; McNemar and bootstrap decision rule; approaches 4 and 5 stated as not implemented |
+| New Appendix C "Illustrative Evaluation and Discussion" (`14_illustrative.tex`) | Boxed disclaimer; Tables VIII–IX with **hypothetical** values (each caption says so); illustrative interpretation, failure scenarios and validation requirements |
+| Abstract, §I | One sentence on the hypotheses; §I points to Appendix C as hypothetical. No illustrative number appears outside Appendix C. |
+| Table VII (experiment design) | Moved to Appendix B to keep the body at 8 pages; `no_evidence` row added |
+| §IX Discussion | "Auditing an agent" paragraph removed (space) |
+| `benchmarks/e2e/run_e2e.py` | `no_evidence` configuration (code only; nothing was run) |
+
+**Integrity audit:**
+- H1–H5 match the code, with these mismatches flagged in the text:
+  - There is no `MemoryManager`; memory is `ChromaProvider` over Chroma plus SQLite.
+  - There is no multi-agent orchestration; it is a single LangGraph state machine (H5).
+  - `enable_evidence` turns off only per-action execution records (H3).
+  - The unstructured baseline (H5), per-step evidence-based verification (approach 4) and combined verification (approach 5) are not implemented.
+- Every hypothesis maps to a metric with a formula (Eq. 3 or Eq. 2).
+- The illustrative counts are internally consistent: each approach sums to 90 episodes; full-system TCR is 44/90 in Tables VIII and IX; the reported-completion denominator for ETR is 52, equal to TP + FC of approach 3.
+- No illustrative value is called significant or measured. The one measured value reused (27 ms) is labelled as such.
+- Genuine results (§VIII) are unchanged.
+- No new references; all 47 are unchanged. The build has 0 LaTeX errors, 0 undefined references and 0 BibTeX warnings. The body takes pages 1–8, the appendices pages 9–10 and the references pages 10–11.
+
+**Recommendation:** remove Appendix C, or replace its values, once the end-to-end runs (AUTHOR_ACTIONS A1) produce measured data. Many IEEE venues count appendices toward the page limit.

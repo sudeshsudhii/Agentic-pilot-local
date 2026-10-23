@@ -15,3 +15,5 @@ The repository contains a desktop executor that wraps PyAutoGUI and psutil, a te
 \label{app:tasks}
 
 The 40 tasks (\texttt{benchmarks/e2e/tasks.json}) are distributed as follows (development/test): extraction 2/8, form submission 2/7, multi-step 1/5, navigation 2/2, search 1/2, text entry 1/2, unsatisfiable 1/4; tiers 1--4 contain 3/6, 4/11, 3/12 and 0/1 tasks. The test split uses all five sites; the notes site appears only there. The harness (\texttt{run\_e2e.py}) takes the split, the number of trials and a list of the configurations of Table~\ref{tab:e2e}; the analysis script (\texttt{analyze\_e2e.py}) writes result tables with Wilson intervals, McNemar tests and bootstrap intervals.
+
+\input{tables/e2e_design}

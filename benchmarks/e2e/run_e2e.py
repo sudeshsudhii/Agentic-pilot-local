@@ -34,6 +34,7 @@ CONFIGS: dict[str, dict[str, str]] = {
     "self_verification": {"PILOT_VERIFICATION_MODE": "self"},
     "no_recovery": {"PILOT_ENABLE_RECOVERY": "false"},
     "no_memory": {"PILOT_ENABLE_MEMORY": "false", "PILOT_ENABLE_RAG": "false"},
+    "no_evidence": {"PILOT_ENABLE_EVIDENCE": "false"},
     "single_model": {"PILOT_ENABLE_MULTI_MODEL": "false"},
     "vision_only_grounding": {"PILOT_GROUNDING_MODE": "vision_only"},
     "recovery_retry_only": {"PILOT_RECOVERY_FIXED_STRATEGY": "retry"},
