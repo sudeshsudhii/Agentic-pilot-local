@@ -12,18 +12,21 @@ Language-model agents now operate software for people: they open pages, fill in 
 
 \paragraph{Scope and terms} Agentic Pilot acts only in a Chromium browser. It is \emph{autonomous} in that, given a request, it plans and executes browser actions without step-by-step instructions; the user approves tasks classified as high-risk (posting, sending, purchasing, deleting, transferring) and solves CAPTCHAs, and no end-to-end task with a language model is evaluated in this paper. It is \emph{privacy-preserving} in that model inference is restricted to the user's machine and its records are stored there (Section~\ref{sec:safety}). Desktop, file and process control is a design (Appendix~\ref{app:computer}).
 
+\paragraph{Research questions} The gaps lead to five questions (Section~\ref{sec:hypotheses}): whether evidence-gated completion reduces false completions (RQ1, G1) and improves decision reliability (RQ2, G1, G2), whether memory helps repeated workflows (RQ3), whether evidence-guided recovery helps (RQ4) and what verification costs (RQ5).
+
 \paragraph{Scientific contributions}
 \begin{enumerate}
 \item A formulation of evidence-gated completion that separates action dispatch from task completion, with false completion and false rejection rates (Section~\ref{sec:problem}).
-\item Evidence on G1 and G2: the gate's error rates on 92 constructed states in three sets, one frozen before testing, inside the live verification node, with intervals, paired tests and a per-conjunct ablation. The main finding is negative for generalization: rule fixes made on design states transfer only partially (Section~\ref{sec:results}).
+\item \textsc{Actual} evidence on G1 and G2: the gate's error rates on 92 constructed states in three sets, one frozen before testing, inside the live verification node, with intervals, paired tests and a per-conjunct ablation. Rule fixes made on design states transfer only partially (Section~\ref{sec:results}).
+\item A seeded, \textsc{simulation}-based evaluation of H1--H5, with inputs measured on the implementation and every assumption stated, which shows the trade-off between false completions and false rejections and where the implementation falls short---memory without a relevance threshold, recovery blind to missing confirmations (Section~\ref{sec:sim-results}).
 \end{enumerate}
 
 \paragraph{Engineering contributions}
 \begin{enumerate}
-\setcounter{enumi}{2}
-\item An open-source local agent with the gate inside its control loop (Algorithm~\ref{alg:loop}, Section~\ref{sec:arch}), a code-level component audit (Table~\ref{tab:status}) and the fixes it led to (Section~\ref{sec:impl}).
-\item Enforcement and a test of local-only model traffic, addressing G3 (Sections~\ref{sec:impl} and~\ref{sec:res-privacy}).
-\item An end-to-end harness: self-hosted sites with fictional content, 40 tasks with a dev/test split, an oracle validated on scripted trajectories, and baseline and ablation configurations, with five research hypotheses and the design that tests them (Sections~\ref{sec:hypotheses} and~\ref{sec:method}).
+\setcounter{enumi}{3}
+\item An open-source local agent with the gate inside its control loop (Algorithm~\ref{alg:loop}, Section~\ref{sec:arch}) and an implementation audit (Table~\ref{tab:status}).
+\item Enforcement and an \textsc{actual} test of local-only model traffic, addressing G3 (Sections~\ref{sec:impl} and~\ref{sec:res-privacy}).
+\item An end-to-end harness: self-hosted sites with fictional content, 40 tasks with a dev/test split, an oracle validated on scripted trajectories, and baseline and ablation configurations (Section~\ref{sec:method-e2e}).
 \end{enumerate}
 
-We do not claim that the agent completes tasks; the end-to-end evaluation is designed and implemented but not run (Section~\ref{sec:res-e2e}). Appendix~\ref{app:illustrative} illustrates its reporting with hypothetical values that are not results.
+We do not claim that the agent completes tasks: the end-to-end evaluation is implemented but not run (Section~\ref{sec:res-e2e}), and simulated results are labelled as such throughout.

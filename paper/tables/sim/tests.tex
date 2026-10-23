@@ -1,0 +1,17 @@
+\begin{table}[t]
+\centering
+\caption{\textsc{Simulation-based (synthetic)} Paired comparison with the evidence-gated configuration on the same scenarios. $b/c$: scenarios with a false completion only in the other configuration / only under $\Phi$; $p$: exact McNemar test; $\Delta$FC: difference in false completions per scenario (other minus $\Phi$) with scenario-level bootstrap 95\% interval; $h$: Cohen's $h$ for TSR ($\Phi$ minus other). MC: mean FCR and 2.5--97.5th percentiles over 1000 regenerated scenario sets.}
+\label{tab:sim-tests}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Configuration & $b/c$ & $p$ & $\Delta$FC & $h$ & MC FCR \\
+\midrule
+No verification & 9/0 & 0.004 & +0.09 [+0.04,+0.15] & -0.12 & 0.36 [0.25,0.48] \\
+Basic success detection & 5/0 & 0.062 & +0.05 [+0.01,+0.10] & -0.10 & 0.33 [0.22,0.44] \\
+Evidence-gated ($\Phi$) & ref. & ref. & ref. & -- & 0.25 [0.15,0.37] \\
+Enhanced validation$^{\ddagger}$ & 0/11 & 0.001 & -0.11 [-0.18,-0.05] & -0.04 & 0.14 [0.05,0.24] \\
+\bottomrule
+\end{tabular}
+\end{table}

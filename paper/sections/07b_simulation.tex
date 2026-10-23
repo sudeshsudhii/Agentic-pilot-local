@@ -1,0 +1,42 @@
+\section{Simulation-Based Evaluation}
+\label{sec:sim-results}
+
+\noindent\fbox{\parbox{0.96\columnwidth}{\small All values in this section except those marked \textsc{actual} are \textsc{synthetic}: they come from the seeded simulation of Section~\ref{sec:sim}, not from running the agent. They show the consequences of the stated assumptions and the measured component behaviour; they do not establish how the deployed agent performs.}}
+
+\subsection{Baselines and Verification (Studies A and B; H1, H2)}
+
+\input{tables/sim/baseline}
+\input{tables/sim/tests}
+
+Table~\ref{tab:sim-baseline} compares four completion rules on the same 100 held-out scenarios. Evidence-gated verification has 19 false completions against 28 without verification (paired: 9 scenarios only without, 0 only with; exact McNemar $p=0.004$; Table~\ref{tab:sim-tests}), so the simulation is consistent with H1. Basic success detection, which only recognizes error pages, removes 4. But $\Phi$ also rejects completed work: its FRR is 0.21 against 0.07, its TSR is lower (0.37 against 0.43) and its overall accuracy is not significantly different ($p=0.80$). H2 is therefore not supported for $\Phi$ alone in this simulation; it is supported for the proposed enhanced validation, which adds an independent second check (accuracy 0.80 against 0.71, $p=0.02$), at a still higher FRR. Over 1{,}000 regenerated sets the mean FCR is 0.36 without verification, 0.25 with $\Phi$ and 0.14 with enhanced validation; their 95\% ranges overlap, so a single set of 100 tasks may not separate $\Phi$ from no verification.
+
+\subsection{Ablation (Study C)}
+
+\input{tables/sim/ablation}
+
+Table~\ref{tab:sim-ablation} removes one component at a time. Removing evidence validation reproduces the no-verification row. Removing evidence collection changes no decision, because the implemented $\Phi$ reads the live page rather than the stored evidence; it removes the audit trail (evidence available in 0\% instead of 89\% of episodes). Removing recovery lowers TSR from 0.37 to 0.30 and, across replications, from 0.45 to 0.38. Removing memory changes one outcome in this set and nothing on average.
+
+\subsection{Memory and Retrieval (Study D; H3)}
+
+\input{tables/sim/memory}
+
+On the synthetic memory corpus the real store returned a relevant record in the top three for every query that had one (recall@3 1.00, MRR 0.93). It has no relevance threshold, however: a query with no relevant memory still returned three records, and for 3 of 10 queries the top record was irrelevant or a \emph{failed} earlier attempt (Table~\ref{tab:sim-memory}). With that measured misleading rate, the simulated repeated workflows gain nothing from memory (18 against 19 of 44 successful), so H3 is not supported. A relevance filter that drops failed attempts and unrelated records (proposed) raises contextual accuracy from 0.64 to 0.86 in the simulation.
+
+\subsection{Recovery (Study E; H4)}
+
+\input{tables/sim/recovery}
+
+The real recovery engine classifies a navigation error containing \texttt{net::ERR\_} as transient, treats an invalid submission as a verification failure and assigns it re-planning, and does not recognize a missing confirmation, which it classifies as unknown (\textsc{actual}). In the simulation (Table~\ref{tab:sim-recovery}), retry-based recovery recovers 69 of 93 recoverable failures and almost none of the missing confirmations (4 of 20), and 9 undetected missing confirmations end as false completions. The proposed evidence-guided recovery, which checks an explicit confirmation postcondition, recovers 87 ($p<0.001$ paired) and leaves 2 false completions, but it spends as many attempts on permanent failures (162).
+
+\subsection{Verification Overhead (Study F; H5)}
+
+\input{tables/sim/overhead}
+
+Measured on the self-hosted sites, $\Phi$ takes a median of 5.2\,ms on an ordinary page and 26.8\,ms on the gate states, a screenshot 61\,ms and DOM extraction 76\,ms (\textsc{actual}, Table~\ref{tab:sim-overhead}). In the simulation, with an assumed median of 3\,s per model call on a CPU, inference takes 84\% of an episode; $\Phi$ adds 0.035\,s per episode (0.2\%), evidence screenshots 0.46\,s, and a model self-check 4.5\,s (+24\%). At 1.5\,s or 6\,s per call the median episode takes 8.9\,s or 32.6\,s. H5 is consistent with the simulation: rule-based verification is cheap, and its cost is in false rejections, not time.
+
+\subsection{Robustness and Sensitivity (Study H)}
+
+\input{tables/sim/sensitivity_fig}
+\input{tables/sim/sensitivity}
+
+The advantage of verification depends on how often the planner claims completion prematurely, which is unmeasured (Fig.~\ref{fig:sim-sens}): at $\pi=0.3$ the FCR of $\Phi$ is 0.14 against 0.21 without verification, at $\pi=0.95$ 0.32 against 0.45, while FRR is constant at about 0.16 against 0.08. Halving the measured detection rate of $\Phi$ raises FCR to 0.31, close to no verification; missing evidence raises FRR because $\Phi$ fails closed on an unreadable page; more action failures lower TSR (Table~\ref{tab:sim-sens}).

@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\caption{Privacy and security assessment (Study~G, analytical). Evidence: E egress test, C code inspection, T unit test; -- none.}
+\label{tab:threats}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{1.55cm}p{3.05cm}p{0.6cm}p{2.95cm}@{}}
+\toprule
+Surface & Control in the code & Evid. & Residual risk \\
+\midrule
+Model inference & loopback endpoint enforced; override must be explicit & E, T & user override sends prompts and screenshots off the machine \\
+Memory, task data & SQLite and Chroma on local disk; telemetry off & C, T & not encrypted; readable by any local process \\
+Websites & none: the planner may follow links to any site & C & data the agent types reaches that site \\
+Browser traffic & page requests logged in the harness & E & Chromium background traffic not observed \\
+Screenshots & stored in the local evidence folder & C & not redacted; may show account data \\
+Retention & no deletion policy & C & evidence grows without bound \\
+High-risk actions & approval before posting, sending, purchasing, deleting & C, T & model-assigned label; once per task \\
+Injected text & 17-pattern sanitizer on element text & C, T & denylist; titles and memory unfiltered \\
+\bottomrule
+\end{tabular}
+\end{table}

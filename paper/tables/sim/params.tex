@@ -1,0 +1,30 @@
+\begin{table}[t]
+\centering
+\caption{Simulation parameters and their provenance (\texttt{benchmarks/simulation/params.json}). DERIVED rates use $(k+0.5)/(n+1)$ on the held-out gate states.}
+\label{tab:sim-params}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{3.6cm}p{3.0cm}p{1.3cm}@{}}
+\toprule
+Parameter & Value & Class \\
+\midrule
+Scenarios per set; dev / held-out seed & 100; 101 / 202 & design \\
+Outcome classes (successful, incomplete, incorrect, missing, contradictory, stale, ambiguous) & 0.40 / 0.15 / 0.12 / 0.08 / 0.08 / 0.07 / 0.10 & ASSUMED \\
+Planner claims completion: if complete / if not ($\pi$) & 0.92 / 0.65 & ASSUMED \\
+$\Phi$ withhold rate by category (held-out gate states) & navi. 0.36, sear. 0.50, form. 0.50, data. 0.38, extr. 0.07, mult. 0.62 & DERIVED \\
+Basic detection withhold rate by category & navi. 0.36, sear. 0.10, form. 0.07, data. 0.12, extr. 0.07, mult. 0.12 & DERIVED \\
+False rejection: $\Phi$ / basic & 0.089 / 0.018 & DERIVED \\
+$\Phi$ rejects when evidence is missing & 0.8 & ASSUMED \\
+Enhanced: extra catch / extra false rejection & 0.5 / 0.05 & PROPOSED \\
+Finish after rejection; re-claim after false rejection & 0.35; 0.3 & ASSUMED \\
+Action failure; recovered when recovery on & 0.25; 0.55 & ASSUMED \\
+Repeated workflows; memory gain / loss & 0.4; 0.08 / 0.1 & ASSUMED \\
+Misleading retrieval: store / filtered & 0.30 / 0.1 & DERIVED / PROPOSED \\
+Recovery strategy sequences & real engine (Table~\ref{tab:sim-recovery}) & ACTUAL \\
+Recovery success per attempt & 0.10--0.45 (re-plan), 0.05--0.35 (vision) & ASSUMED \\
+Missing-confirmation detection: retry / guided & 0.62 / 0.9 & DERIVED / PROPOSED \\
+Inference time per call (median, log-sd) & 3.0 s, 0.5 & ASSUMED \\
+Browser, DOM, screenshot, $\Phi$ latency & resampled from measurements & ACTUAL \\
+\bottomrule
+\end{tabular}
+\end{table}

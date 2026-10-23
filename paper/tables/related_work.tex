@@ -1,31 +1,31 @@
 \begin{table}[t]
 \centering
-\caption{Comparison with representative systems, from what each paper reports. Kind: A agent, B benchmark, M model. Environment: W live websites, Wr self-hosted or cached web pages, Ws simulated web, tool or text environment, D desktop OS, Mo mobile. Completion: who decides that a task is done---the agent's model (model), a checker of the benchmark after the episode (benchmark), a model judge after the episode (judge), or a rule over observed state inside the loop (in-loop rule); n/a for systems that do not end tasks. Evid.: persists state artifacts of each step. Mem.: memory across steps or episodes. Open: open-weight models used or supported. Y yes, P partial, N no, n.r. not reported. All listed systems released code.}
+\caption{Comparison with representative systems, from what each paper reports. Env.: W live websites, Wr self-hosted or cached pages, Ws simulated web, tool or text environment, D desktop OS, Mo mobile. Exec.: A agent, B benchmark, M model. Completion: who decides that a task is done---the agent's model, a benchmark checker after the episode, a model judge after the episode, or a rule over observed state inside the loop; n/a if the system does not end tasks. Evid.: persists per-step state artifacts. Mem.: memory across steps or episodes. Deploy.: L open-weight models used or supported, H hosted models only. Eval.: E2E end-to-end tasks, Off offline step prediction, C+S component tests and simulation. Y yes, P partial, N no, n.r.\ not reported. All listed systems released code.}
 \label{tab:related}
-\setlength{\tabcolsep}{2.2pt}
-\footnotesize
-\begin{tabular}{@{}llllccc@{}}
+\setlength{\tabcolsep}{1.7pt}
+\scriptsize
+\begin{tabular}{@{}lllllccc@{}}
 \toprule
-System & Kind & Env. & Completion & Evid. & Mem. & Open \\
+System & Env. & Exec. & Completion & Evid. & Mem. & Deploy. & Eval. \\
 \midrule
-ReAct~\cite{yao2023react}               & A & Ws & model & N & N & N \\
-Reflexion~\cite{shinn2023reflexion}     & A & Ws & model$^{a}$ & N & Y & n.r. \\
-WebArena~\cite{zhou2024webarena}        & B & Wr & benchmark & n.r. & N & n.r. \\
-Mind2Web~\cite{deng2023mind2web}        & B & Wr & n/a & P & N & Y \\
-WebVoyager~\cite{he2024webvoyager}      & A & W & model; judge$^{b}$ & Y & N & N \\
-SeeAct~\cite{zheng2024seeact}           & A & W, Wr & model & n.r. & N & P \\
-OSWorld~\cite{xie2024osworld}           & B & D & benchmark & n.r. & N & Y \\
-UFO~\cite{zhang2025ufo}                 & A & D & model & n.r. & P & N \\
-AppAgent~\cite{zhang2025appagent}       & A & Mo & model & n.r. & Y & N \\
-CogAgent~\cite{hong2024cogagent}        & M & Wr, Mo & n/a & N & N & Y \\
-MemGPT~\cite{packer2023memgpt}          & A & n/a & n/a & N & Y & n.r. \\
-AgentDojo~\cite{debenedetti2024agentdojo} & B & Ws & benchmark & n.r. & N & Y \\
+ReAct~\cite{yao2023react}               & Ws & A & model & N & N & H & E2E \\
+Reflexion~\cite{shinn2023reflexion}     & Ws & A & model$^{a}$ & N & Y & n.r. & E2E \\
+WebArena~\cite{zhou2024webarena}        & Wr & B & benchmark & n.r. & N & n.r. & E2E \\
+Mind2Web~\cite{deng2023mind2web}        & Wr & B & n/a & P & N & L & Off \\
+WebVoyager~\cite{he2024webvoyager}      & W & A & model; judge$^{b}$ & Y & N & H & E2E \\
+SeeAct~\cite{zheng2024seeact}           & W, Wr & A & model & n.r. & N & P & E2E, Off \\
+OSWorld~\cite{xie2024osworld}           & D & B & benchmark & n.r. & N & L & E2E \\
+UFO~\cite{zhang2025ufo}                 & D & A & model & n.r. & P & H & E2E \\
+AppAgent~\cite{zhang2025appagent}       & Mo & A & model & n.r. & Y & H & E2E \\
+CogAgent~\cite{hong2024cogagent}        & Wr, Mo & M & n/a & N & N & L & Off \\
+MemGPT~\cite{packer2023memgpt}          & n/a & A & n/a & N & Y & n.r. & n/a \\
+AgentDojo~\cite{debenedetti2024agentdojo} & Ws & B & benchmark & n.r. & N & L & E2E \\
 \midrule
-Agentic Pilot (ours)                    & A & W$^{c}$ & in-loop rule & Y & P$^{d}$ & Y \\
+Agentic Pilot (ours)                    & W$^{c}$ & A & in-loop rule & Y & P$^{d}$ & L & C+S \\
 \bottomrule
 \end{tabular}
 \vspace{2pt}
 
 \raggedright\scriptsize
-$^{a}$An evaluator gives feedback between trials. $^{b}$Used for evaluation. $^{c}$Implemented backend; a desktop backend is designed (Appendix~\ref{app:computer}) and not integrated; our end-to-end harness uses self-hosted sites (Wr), not yet run with a model. $^{d}$Implemented and retrieved; its effect is not measured.
+$^{a}$An evaluator gives feedback between trials. $^{b}$Used for evaluation. $^{c}$Implemented backend; a desktop backend is designed (Appendix~\ref{app:computer}). $^{d}$Implemented; studied only by simulation.
 \end{table}

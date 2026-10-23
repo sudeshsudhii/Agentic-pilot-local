@@ -1,0 +1,27 @@
+\begin{table}[t]
+\centering
+\caption{Study~F, verification overhead. Upper block ACTUAL; lower block \textsc{Simulation-based (synthetic)}, built from the ACTUAL component samples and an ASSUMED inference time; the two blocks are not combined into one claim. Inference dominates every synthetic episode (84\% of time under $\Phi$); evidence screenshots take 2.5\%. $^{\ddagger}$Not implemented.}
+\label{tab:sim-overhead}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\multicolumn{4}{@{}l}{\emph{ACTUAL component latency (ms), local sites, 30 repetitions}} \\
+Operation & median & p95 &  \\
+navigate & 17.1 & 24.9 &  \\
+click + load & 65.2 & 106.2 &  \\
+fill & 12.5 & 17.4 &  \\
+DOM extraction & 76.4 & 105.6 &  \\
+screenshot (evidence) & 61.3 & 93.6 &  \\
+$\Phi$ on a site page & 5.2 & 6.9 &  \\
+$\Phi$ on gate states (83) & 26.8 & 30.3 &  \\
+\midrule
+\multicolumn{4}{@{}l}{\emph{SYNTHETIC episode time (s), inference median 3.0 s assumed}} \\
+Configuration & median & p95 & verif.\ share \\
+No verification & 17.0 & 34.1 & 0.0\% \\
+Evidence-gated ($\Phi$) & 17.0 & 34.2 & 0.2\% \\
+LLM self-verification & 21.7 & 38.7 & 19.6\% \\
+$\Phi$ + model check$^{\ddagger}$ & 21.7 & 38.7 & 19.8\% \\
+\bottomrule
+\end{tabular}
+\end{table}

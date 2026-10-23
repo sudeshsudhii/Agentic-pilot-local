@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering
+\caption{\textsc{Simulation-based (synthetic)} Study~C: ablation of the full architecture on the same 100 scenarios. Evid.: share of episodes with audit evidence stored. MC: means over 1000 regenerated sets. Disabling evidence collection leaves decisions unchanged because $\Phi$ reads the live page, not the stored evidence (code behaviour).}
+\label{tab:sim-ablation}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+Configuration & TSR & FCR & FRR & F1 & Evid. & MC TSR & MC FCR \\
+\midrule
+Full & 37/100 [0.28,0.47] & .339 & .213 & .718 & 0.89 & 0.44 & 0.25 \\
+-- evid.\ collection & 37/100 [0.28,0.47] & .339 & .213 & .718 & 0.00 & 0.44 & 0.25 \\
+-- $\Phi$ & 43/100 [0.34,0.53] & .394 & .065 & .735 & 0.89 & 0.45 & 0.36 \\
+-- memory, RAG & 38/100 [0.29,0.48] & .345 & .191 & .724 & 0.89 & 0.44 & 0.26 \\
+-- recovery & 30/100 [0.22,0.40] & .348 & .250 & .698 & 0.90 & 0.38 & 0.25 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -217,38 +217,47 @@ def recovery_study(seed: int) -> dict:
 
 # ------------------------------------------------------------------ Study F: latency
 def latency_study(scen: list[dict], seed: int, inference_median: float | None = None) -> dict:
-    rng = random.Random(seed + 11)
+    """Common random numbers: every configuration sees the same base draws per scenario;
+    verification draws come from a separate stream, so configurations differ only by what they add."""
     L = D["latency"]
     med = P["latency"]["inference_median_s"]["value"] if inference_median is None else inference_median
+    sigma = P["latency"]["inference_log_sigma"]["value"]
 
-    def infer():
-        return med * math.exp(rng.gauss(0, P["latency"]["inference_log_sigma"]["value"]))
+    def infer(rng):
+        return med * math.exp(rng.gauss(0, sigma))
 
-    def samp(k):
+    def samp(rng, k):
         return rng.choice(L[k]["samples_ms"]) / 1000
 
     res = {}
     for name, extra_infer, phi in (("no_verification", 0, False), ("evidence_gated", 0, True),
                                    ("self_verification", 1, False), ("enhanced_validation", 1, True)):
         totals, comp = [], {"inference": 0.0, "browser": 0.0, "evidence": 0.0, "verification": 0.0, "recovery": 0.0}
-        for s in scen:
+        for idx, s in enumerate(scen):
+            rb = random.Random(seed * 100003 + idx)          # base execution draws
+            rv = random.Random(seed * 100003 + idx + 7 ** 9)  # verification draws
             steps = P["latency"]["steps_by_category"][s["category"]]
-            t = {"inference": infer(), "browser": 0.0, "evidence": 0.0, "verification": 0.0, "recovery": 0.0}  # intent call
+            t = {"inference": infer(rb), "browser": 0.0, "evidence": 0.0, "verification": 0.0, "recovery": 0.0}
             for k in range(steps):
-                t["inference"] += infer()
-                t["browser"] += samp("dom_extract") + samp("navigate" if k == 0 else rng.choice(["click", "fill"]))
-                t["evidence"] += 2 * samp("screenshot")
-            checks = 2 if s["outcome"] in ("incomplete", "incorrect_action") else 1
-            if phi:
-                t["verification"] += sum(rng.choice(D["phi_ms"]) / 1000 for _ in range(checks))
-            t["verification"] += sum(infer() for _ in range(extra_infer * checks))
+                t["inference"] += infer(rb)
+                t["browser"] += samp(rb, "dom_extract") + samp(rb, "navigate" if k == 0 else rb.choice(["click", "fill"]))
+                t["evidence"] += 2 * samp(rb, "screenshot")
+            rec_draws = [infer(rb) + samp(rb, "dom_extract") + samp(rb, "click") for _ in range(2)]
             if s["u_actfail"] < P["p_action_failure"]["value"]:
-                t["recovery"] += 2 * (infer() + samp("dom_extract") + samp("click"))
+                t["recovery"] += sum(rec_draws)
+            checks = 2 if s["outcome"] in ("incomplete", "incorrect_action") else 1
+            phi_draws = [rv.choice(D["phi_ms"]) / 1000 for _ in range(checks)]
+            judge_draws = [infer(rv) for _ in range(checks)]
+            if phi:
+                t["verification"] += sum(phi_draws)
+            if extra_infer:
+                t["verification"] += sum(judge_draws)
             totals.append(sum(t.values()))
             for k in comp:
                 comp[k] += t[k]
         totals.sort()
         res[name] = {"median_s": statistics.median(totals), "p95_s": totals[int(round(0.95 * (len(totals) - 1)))],
+                     "mean_s": statistics.mean(totals),
                      "share": {k: v / sum(comp.values()) for k, v in comp.items()},
                      "verification_mean_s": comp["verification"] / len(scen), "evidence_mean_s": comp["evidence"] / len(scen)}
     return res

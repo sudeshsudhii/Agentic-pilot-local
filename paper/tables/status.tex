@@ -1,29 +1,26 @@
 \begin{table}[t]
 \centering
-\caption{Component status, traced through the code. Impl.: code exists (P prototype or partial). Integ.: on the agent's execution path. Test: Y behavior test; M with a mocked model; S scripted stand-in model; I interface only; W needs live web. Eval.: evidence in this paper---C component study, O oracle validation, E egress test, R routing resolution; -- none. Claims in this paper are limited to rows with an entry under Eval.}
+\caption{Implementation audit, traced through the code. Class: IE implemented and experimentally evaluated (component level, \textsc{actual}); IS implemented, studied only by simulation; IN implemented, not evaluated; PI partially implemented; PR proposed. Evidence: C component study, O oracle validation, E egress test, M measured input to the simulation, S simulation.}
 \label{tab:status}
-\footnotesize
+\scriptsize
 \setlength{\tabcolsep}{2.4pt}
-\begin{tabular}{@{}p{3.65cm}cccc@{}}
+\begin{tabular}{@{}p{4.3cm}cp{2.6cm}@{}}
 \toprule
-Component & Impl. & Integ. & Test & Eval. \\
+Component & Class & Evidence \\
 \midrule
-Completion predicate $\Phi$, bot-check halt & Y & Y & Y & C \\
-Browser control (Playwright) & Y & Y & Y & C \\
-Local-only model endpoint, no telemetry & Y & Y & Y & E \\
-End-to-end harness and oracle $\Phi^{\star}$ & Y & -- & S & O \\
-Model routing & Y & Y & Y & R \\
-LLM planner in the full loop & Y & Y & M, S & -- \\
-DOM grounding; vision fallback & Y & Y & Y; M & -- \\
-Per-action evidence & Y & Y & Y & -- \\
-Recovery: retry, vision fallback & Y & Y & Y & -- \\
-Recovery: alt.\ selector, replan & P & P & Y & -- \\
-Memory and RAG retrieval & Y & Y & Y & -- \\
-Self-verification baseline mode & Y & Y & S & -- \\
-Task-level human approval & Y & Y & W & -- \\
-\midrule
-Desktop input, files, processes & P & N & I & -- \\
-Accessibility tree, action gate, tiers & N & N & N & -- \\
+Completion predicate $\Phi$, bot-check halt & IE & C (92 states), M, S \\
+Browser control (Playwright), DOM extraction & IE & C, M (latency) \\
+Local-only model endpoint, no telemetry & IE & E (70 episodes) \\
+End-to-end harness and oracle $\Phi^{\star}$ & IE & O (114 trajectories) \\
+Recovery engine: classification, strategy order & IS & M (6 failure modes), S \\
+Memory store retrieval (Chroma, SQLite) & IS & M (10 queries), S \\
+Per-action evidence (screenshots, records) & IS & M (latency), S \\
+LLM planner in the full loop & IN & tests with mocked model \\
+Vision fallback; task-level human approval & IN & tests \\
+Recovery: alternative selector, replan & PI & labels only \\
+Self-verification baseline mode & IN & harness only \\
+Enhanced validation; evidence-guided recovery; memory relevance filter & PR & S (assumed behaviour) \\
+Desktop backend, action gate, permission tiers & PR & -- \\
 \bottomrule
 \end{tabular}
 \end{table}
