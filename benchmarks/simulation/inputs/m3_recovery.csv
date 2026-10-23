@@ -1,0 +1,7 @@
+failure_mode,error_message,classified_as,strategies_retry0_to_6
+navigation_failure,Navigation failed: net::ERR_NAME_NOT_RESOLVED at http://shop.example,transient,retry > retry > alternative_selector > alternative_selector > vision_fallback > vision_fallback > exhausted
+timeout,Timeout 30000ms exceeded while waiting for selector,transient,retry > retry > alternative_selector > alternative_selector > vision_fallback > vision_fallback > exhausted
+missing_element,Element has no usable selector: element not found on page,element_not_found,retry > retry > alternative_selector > alternative_selector > vision_fallback > vision_fallback > exhausted
+invalid_submission,Input verification failed: field value does not match requested text,verification_failed,retry > retry > replan > replan > replan > replan > exhausted
+unexpected_state,"Agent needed assistance: page layout differs from plan, need_help",vision_needed,vision_fallback > vision_fallback > vision_fallback > vision_fallback > vision_fallback > vision_fallback > exhausted
+missing_confirmation,Max iterations exceeded without satisfying goal: FAIL - task_completed expected True,unknown,retry > retry > alternative_selector > alternative_selector > vision_fallback > vision_fallback > exhausted

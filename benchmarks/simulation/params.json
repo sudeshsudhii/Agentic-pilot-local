@@ -1,0 +1,222 @@
+{
+ "_note": "Frozen simulation parameters. Every value is tagged ACTUAL/DERIVED (from benchmarks/simulation/inputs, measured), ASSUMED (author assumption, swept in the sensitivity study) or PROPOSED (behaviour of a component that is not implemented). Committed before the held-out scenario set was generated.",
+ "n_scenarios": 100,
+ "seed_dev": 101,
+ "seed_heldout": 202,
+ "monte_carlo_replications": 1000,
+ "category_mix": {
+  "_tag": "ASSUMED",
+  "navigation": 0.15,
+  "search": 0.15,
+  "form": 0.2,
+  "data_entry": 0.15,
+  "extraction": 0.2,
+  "multi_step": 0.15
+ },
+ "outcome_mix": {
+  "_tag": "ASSUMED",
+  "successful": 0.4,
+  "incomplete": 0.15,
+  "incorrect_action": 0.12,
+  "missing_evidence": 0.08,
+  "contradictory_evidence": 0.08,
+  "stale_evidence": 0.07,
+  "ambiguous": 0.1
+ },
+ "p_true_complete_given_outcome": {
+  "_tag": "ASSUMED",
+  "successful": 1.0,
+  "incomplete": 0.0,
+  "incorrect_action": 0.0,
+  "missing_evidence": 0.5,
+  "contradictory_evidence": 0.5,
+  "stale_evidence": 0.3,
+  "ambiguous": 0.5
+ },
+ "p_claim_if_complete": {
+  "_tag": "ASSUMED",
+  "value": 0.92
+ },
+ "p_claim_if_not_complete": {
+  "_tag": "ASSUMED",
+  "value": 0.65,
+  "sweep": [
+   0.3,
+   0.5,
+   0.65,
+   0.8,
+   0.95
+  ]
+ },
+ "detector_category_map": {
+  "_tag": "ASSUMED",
+  "navigation": [
+   "navigation"
+  ],
+  "search": [
+   "search"
+  ],
+  "form": [
+   "text_entry",
+   "multi_step"
+  ],
+  "data_entry": [
+   "text_entry"
+  ],
+  "extraction": [
+   "extraction"
+  ],
+  "multi_step": [
+   "multi_step"
+  ]
+ },
+ "detector_rates_source": {
+  "_tag": "DERIVED",
+  "file": "inputs/m1_gate_rules.csv",
+  "splits": [
+   "held_out",
+   "held_out_2"
+  ],
+  "estimator": "(k+0.5)/(n+1) per mapped category; false-rejection rate pooled over all categories"
+ },
+ "phi_missing_evidence_reject": {
+  "_tag": "ACTUAL-behaviour/ASSUMED-rate",
+  "value": 0.8,
+  "why": "verify_task_completion fails closed when the page cannot be read; how often missing evidence means an unreadable page is assumed"
+ },
+ "ambiguous_detection_factor": {
+  "_tag": "ASSUMED",
+  "value": 0.5
+ },
+ "enhanced_extra_catch": {
+  "_tag": "PROPOSED",
+  "value": 0.5,
+  "why": "second, independent check (per-step postconditions or model judge) catches half of what Phi accepts"
+ },
+ "enhanced_extra_false_reject": {
+  "_tag": "PROPOSED",
+  "value": 0.05
+ },
+ "enhanced_contradiction_reject": {
+  "_tag": "PROPOSED",
+  "value": 0.7
+ },
+ "p_continue_success_after_reject": {
+  "_tag": "ASSUMED",
+  "value": 0.35,
+  "why": "after a rejection control returns to planning; share of unfinished episodes that then finish correctly"
+ },
+ "p_reclaim_after_false_reject": {
+  "_tag": "ASSUMED",
+  "value": 0.3
+ },
+ "p_action_failure": {
+  "_tag": "ASSUMED",
+  "value": 0.25
+ },
+ "p_recovered_with_recovery": {
+  "_tag": "ASSUMED",
+  "value": 0.55
+ },
+ "repeated_workflow_share": {
+  "_tag": "ASSUMED",
+  "value": 0.4
+ },
+ "memory_helpful_gain": {
+  "_tag": "ASSUMED",
+  "value": 0.08
+ },
+ "memory_misleading_loss": {
+  "_tag": "ASSUMED",
+  "value": 0.1
+ },
+ "memory_misleading_prob": {
+  "_tag": "DERIVED",
+  "file": "inputs/m4_memory.csv",
+  "rule": "share of queries whose top-ranked record is irrelevant or a failed attempt"
+ },
+ "memory_misleading_prob_filtered": {
+  "_tag": "PROPOSED",
+  "value": 0.1
+ },
+ "recovery": {
+  "n_per_mode": 20,
+  "permanent_share": {
+   "_tag": "ASSUMED",
+   "value": 0.25
+  },
+  "strategy_sequence_source": {
+   "_tag": "ACTUAL",
+   "file": "inputs/m3_recovery.csv"
+  },
+  "p_success_replan": {
+   "_tag": "ASSUMED",
+   "navigation_failure": 0.4,
+   "timeout": 0.45,
+   "missing_element": 0.25,
+   "invalid_submission": 0.3,
+   "unexpected_state": 0.2,
+   "missing_confirmation": 0.1
+  },
+  "p_success_vision": {
+   "_tag": "ASSUMED",
+   "navigation_failure": 0.05,
+   "timeout": 0.1,
+   "missing_element": 0.35,
+   "invalid_submission": 0.1,
+   "unexpected_state": 0.3,
+   "missing_confirmation": 0.05
+  },
+  "p_success_evidence_guided": {
+   "_tag": "PROPOSED",
+   "navigation_failure": 0.45,
+   "timeout": 0.5,
+   "missing_element": 0.4,
+   "invalid_submission": 0.55,
+   "unexpected_state": 0.35,
+   "missing_confirmation": 0.4
+  },
+  "missing_confirmation_detection": {
+   "_tag": "DERIVED",
+   "rule": "Phi withheld share on unsatisfied multi_step held-out states"
+  },
+  "max_attempts": 6,
+  "evidence_guided_confirmation_detection": {
+   "_tag": "PROPOSED",
+   "value": 0.9
+  }
+ },
+ "latency": {
+  "inference_median_s": {
+   "_tag": "ASSUMED",
+   "value": 3.0,
+   "sweep": [
+    1.5,
+    3.0,
+    6.0
+   ]
+  },
+  "inference_log_sigma": {
+   "_tag": "ASSUMED",
+   "value": 0.5
+  },
+  "browser_and_evidence_source": {
+   "_tag": "ACTUAL",
+   "file": "inputs/m2_latency.json"
+  },
+  "phi_decision_source": {
+   "_tag": "ACTUAL",
+   "file": "../../artifacts/results/verification_gate_cases.csv",
+   "column": "gate_ms_median"
+  },
+  "steps_by_category": {
+   "_tag": "ASSUMED",
+   "navigation": 2,
+   "search": 3,
+   "form": 5,
+   "data_entry": 3,
+   "extraction": 3,
+   "multi_step": 6
+  }
+ }
+}

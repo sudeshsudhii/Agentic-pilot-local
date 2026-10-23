@@ -1,0 +1,11 @@
+group,query,n_relevant,retrieved,relevant_in_top_k,precision_at_k,recall_at_k,reciprocal_rank,top1
+shop_kettle,Add a steel kettle to my cart on Quillmart,2,3,2,0.667,1.0,1.0,Task: Go to the Quillmart shop and add the steel kettle to the cart. Status: Success.
+wiki_velmora,What is the population of Velmora according to Openpedia?,2,3,2,0.667,1.0,1.0,Task: Open the Openpedia article on Velmora and report its population. Status: Success.
+desk_contact,Submit a complaint through the CivicDesk contact form,2,3,2,0.667,1.0,1.0,Task: Fill the CivicDesk contact form and submit it. Status: Failed. Error encountered: In
+jotter_note,Add a new note in Jotter called Call plumber,1,3,1,0.333,1.0,1.0,Task: Create a note titled Groceries in Jotter. Status: Success.
+findr_search,Search Findr for the observatory,2,3,2,0.667,1.0,1.0,Task: Search Findr for Halden Bridge. Status: Success.
+newsletter,Sign lena@example.org up for the CivicDesk newsletter,1,3,1,0.333,1.0,1.0,Task: Subscribe ana@example.org to the CivicDesk newsletter. Status: Success.
+lake_depth,How deep is Lake Tessaly?,1,3,1,0.333,1.0,1.0,Task: Report the maximum depth of Lake Tessaly from Openpedia. Status: Success.
+portal_conflict,Read the Q3 total on the portal reports page,2,3,2,0.667,1.0,1.0,Task: Open the portal reports page and read the Q3 total. Status: Success.
+shop_price,How much does the brass fountain pen cost on Quillmart?,1,3,1,0.333,1.0,0.333,Task: Search Quillmart for kettle and open the product page. Status: Success.
+unrelated,Book a train ticket from Velmora to Mirefield,0,3,0,0.0,,0.0,Task: Open the Openpedia article on Velmora and report its population. Status: Success.
