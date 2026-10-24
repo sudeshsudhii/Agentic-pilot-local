@@ -104,7 +104,7 @@ def episode(s: dict, cfg: tuple, pi: float | None = None, det_mult: float = 1.0,
     p_af = P["p_action_failure"]["value"] if p_actfail is None else p_actfail
     # action failure and recovery
     if s["u_actfail"] < p_af and not (recovery and s["u_recov"] < P["p_recovered_with_recovery"]["value"]):
-        return {"reported": 0, "y": 0, "failed": 1, "evidence": int(evidence)}
+        return {"reported": 0, "y": 0, "failed": 1, "evidence": int(evidence), "claimed": 0, "y_claim": 0}
     # memory on repeated workflows
     y = s["y_base"]
     if s["repeated"] and memory != "off":
@@ -116,10 +116,13 @@ def episode(s: dict, cfg: tuple, pi: float | None = None, det_mult: float = 1.0,
             y = 1
     p_claim = P["p_claim_if_complete"]["value"] if y else (P["p_claim_if_not_complete"]["value"] if pi is None else pi)
     if s["u_claim"] >= p_claim:
-        return {"reported": 0, "y": y, "failed": 0, "evidence": int(evidence and s["outcome"] != "missing_evidence")}
+        return {"reported": 0, "y": y, "failed": 0, "evidence": int(evidence and s["outcome"] != "missing_evidence"),
+                "claimed": 0, "y_claim": y}
     ev = int(evidence and s["outcome"] != "missing_evidence")
+    # Fields "claimed", "y_claim" and "accepted" describe the verifier's decision at the first completion claim
+    # (decision level); "reported" and "y" describe the final outcome of the episode (policy level).
     if verifier == "none":
-        return {"reported": 1, "y": y, "failed": 0, "evidence": ev}
+        return {"reported": 1, "y": y, "failed": 0, "evidence": ev, "claimed": 1, "y_claim": y, "accepted": 1}
     rule = "basic_accepts" if verifier == "basic" else "phi_accepts"
     phi_like = verifier in ("phi", "enhanced")
     if y == 0:
@@ -139,12 +142,14 @@ def episode(s: dict, cfg: tuple, pi: float | None = None, det_mult: float = 1.0,
         if s["outcome"] == "contradictory_evidence" and s["u_contra"] < P["enhanced_contradiction_reject"]["value"]:
             withhold = True
     if not withhold:
-        return {"reported": 1, "y": y, "failed": 0, "evidence": ev, "checks": 1}
+        return {"reported": 1, "y": y, "failed": 0, "evidence": ev, "checks": 1, "claimed": 1, "y_claim": y, "accepted": 1}
     if y == 0:  # rejected premature claim: control returns to planning
         done = s["u_cont"] < P["p_continue_success_after_reject"]["value"]
-        return {"reported": int(done), "y": int(done), "failed": 0, "evidence": ev, "checks": 2, "rejected": 1}
+        return {"reported": int(done), "y": int(done), "failed": 0, "evidence": ev, "checks": 2, "rejected": 1,
+                "claimed": 1, "y_claim": 0, "accepted": 0}
     again = s["u_reclaim"] < P["p_reclaim_after_false_reject"]["value"]
-    return {"reported": int(again), "y": 1, "failed": 0, "evidence": ev, "checks": 2, "rejected": 1}
+    return {"reported": int(again), "y": 1, "failed": 0, "evidence": ev, "checks": 2, "rejected": 1,
+            "claimed": 1, "y_claim": 1, "accepted": 0}
 
 
 def metrics(eps: list[dict]) -> dict:

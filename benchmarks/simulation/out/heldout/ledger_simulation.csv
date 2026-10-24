@@ -1,31 +1,41 @@
 claim,value,source,classification,location
-no_verification TP,43,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
-no_verification FP,28,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
-no_verification FN,3,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
-no_verification TN,26,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+no_verification policy TP,43,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+no_verification policy FP,28,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+no_verification policy FN,3,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+no_verification policy TN,26,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
 no_verification FCR,0.3944,FP/(TP+FP),SYNTHETIC,Table sim-baseline
 no_verification FRR,0.0652,FN/(TP+FN),SYNTHETIC,Table sim-baseline
-basic_detection TP,42,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
-basic_detection FP,24,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
-basic_detection FN,4,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
-basic_detection TN,30,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+no_verification decision accuracy,43/71,decision_analysis.json (TP+TN)/claims,SYNTHETIC,Table sim-baseline
+basic_detection policy TP,42,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+basic_detection policy FP,24,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+basic_detection policy FN,4,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+basic_detection policy TN,30,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
 basic_detection FCR,0.3636,FP/(TP+FP),SYNTHETIC,Table sim-baseline
 basic_detection FRR,0.087,FN/(TP+FN),SYNTHETIC,Table sim-baseline
-evidence_gated TP,37,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
-evidence_gated FP,19,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
-evidence_gated FN,10,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
-evidence_gated TN,34,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+basic_detection decision accuracy,46/71,decision_analysis.json (TP+TN)/claims,SYNTHETIC,Table sim-baseline
+evidence_gated policy TP,37,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+evidence_gated policy FP,19,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+evidence_gated policy FN,10,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+evidence_gated policy TN,34,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
 evidence_gated FCR,0.3393,FP/(TP+FP),SYNTHETIC,Table sim-baseline
 evidence_gated FRR,0.2128,FN/(TP+FN),SYNTHETIC,Table sim-baseline
-enhanced_validation TP,39,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
-enhanced_validation FP,8,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
-enhanced_validation FN,12,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
-enhanced_validation TN,41,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+evidence_gated decision accuracy,45/71,decision_analysis.json (TP+TN)/claims,SYNTHETIC,Table sim-baseline
+enhanced_validation policy TP,39,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+enhanced_validation policy FP,8,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+enhanced_validation policy FN,12,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+enhanced_validation policy TN,41,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
 enhanced_validation FCR,0.1702,FP/(TP+FP),SYNTHETIC,Table sim-baseline
 enhanced_validation FRR,0.2353,FN/(TP+FN),SYNTHETIC,Table sim-baseline
-no_verification McNemar p (false completion vs evidence_gated),0.0039,exact McNemar on paired FP indicators,SYNTHETIC,Table sim-tests
-basic_detection McNemar p (false completion vs evidence_gated),0.0625,exact McNemar on paired FP indicators,SYNTHETIC,Table sim-tests
-enhanced_validation McNemar p (false completion vs evidence_gated),0.001,exact McNemar on paired FP indicators,SYNTHETIC,Table sim-tests
+enhanced_validation decision accuracy,54/71,decision_analysis.json (TP+TN)/claims,SYNTHETIC,Table sim-baseline
+no_verification McNemar p (episode false completion vs evidence_gated),0.0039,exact McNemar on paired FP indicators,SYNTHETIC,Table sim-tests
+no_verification McNemar p (decision correctness vs evidence_gated),0.8036,decision_analysis.json,SYNTHETIC,Table sim-tests
+no_verification McNemar p (task success vs evidence_gated),0.0703,decision_analysis.json,SYNTHETIC,Table sim-tests
+basic_detection McNemar p (episode false completion vs evidence_gated),0.0625,exact McNemar on paired FP indicators,SYNTHETIC,Table sim-tests
+basic_detection McNemar p (decision correctness vs evidence_gated),1.0,decision_analysis.json,SYNTHETIC,Table sim-tests
+basic_detection McNemar p (task success vs evidence_gated),0.125,decision_analysis.json,SYNTHETIC,Table sim-tests
+enhanced_validation McNemar p (episode false completion vs evidence_gated),0.001,exact McNemar on paired FP indicators,SYNTHETIC,Table sim-tests
+enhanced_validation McNemar p (decision correctness vs evidence_gated),0.0225,decision_analysis.json,SYNTHETIC,Table sim-tests
+enhanced_validation McNemar p (task success vs evidence_gated),0.6875,decision_analysis.json,SYNTHETIC,Table sim-tests
 evidence_gated TSR,0.37,TP/N,SYNTHETIC,Table sim-ablation
 abl_no_evidence_collection TSR,0.37,TP/N,SYNTHETIC,Table sim-ablation
 abl_no_evidence_validation TSR,0.43,TP/N,SYNTHETIC,Table sim-ablation

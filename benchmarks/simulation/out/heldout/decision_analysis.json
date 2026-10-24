@@ -1,0 +1,120 @@
+{
+ "n_scenarios": 100,
+ "n_claims": 71,
+ "n_claims_true": 43,
+ "decision": {
+  "no_verification": {
+   "TP": 43,
+   "FP": 28,
+   "FN": 0,
+   "TN": 0,
+   "accuracy": 0.6056338028169014,
+   "accuracy_wilson": [
+    0.48935768499400845,
+    0.711065987077071
+   ],
+   "accepted": 71
+  },
+  "basic_detection": {
+   "TP": 42,
+   "FP": 24,
+   "FN": 1,
+   "TN": 4,
+   "accuracy": 0.647887323943662,
+   "accuracy_wilson": [
+    0.5318206221160442,
+    0.7487725187834671
+   ],
+   "accepted": 66
+  },
+  "evidence_gated": {
+   "TP": 36,
+   "FP": 19,
+   "FN": 7,
+   "TN": 9,
+   "accuracy": 0.6338028169014085,
+   "accuracy_wilson": [
+    0.5175721979631125,
+    0.7362977866602549
+   ],
+   "accepted": 55
+  },
+  "enhanced_validation": {
+   "TP": 34,
+   "FP": 8,
+   "FN": 9,
+   "TN": 20,
+   "accuracy": 0.7605633802816901,
+   "accuracy_wilson": [
+    0.6495877914390639,
+    0.8447905996695989
+   ],
+   "accepted": 42
+  }
+ },
+ "policy": {
+  "no_verification": {
+   "success": 43,
+   "TSR": 0.43,
+   "TSR_wilson": [
+    0.33733298524110106,
+    0.5278461045078768
+   ]
+  },
+  "basic_detection": {
+   "success": 42,
+   "TSR": 0.42,
+   "TSR_wilson": [
+    0.3279838267435473,
+    0.5179351329695703
+   ]
+  },
+  "evidence_gated": {
+   "success": 37,
+   "TSR": 0.37,
+   "TSR_wilson": [
+    0.28182360534324524,
+    0.4677947041905709
+   ]
+  },
+  "enhanced_validation": {
+   "success": 39,
+   "TSR": 0.39,
+   "TSR_wilson": [
+    0.3001687400639441,
+    0.4879698295415926
+   ]
+  }
+ },
+ "paired_vs_evidence_gated": {
+  "no_verification": {
+   "decision_correct_phi_only": 9,
+   "decision_correct_other_only": 7,
+   "decision_mcnemar_p": 0.803619384765625,
+   "success_phi_only": 1,
+   "success_other_only": 7,
+   "success_mcnemar_p": 0.0703125
+  },
+  "basic_detection": {
+   "decision_correct_phi_only": 5,
+   "decision_correct_other_only": 6,
+   "decision_mcnemar_p": 1.0,
+   "success_phi_only": 1,
+   "success_other_only": 6,
+   "success_mcnemar_p": 0.125
+  },
+  "enhanced_validation": {
+   "decision_correct_phi_only": 2,
+   "decision_correct_other_only": 11,
+   "decision_mcnemar_p": 0.0224609375,
+   "success_phi_only": 2,
+   "success_other_only": 4,
+   "success_mcnemar_p": 0.6875
+  }
+ },
+ "withdrawn_mixed_indicator_no_verification": {
+  "correct_ref_only": 9,
+  "correct_other_only": 7,
+  "mcnemar_p_correct": 0.803619384765625
+ }
+}

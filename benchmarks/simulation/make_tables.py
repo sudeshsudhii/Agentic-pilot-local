@@ -57,38 +57,46 @@ NAMES = {"no_verification": "No verification", "basic_detection": "Basic success
          "evidence_gated": "Evidence-gated ($\\Phi$)", "enhanced_validation": "Enhanced validation$^{\\ddagger}$"}
 SIM = "\\textsc{Simulation-based (synthetic)}"
 
-# ---- Table: baseline comparison (Study A/B)
+# ---- Table: baseline comparison (Study A/B): policy level (final outcome) and decision level (first claim)
+DA = json.loads((HERE / "out" / "heldout" / "decision_analysis.json").read_text())
+COND = "Synthetic $p$-values and intervals are conditional on the simulation assumptions; they are not empirical tests of the agent."
 rows = []
 for c, nm in NAMES.items():
     m = C[c]
+    d = DA["decision"][c]
     rows.append([nm, str(m["TP"]), str(m["FP"]), str(m["FN"]), str(m["TN"]),
                  ci(m["TP"], m["N"]), ci(m["FP"], m["TP"] + m["FP"]), ci(m["FN"], m["TP"] + m["FN"]),
-                 f3(m["F1"]), f3(m["accuracy"])])
+                 f"{d['TP']}/{d['FP']}/{d['FN']}/{d['TN']}", ci(d["TP"] + d["TN"], DA["n_claims"])])
     for k in ("TP", "FP", "FN", "TN"):
-        led(f"{c} {k}", m[k], "out/heldout/results.json configs", "SYNTHETIC", "Table sim-baseline")
+        led(f"{c} policy {k}", m[k], "out/heldout/results.json configs", "SYNTHETIC", "Table sim-baseline")
     led(f"{c} FCR", round(m["FCR"], 4), "FP/(TP+FP)", "SYNTHETIC", "Table sim-baseline")
     led(f"{c} FRR", round(m["FRR"], 4), "FN/(TP+FN)", "SYNTHETIC", "Table sim-baseline")
-table("baseline", f"{SIM} Study~B: completion decisions of four configurations on the same 100 held-out synthetic scenarios. Confusion counts and rates with Wilson 95\\% intervals. $^{{\\ddagger}}$Not implemented (proposed).",
-      "tab:sim-baseline", "lccccccccc", ["Configuration", "TP", "FP", "FN", "TN", "TSR", "FCR", "FRR", "F1", "Acc."], rows,
-      size="\\footnotesize", sep="5pt", wide=True)
+    led(f"{c} decision accuracy", f"{d['TP'] + d['TN']}/{DA['n_claims']}", "decision_analysis.json (TP+TN)/claims", "SYNTHETIC", "Table sim-baseline")
+table("baseline", f"{SIM} Study~B on the same 100 held-out synthetic scenarios. Policy level: final outcome of each episode (TP reported and achieved, FP reported but not achieved, FN achieved but not reported, TN neither); the final state can differ between configurations because a rejection returns control to planning. Decision level: the verifier's first accept/withhold decision on the {DA['n_claims']} scenarios in which the planner claims completion, against the true state at that claim (TP/FP/FN/TN and accuracy). Wilson 95\\% intervals. {COND} $^{{\\ddagger}}$Not implemented (proposed).",
+      "tab:sim-baseline", "lccccccccc", ["Configuration", "TP", "FP", "FN", "TN", "TSR", "FCR", "FRR", "Decision TP/FP/FN/TN", "Decision acc."], rows,
+      size="\\footnotesize", sep="4pt", wide=True)
 
 # ---- Table: paired tests and Monte Carlo
 rows = []
 for c, nm in NAMES.items():
     mc = MC[c]["FCR"]
     if c == "evidence_gated":
-        rows.append([nm, "ref.", "ref.", "ref.", "--", f"{mc['mean']:.2f} [{mc['p2.5']:.2f},{mc['p97.5']:.2f}]"])
+        rows.append([nm, "ref.", "ref.", "ref.", "ref.", "ref.", f"{mc['mean']:.2f} [{mc['p2.5']:.2f},{mc['p97.5']:.2f}]"])
         continue
     t = T[c]
+    pv = DA["paired_vs_evidence_gated"][c]
     rows.append([nm, f"{t['fp_other_only']}/{t['fp_ref_only']}", f"{t['mcnemar_p_fp']:.3f}",
-                 f"{t['fp_rate_diff']:+.2f} [{t['fp_rate_diff_ci'][0]:+.2f},{t['fp_rate_diff_ci'][1]:+.2f}]",
-                 f"{t['cohens_h_tsr']:+.2f}", f"{mc['mean']:.2f} [{mc['p2.5']:.2f},{mc['p97.5']:.2f}]"])
-    led(f"{c} McNemar p (false completion vs evidence_gated)", round(t["mcnemar_p_fp"], 4), "exact McNemar on paired FP indicators", "SYNTHETIC", "Table sim-tests")
-table("tests", f"{SIM} Paired comparison with the evidence-gated configuration on the same scenarios. $b/c$: scenarios with a false completion only in the other configuration / only under $\\Phi$; $p$: exact McNemar test; $\\Delta$FC: difference in false completions per scenario (other minus $\\Phi$) with scenario-level bootstrap 95\\% interval; $h$: Cohen's $h$ for TSR ($\\Phi$ minus other). MC: mean FCR and 2.5--97.5th percentiles over {P['monte_carlo_replications']} regenerated scenario sets.",
-      "tab:sim-tests", "lccccc", ["Configuration", "$b/c$", "$p$", "$\\Delta$FC", "$h$", "MC FCR"], rows, size="\\scriptsize", sep="2pt")
+                 f"{pv['decision_correct_other_only']}/{pv['decision_correct_phi_only']}", f"{pv['decision_mcnemar_p']:.3f}",
+                 f"{pv['success_other_only']}/{pv['success_phi_only']}; {pv['success_mcnemar_p']:.3f}",
+                 f"{mc['mean']:.2f} [{mc['p2.5']:.2f},{mc['p97.5']:.2f}]"])
+    led(f"{c} McNemar p (episode false completion vs evidence_gated)", round(t["mcnemar_p_fp"], 4), "exact McNemar on paired FP indicators", "SYNTHETIC", "Table sim-tests")
+    led(f"{c} McNemar p (decision correctness vs evidence_gated)", round(pv["decision_mcnemar_p"], 4), "decision_analysis.json", "SYNTHETIC", "Table sim-tests")
+    led(f"{c} McNemar p (task success vs evidence_gated)", round(pv["success_mcnemar_p"], 4), "decision_analysis.json", "SYNTHETIC", "Table sim-tests")
+table("tests", f"{SIM} Paired comparisons with the evidence-gated configuration, exact McNemar tests on discordant pairs $b/c$ (first count: only the other configuration; second: only $\\Phi$). FC: episode ends in a false completion (100 scenarios). Decision: first decision correct ({DA['n_claims']} claims). Success: task achieved and reported (100 scenarios). MC: mean FCR and 2.5--97.5th percentiles over {P['monte_carlo_replications']} regenerated scenario sets. {COND}",
+      "tab:sim-tests", "lcccccc", ["Configuration", "FC $b/c$", "$p$", "Decision $b/c$", "$p$", "Success $b/c$; $p$", "MC FCR"], rows, size="\\scriptsize", sep="1.8pt")
 
 # ---- Table: ablation (Study C)
-AB = {"evidence_gated": "Full", "abl_no_evidence_collection": "-- evid.\\ collection",
+AB = {"evidence_gated": "Full", "abl_no_evidence_collection": "-- stored evidence$^{\\S}$",
       "abl_no_evidence_validation": "-- $\\Phi$", "abl_no_memory": "-- memory, RAG", "abl_no_recovery": "-- recovery"}
 rows = []
 for c, nm in AB.items():
@@ -97,7 +105,7 @@ for c, nm in AB.items():
     rows.append([nm, ci(m["TP"], m["N"]), f3(m["FCR"]), f3(m["FRR"]), f3(m["F1"]), f"{m['evidence_available']:.2f}",
                  f"{mc['TSR']['mean']:.2f}", f"{mc['FCR']['mean']:.2f}"])
     led(f"{c} TSR", m["TSR"], "TP/N", "SYNTHETIC", "Table sim-ablation")
-table("ablation", f"{SIM} Study~C: ablation of the full architecture on the same 100 scenarios. Evid.: share of episodes with audit evidence stored. MC: means over {P['monte_carlo_replications']} regenerated sets. Disabling evidence collection leaves decisions unchanged because $\\Phi$ reads the live page, not the stored evidence (code behaviour).",
+table("ablation", f"{SIM} Study~C: one component removed at a time, on the same 100 scenarios (policy level). Each row is a simulated configuration, not a run of the implementation; the rows for $\\Phi$, memory and recovery correspond to switches that exist in the code (\\texttt{{verification\\_mode}}, \\texttt{{enable\\_memory}}/\\texttt{{enable\\_rag}}, \\texttt{{enable\\_recovery}}). $^{{\\S}}$Simulated removal of all stored evidence (screenshots and records); the implemented switch \\texttt{{enable\\_evidence}} removes only the per-action execution records. Decisions are unchanged because $\\Phi$ reads the live page, not the stored evidence (code behaviour). Evid.: share of episodes with audit evidence stored. MC: means over {P['monte_carlo_replications']} regenerated sets.",
       "tab:sim-ablation", "lccccccc", ["Configuration", "TSR", "FCR", "FRR", "F1", "Evid.", "MC TSR", "MC FCR"], rows, size="\\scriptsize", sep="2pt")
 
 # ---- Table: memory (Study D) — ACTUAL retrieval on synthetic corpus + SYNTHETIC repeated workflows

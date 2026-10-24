@@ -1,17 +1,17 @@
 \begin{table}[t]
 \centering
-\caption{\textsc{Simulation-based (synthetic)} Paired comparison with the evidence-gated configuration on the same scenarios. $b/c$: scenarios with a false completion only in the other configuration / only under $\Phi$; $p$: exact McNemar test; $\Delta$FC: difference in false completions per scenario (other minus $\Phi$) with scenario-level bootstrap 95\% interval; $h$: Cohen's $h$ for TSR ($\Phi$ minus other). MC: mean FCR and 2.5--97.5th percentiles over 1000 regenerated scenario sets.}
+\caption{\textsc{Simulation-based (synthetic)} Paired comparisons with the evidence-gated configuration, exact McNemar tests on discordant pairs $b/c$ (first count: only the other configuration; second: only $\Phi$). FC: episode ends in a false completion (100 scenarios). Decision: first decision correct (71 claims). Success: task achieved and reported (100 scenarios). MC: mean FCR and 2.5--97.5th percentiles over 1000 regenerated scenario sets. Synthetic $p$-values and intervals are conditional on the simulation assumptions; they are not empirical tests of the agent.}
 \label{tab:sim-tests}
 \scriptsize
-\setlength{\tabcolsep}{2pt}
-\begin{tabular}{@{}lccccc@{}}
+\setlength{\tabcolsep}{1.8pt}
+\begin{tabular}{@{}lcccccc@{}}
 \toprule
-Configuration & $b/c$ & $p$ & $\Delta$FC & $h$ & MC FCR \\
+Configuration & FC $b/c$ & $p$ & Decision $b/c$ & $p$ & Success $b/c$; $p$ & MC FCR \\
 \midrule
-No verification & 9/0 & 0.004 & +0.09 [+0.04,+0.15] & -0.12 & 0.36 [0.25,0.48] \\
-Basic success detection & 5/0 & 0.062 & +0.05 [+0.01,+0.10] & -0.10 & 0.33 [0.22,0.44] \\
-Evidence-gated ($\Phi$) & ref. & ref. & ref. & -- & 0.25 [0.15,0.37] \\
-Enhanced validation$^{\ddagger}$ & 0/11 & 0.001 & -0.11 [-0.18,-0.05] & -0.04 & 0.14 [0.05,0.24] \\
+No verification & 9/0 & 0.004 & 7/9 & 0.804 & 7/1; 0.070 & 0.36 [0.25,0.48] \\
+Basic success detection & 5/0 & 0.062 & 6/5 & 1.000 & 6/1; 0.125 & 0.33 [0.22,0.44] \\
+Evidence-gated ($\Phi$) & ref. & ref. & ref. & ref. & ref. & 0.25 [0.15,0.37] \\
+Enhanced validation$^{\ddagger}$ & 0/11 & 0.001 & 11/2 & 0.022 & 4/2; 0.688 & 0.14 [0.05,0.24] \\
 \bottomrule
 \end{tabular}
 \end{table}

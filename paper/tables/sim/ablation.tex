@@ -1,6 +1,6 @@
 \begin{table}[t]
 \centering
-\caption{\textsc{Simulation-based (synthetic)} Study~C: ablation of the full architecture on the same 100 scenarios. Evid.: share of episodes with audit evidence stored. MC: means over 1000 regenerated sets. Disabling evidence collection leaves decisions unchanged because $\Phi$ reads the live page, not the stored evidence (code behaviour).}
+\caption{\textsc{Simulation-based (synthetic)} Study~C: one component removed at a time, on the same 100 scenarios (policy level). Each row is a simulated configuration, not a run of the implementation; the rows for $\Phi$, memory and recovery correspond to switches that exist in the code (\texttt{verification\_mode}, \texttt{enable\_memory}/\texttt{enable\_rag}, \texttt{enable\_recovery}). $^{\S}$Simulated removal of all stored evidence (screenshots and records); the implemented switch \texttt{enable\_evidence} removes only the per-action execution records. Decisions are unchanged because $\Phi$ reads the live page, not the stored evidence (code behaviour). Evid.: share of episodes with audit evidence stored. MC: means over 1000 regenerated sets.}
 \label{tab:sim-ablation}
 \scriptsize
 \setlength{\tabcolsep}{2pt}
@@ -9,7 +9,7 @@
 Configuration & TSR & FCR & FRR & F1 & Evid. & MC TSR & MC FCR \\
 \midrule
 Full & 37/100 [0.28,0.47] & .339 & .213 & .718 & 0.89 & 0.44 & 0.25 \\
--- evid.\ collection & 37/100 [0.28,0.47] & .339 & .213 & .718 & 0.00 & 0.44 & 0.25 \\
+-- stored evidence$^{\S}$ & 37/100 [0.28,0.47] & .339 & .213 & .718 & 0.00 & 0.44 & 0.25 \\
 -- $\Phi$ & 43/100 [0.34,0.53] & .394 & .065 & .735 & 0.89 & 0.45 & 0.36 \\
 -- memory, RAG & 38/100 [0.29,0.48] & .345 & .191 & .724 & 0.89 & 0.44 & 0.26 \\
 -- recovery & 30/100 [0.22,0.40] & .348 & .250 & .698 & 0.90 & 0.38 & 0.25 \\
