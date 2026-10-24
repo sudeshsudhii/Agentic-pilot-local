@@ -34,7 +34,8 @@ H.~He \emph{et~al.}, ``{WebVoyager}: Building an end-to-end web agent with
 \bibitem{xie2024osworld}
 T.~Xie \emph{et~al.}, ``{OSWorld}: Benchmarking multimodal agents for
   open-ended tasks in real computer environments,'' in \emph{Proc. Adv. Neural
-  Inf. Process. Syst. (NeurIPS), Datasets and Benchmarks Track}, vol.~37, 2024.
+  Inf. Process. Syst. (NeurIPS), Datasets and Benchmarks Track}, vol.~37, 2024,
+  pp. 52\,040--52\,094.
 
 \bibitem{zheng2024seeact}
 B.~Zheng, B.~Gou, J.~Kil, H.~Sun, and Y.~Su, ``{GPT-4V(ision)} is a generalist
@@ -74,16 +75,17 @@ J.~Wei \emph{et~al.}, ``Chain-of-thought prompting elicits reasoning in large
 \bibitem{schick2023toolformer}
 T.~Schick \emph{et~al.}, ``Toolformer: Language models can teach themselves to
   use tools,'' in \emph{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS)},
-  vol.~36, 2023.
+  vol.~36, 2023, pp. 68\,539--68\,551.
 
 \bibitem{shinn2023reflexion}
 N.~Shinn, F.~Cassano, A.~Gopinath, K.~Narasimhan, and S.~Yao, ``Reflexion:
   Language agents with verbal reinforcement learning,'' in \emph{Proc. Adv.
-  Neural Inf. Process. Syst. (NeurIPS)}, vol.~36, 2023.
+  Neural Inf. Process. Syst. (NeurIPS)}, vol.~36, 2023, pp. 8634--8652.
 
 \bibitem{kim2023rci}
 G.~Kim, P.~Baldi, and S.~McAleer, ``Language models can solve computer tasks,''
-  in \emph{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS)}, vol.~36, 2023.
+  in \emph{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS)}, vol.~36, 2023, pp.
+  39\,648--39\,677.
 
 \bibitem{wang2024voyager}
 G.~Wang \emph{et~al.}, ``Voyager: An open-ended embodied agent with large
@@ -172,7 +174,7 @@ N.~Reimers and I.~Gurevych, ``{Sentence-BERT}: Sentence embeddings using
 J.~S. Park, J.~C. O'Brien, C.~J. Cai, M.~R. Morris, P.~Liang, and M.~S.
   Bernstein, ``Generative agents: Interactive simulacra of human behavior,'' in
   \emph{Proc. 36th Annu. ACM Symp. User Interface Softw. Technol. (UIST)},
-  2023.
+  2023, pp. 2:1--2:22.
 
 \bibitem{packer2023memgpt}
 C.~Packer \emph{et~al.}, ``{MemGPT}: Towards {LLMs} as operating systems,''
