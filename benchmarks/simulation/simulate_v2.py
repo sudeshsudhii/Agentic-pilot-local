@@ -13,10 +13,12 @@ the implementation or the measurements:
       verify_node does; a false rejection of an unchanged, completed page is repeated (the rule check is
       deterministic), so v1's unconditional re-claim acceptance is removed.
   C4  Recovery follows the implemented path per failure mode: three inline retries in verify_node for action
-      errors, then the recovery engine from retry count 3; navigation failures and need_help go to the engine
-      directly; a missing confirmation is never an error and is handled only by rejection and continuation.
-      With recovery disabled the engine fails at once but inline retries remain. The policy simulation's
-      recovery probabilities are taken from this recovery study instead of a separate assumption.
+      errors, including need_help, then the recovery engine from retry count 3; a failed initial navigation is
+      retried three times by the browser executor and then enters the engine at retry count 0; a missing
+      confirmation raises no error and is handled by rejection and continuation. With recovery disabled the
+      engine fails at once but the retries before it remain. The policy simulation's recovery probabilities are
+      taken from this recovery study instead of a separate assumption. Each scenario has one failure, which
+      matches the code for the first failure of a task (the retry counter is per task).
   C5  Monte Carlo replications also draw every derived rate from its Beta posterior (Jeffreys prior),
       so the percentiles include parameter uncertainty.
   C6  The latency model counts re-planning after rejections, a check per claim, three screenshots per step

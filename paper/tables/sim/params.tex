@@ -8,25 +8,25 @@
 \toprule
 Parameter & Value & Class \\
 \midrule
-Scenarios per set; dev / held-out seed; MC sets & 100; 101 / 202; 1000 & design \\
+Scenarios per set; dev / held-out seed; MC sets & 100; 101 / 202; 1000 & ASSUMED (design choice) \\
 Task categories (nav., search, form, data entry, extraction, multi-step) & 0.15 / 0.15 / 0.20 / 0.15 / 0.20 / 0.15 & ASSUMED \\
 Outcome classes (successful, incomplete, incorrect, missing, contradictory, stale, ambiguous) & 0.40 / 0.15 / 0.12 / 0.08 / 0.08 / 0.07 / 0.10 & ASSUMED \\
 P(task truly complete $\mid$ class), same order & 1.0 / 0.0 / 0.0 / 0.5 / 0.5 / 0.3 / 0.5 & ASSUMED \\
 Planner claims completion: if complete / if not ($\pi$) & 0.92 / 0.65 & ASSUMED \\
-$\Phi$ withhold rate on unsatisfied states, by task category & navi. 0.36, sear. 0.50, form. 0.50, data. 0.38, extr. 0.07, mult. 0.63 & DERIVED \\
-Basic detection withhold rate, same & navi. 0.36, sear. 0.10, form. 0.07, data. 0.13, extr. 0.07, mult. 0.13 & DERIVED \\
+$\Phi$ withhold rate on unsatisfied states, by task category & navi. 0.36, sear. 0.50, form. 0.50, data. 0.38, extr. 0.07, mult. 0.63 & DERIVED (mapping ASSUMED) \\
+Basic detection withhold rate, same & navi. 0.36, sear. 0.10, form. 0.07, data. 0.13, extr. 0.07, mult. 0.13 & DERIVED (mapping ASSUMED) \\
 False rejection: $\Phi$ / basic & 0/24 $\to$ 0.02 / 0.02 (satisfied states of the mapped categories; bot-check pages excluded) & DERIVED \\
 Ambiguous-class detection factor & 0.5 & ASSUMED \\
-Verifier rejects when evidence is missing ($\Phi$ and basic) & 0.8 & ASSUMED rate \\
+Verifier rejects when evidence is missing ($\Phi$ and basic) & 0.8 & ASSUMED \\
 Enhanced: extra catch / extra false rej. / contradiction rej. & 0.5 / 0.05 / 0.7 & PROPOSED \\
 Finish after rejection (continuation is verified again) & 0.35 & ASSUMED \\
-Action failure; recovered with / without engine & 0.25; 0.66 / 0.49 & ASSUMED; from Study E \\
+Action failure; recovered with / without engine & 0.25; 0.66 / 0.49 & ASSUMED; SYNTHETIC (Study E) \\
 Repeated workflows; memory gain / loss & 0.4; 0.08 / 0.1 & ASSUMED \\
-Misleading retrieval: store / filtered & 0.30 (raw $k/n$) / 0.1 & DERIVED / PROPOSED \\
+Misleading retrieval: store / filtered & 0.30 (raw $k/n$) / 0.1 & DERIVED (mapping ASSUMED) / PROPOSED \\
 Recovery: permanent share; max attempts & 0.25; 6 & ASSUMED \\
 Recovery entry paths and strategy sequences & code (Table~\ref{tab:sim-recovery}) & ACTUAL \\
 Recovery success per attempt & 0.10--0.45 (re-plan), 0.05--0.35 (vision); guided 0.35--0.55 & ASSUMED / PROPOSED \\
-Missing-confirmation detection: retry / guided & 0.63 / 0.9 & DERIVED / PROPOSED \\
+Missing-confirmation detection: retry / guided & 0.63 / 0.9 & DERIVED via ASSUMED proxy / PROPOSED \\
 Steps per episode by category (same order as above) & 2 / 3 / 5 / 3 / 3 / 6 & ASSUMED \\
 Inference time per call (median, log-sd) & 3.0 s, 0.5 & ASSUMED \\
 Browser, DOM, screenshot, $\Phi$ latency & resampled from measurements & ACTUAL \\

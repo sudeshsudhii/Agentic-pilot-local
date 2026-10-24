@@ -16,7 +16,8 @@
   \If{$\alpha = 0$}
     \If{fewer than 3 retries} \textbf{continue} \EndIf
     \State $\textit{st} \gets \Call{Recover}{\text{error}}$ \label{alg:recover}
-    \If{$\textit{st}$ is exhausted or blocked} \Return \textsc{Failed} \EndIf
+    \If{$\textit{st}$ is blocked} \Return \textsc{Blocked} \EndIf
+    \If{$\textit{st}$ is exhausted} \Return \textsc{Failed} \EndIf
     \State \textbf{continue} \Comment{retry, vision, \dots}
   \EndIf
   \If{$a \neq \texttt{complete}$} mark step done; \textbf{if} steps remain \textbf{continue} \EndIf
@@ -24,7 +25,7 @@
     \State $(v, \text{obs}) \gets \Phi(g, s, P)$; save as evidence \label{alg:phi}
     \If{$v$} store memory; \Return \textsc{Completed} \EndIf
   \EndIf
-  \If{model calls $\geq K$} \Return \textsc{Failed} \EndIf
+  \If{model calls $\geq K$} go to line~\ref{alg:recover} \Comment{budget failure enters recovery} \EndIf
 \EndLoop
 \end{algorithmic}
 \end{algorithm}

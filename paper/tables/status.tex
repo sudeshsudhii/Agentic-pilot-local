@@ -11,7 +11,8 @@ Component & Class & Evidence \\
 Completion predicate $\Phi$, bot-check halt & IE & C (92 states), M, S \\
 Browser control (Playwright), DOM extraction & IE & C, M (latency) \\
 Loopback-only model endpoint; Chroma telemetry off & IE & E (destinations, 70 stand-in episodes), T (refusal, telemetry flag) \\
-End-to-end harness and oracle $\Phi^{\star}$ & IE & O (114 trajectories) \\
+End-to-end oracle $\Phi^{\star}$ & IE & O (114 trajectories) \\
+End-to-end harness (run with a language model) & IN & E (stand-in only) \\
 Recovery engine: classification, strategy order & IE & C (6 failure modes), S \\
 Memory store retrieval (Chroma, SQLite) & IE & C (10 queries, synthetic corpus), S \\
 Per-action evidence (screenshots, records) & IS & M (latency), S \\

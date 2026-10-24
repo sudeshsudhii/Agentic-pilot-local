@@ -1,6 +1,6 @@
 \begin{table}[t]
 \centering
-\caption{\textsc{Simulation-based (synthetic)} Study~E: 120 failure scenarios, 20 per mode; 27 drawn as permanent (25\% expected), none of them a missing confirmation. Entry paths and strategy sequences follow the code: action errors, including a planner's request for help, are retried three times inline before the engine is called; a failed initial navigation is retried three times by the browser executor and then passed to the engine; a missing confirmation raises no error and is handled only by rejection and continuation. $^{\S}$The retries before the engine remain. Per-attempt success rates are ASSUMED (PROPOSED for the guided variant), so differences between rows follow from them. Detected: failure noticed; FC: undetected missing confirmations reported complete; Unnec.: attempts on permanent failures; Att.: mean attempts. $^{\ddagger}$Not implemented.}
+\caption{\textsc{Simulation-based (synthetic)} Study~E: 120 failure scenarios, 20 per mode; 27 drawn as permanent (25\% expected), none of them a missing confirmation. Entry paths and strategy sequences follow the code for the first failure of a task (each scenario has one failure; in the code later failures find the shared retry counter partly used): action errors, including a planner's request for help, are retried three times inline before the engine is called; a failed initial navigation is retried three times by the browser executor and then passed to the engine; a missing confirmation raises no error and is handled only by rejection and continuation. $^{\S}$The retries before the engine remain. Per-attempt success rates are ASSUMED (PROPOSED for the guided variant), so differences between rows follow from them. Detected: failure noticed; FC: undetected missing confirmations reported complete; Unnec.: attempts on permanent failures; Att.: mean attempts. $^{\ddagger}$Not implemented.}
 \label{tab:sim-recovery}
 \scriptsize
 \setlength{\tabcolsep}{2pt}
@@ -9,7 +9,7 @@
 Recovery & Detected & Recovered & FC & Unnec. & Att. \\
 \midrule
 Engine off$^{\S}$ & 111/120 [0.86,0.96] & 51/93 [0.45,0.65] & 9 & 81 & 2.08 \\
-Engine on (impl.) & 111/120 [0.86,0.96] & 68/93 [0.63,0.81] & 9 & 174 & 3.25 \\
+Engine on (as impl.; sim.) & 111/120 [0.86,0.96] & 68/93 [0.63,0.81] & 9 & 174 & 3.25 \\
 Evidence-guided$^{\ddagger}$ & 118/120 [0.94,1.00] & 87/93 [0.87,0.97] & 2 & 162 & 3.17 \\
 \midrule
 \multicolumn{6}{@{}l}{\emph{Recovered / recoverable by mode (engine off; engine on; guided)}} \\
