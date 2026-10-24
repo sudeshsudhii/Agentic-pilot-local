@@ -107,6 +107,21 @@ def main() -> None:
             out.append({"split": split, "subset": "all", "rule": f"ablation_{col}", **d,
                         "full_better": b, "ablated_better": c, "p_vs_full": mcnemar_exact(b, c)})
 
+    # Gate against the measured basic success detector (error check E only, no bot-check halt), decisions
+    # recorded by benchmarks/simulation/measure_inputs.py on the same 92 states (m1_gate_rules.csv).
+    m1_path = REPO / "benchmarks" / "simulation" / "inputs" / "m1_gate_rules.csv"
+    if not m1_path.exists():
+        raise FileNotFoundError(f"required input missing: {m1_path}")
+    m1 = list(csv.DictReader(open(m1_path)))
+    for split in ("design", "held_out", "held_out_2", "held_out_1+2"):
+        sub = [r for r in m1 if r["split"] in split.replace("held_out_1+2", "held_out held_out_2").split()]
+        corr = lambda r, k: (r[k] == "1") == (r["oracle"] == "1")  # noqa: E731
+        b = sum(1 for r in sub if corr(r, "phi_accepts") and not corr(r, "basic_accepts"))
+        c = sum(1 for r in sub if corr(r, "basic_accepts") and not corr(r, "phi_accepts"))
+        d = describe([{**r, "oracle_satisfied": r["oracle"]} for r in sub], lambda r: r["basic_accepts"] == "1")
+        out.append({"split": split, "subset": "all", "rule": "basic_E_only", **d,
+                    "gate_only_correct_vs_basic": b, "basic_only_correct": c, "p_correct_vs_basic": mcnemar_exact(b, c)})
+
     keys = list(dict.fromkeys(k for r in out for k in r))
     with open(RES / "gate_stats.csv", "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=keys)

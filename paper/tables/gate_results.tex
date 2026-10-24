@@ -1,6 +1,6 @@
 \begin{table}[t]
 \centering
-\caption{Completion gate on constructed end states. $n^{-}$/$n^{+}$: states that do not / do meet the goal under the oracle. W: unsatisfied states withheld (a dispatch-only rule withholds none); FR: satisfied states rejected; FC/R: false completions over states reported complete (FCR); it depends on the constructed share of unsatisfied states and is not an estimate for real use, unlike W/$n^{-}$ and FR/$n^{+}$. Brackets: Wilson 95\% intervals. $p$: exact McNemar test on paired decision correctness against the dispatch-only rule on the same states (discordant pairs: W states only the gate decides correctly, FR states only the dispatch-only rule does); it is not computed on the design set (--), because the rules were written on those states. Upper block: current gate by category; lower block: totals, including the gate before the fixes. Held-out~2 was frozen in a commit before the gate was run on it. Source: \texttt{gate\_stats.csv} (columns \texttt{p\_correct\_vs\_dispatch} and, for the gate before the fixes, \texttt{pre\_p\_correct\_vs\_dispatch}).}
+\caption{Completion gate on constructed end states. $n^{-}$/$n^{+}$: states that do not / do meet the goal under the oracle. W: unsatisfied states withheld (a dispatch-only rule withholds none); FR: satisfied states rejected; FC/R: false completions over states reported complete (FCR); it depends on the constructed share of unsatisfied states and is not an estimate for real use, unlike W/$n^{-}$ and FR/$n^{+}$. Brackets: Wilson 95\% intervals. $p$: exact McNemar test on paired decision correctness against the dispatch-only rule on the same states (discordant pairs: W states only the gate decides correctly, FR states only the dispatch-only rule does); it is not computed on the design set (--), because the rules were written on those states. Upper block: current gate by category; lower block: totals, including the gate before the fixes. Held-out~2 was frozen in a commit before the gate was run on it. $p_{E}$: the same test against the measured basic success detector that applies only the error check $E$ (rows ``$E$ only''); on the held-out sets the gate is not significantly better than it. Source: \texttt{gate\_stats.csv} (columns \texttt{p\_correct\_vs\_dispatch} and, for the gate before the fixes, \texttt{pre\_p\_correct\_vs\_dispatch}).}
 \label{tab:gate}
 \footnotesize
 \setlength{\tabcolsep}{2.1pt}
@@ -21,16 +21,18 @@ Multi-step & 2/2 & 1 & 0 & 3/3 & 2 & 0 \\
 
 \vspace{3pt}
 \setlength{\tabcolsep}{1.8pt}
-\begin{tabular}{@{}llcccc@{}}
+\begin{tabular}{@{}llccccc@{}}
 \toprule
-Set & Gate & W / $n^{-}$ & FR / $n^{+}$ & FC/R & $p$ \\
+Set & Rule & W / $n^{-}$ & FR / $n^{+}$ & FC/R & $p$ & $p_{E}$ \\
 \midrule
-Design & before & 15/23 [.45,.81] & 3/15 [.07,.45] & 8/20 & -- \\
-Design & after & 20/23 [.68,.95] & 1/15 [.01,.30] & 3/17 & -- \\
-Held-out 1 & before & 1/5 [.04,.62] & 1/7 [.03,.51] & 4/10 & 1.0 \\
-Held-out 1 & after & 2/5 [.12,.77] & 1/7 [.03,.51] & 3/9 & 1.0 \\
-Held-out 2 & after & 9/22 [.23,.61] & 1/20 [.01,.24] & 13/32 & 0.021 \\
-Held-out 1+2 & after & 11/27 [.25,.59] & 2/27 [.02,.23] & 16/41 & 0.022 \\
+Design & before & 15/23 [.45,.81] & 3/15 [.07,.45] & 8/20 & -- & \\
+Design & after & 20/23 [.68,.95] & 1/15 [.01,.30] & 3/17 & -- & -- \\
+Held-out 1 & before & 1/5 [.04,.62] & 1/7 [.03,.51] & 4/10 & 1.0 & \\
+Held-out 1 & after & 2/5 [.12,.77] & 1/7 [.03,.51] & 3/9 & 1.0 & 1.0 \\
+Held-out 2 & after & 9/22 [.23,.61] & 1/20 [.01,.24] & 13/32 & 0.021 & 0.070 \\
+Held-out 2 & $E$ only & 2/22 [.03,.28] & 0/20 [.00,.16] & 20/40 & & \\
+Held-out 1+2 & after & 11/27 [.25,.59] & 2/27 [.02,.23] & 16/41 & 0.022 & 0.11 \\
+Held-out 1+2 & $E$ only & 3/27 [.04,.28] & 0/27 [.00,.12] & 24/51 & & \\
 \bottomrule
 \end{tabular}
 \end{table}

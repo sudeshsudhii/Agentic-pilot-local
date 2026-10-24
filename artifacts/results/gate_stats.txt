@@ -31,3 +31,7 @@ held_out_2 ablation_without_T       withheld 8/22=0.36 W[0.20,0.57] CP[0.17,0.59
 held_out_2 ablation_without_X       withheld 9/22=0.41 W[0.23,0.61] CP[0.21,0.64]   FCR 13/32=0.41 W[0.26,0.58] CP[0.24,0.59]  FRR 1/20=0.05 W[0.01,0.24] CP[0.00,0.25] {'full_better': 0, 'ablated_better': 0, 'p_vs_full': '1'}
 held_out_2 ablation_without_R       withheld 7/22=0.32 W[0.16,0.53] CP[0.14,0.55]   FCR 15/34=0.44 W[0.29,0.61] CP[0.27,0.62]  FRR 1/20=0.05 W[0.01,0.24] CP[0.00,0.25] {'full_better': 2, 'ablated_better': 0, 'p_vs_full': '0.5'}
 held_out_2 ablation_without_B       withheld 7/22=0.32 W[0.16,0.53] CP[0.14,0.55]   FCR 15/35=0.43 W[0.28,0.59] CP[0.26,0.61]  FRR 0/20=0.00 W[0.00,0.16] CP[0.00,0.17] {'full_better': 2, 'ablated_better': 1, 'p_vs_full': '1'}
+design     basic_E_only             withheld 6/23=0.26 W[0.13,0.46] CP[0.10,0.48]   FCR 17/32=0.53 W[0.36,0.69] CP[0.35,0.71]  FRR 0/15=0.00 W[0.00,0.20] CP[0.00,0.22] {'p_correct_vs_basic': '0.00098'}
+held_out   basic_E_only             withheld 1/5=0.20 W[0.04,0.62] CP[0.01,0.72]    FCR 4/11=0.36 W[0.15,0.65] CP[0.11,0.69]   FRR 0/7=0.00 W[0.00,0.35] CP[0.00,0.41]  {'p_correct_vs_basic': '1'}
+held_out_2 basic_E_only             withheld 2/22=0.09 W[0.03,0.28] CP[0.01,0.29]   FCR 20/40=0.50 W[0.35,0.65] CP[0.34,0.66]  FRR 0/20=0.00 W[0.00,0.16] CP[0.00,0.17] {'p_correct_vs_basic': '0.07'}
+held_out_1+2 basic_E_only             withheld 3/27=0.11 W[0.04,0.28] CP[0.02,0.29]   FCR 24/51=0.47 W[0.34,0.60] CP[0.33,0.62]  FRR 0/27=0.00 W[0.00,0.12] CP[0.00,0.13] {'p_correct_vs_basic': '0.11'}

@@ -1,7 +1,7 @@
 \section{Introduction}
 \label{sec:intro}
 
-Language-model agents now operate software for people: they open pages, fill in forms and read results~\cite{zhou2024webarena,he2024webvoyager,xie2024osworld}. Many send each observation, often a screenshot of a logged-in page, to a hosted multimodal model~\cite{he2024webvoyager,zheng2024seeact,zhang2025ufo}, although such screens carry names, messages and account data and personal information has been shown to leak from language models~\cite{lukas2023pii}. Independently of where the model runs, an agent can stop too early. We call this \emph{premature completion}: a terminal ``done'' while the environment does not satisfy the goal, for example after opening the search engine but before issuing the query. Each action succeeded; the task did not.
+Language-model agents now operate software for people: they open pages, fill in forms and read results~\cite{zhou2024webarena,he2024webvoyager,xie2024osworld}. Many send each observation, often a screenshot of a logged-in page, to a hosted multimodal model~\cite{he2024webvoyager,zheng2024seeact,zhang2025ufo}, although such screens carry names, messages and account data that a hosted provider then processes and may retain; language models can moreover leak personal information they were trained on~\cite{lukas2023pii}. Independently of where the model runs, an agent can stop too early. We call this \emph{premature completion}: a terminal ``done'' while the environment does not satisfy the goal, for example after opening the search engine but before issuing the query. Each action succeeded; the task did not.
 
 \paragraph{Research gaps} We address three gaps, each stated so that it can be tested.
 \begin{enumerate}
