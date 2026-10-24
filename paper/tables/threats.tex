@@ -8,10 +8,10 @@
 \toprule
 Surface & Control in the code & Evid. & Residual risk \\
 \midrule
-Model inference & loopback endpoint enforced; override must be explicit & E, T & user override sends prompts and screenshots off the machine \\
+Model inference & loopback endpoint enforced; override must be explicit & E, T & user override, or a loopback server that forwards requests (Ollama cloud models, a tunnel), sends prompts and screenshots off the machine; E used a stand-in server \\
 Memory, task data & SQLite and Chroma on local disk; telemetry off & C, T & not encrypted; readable by any local process \\
 Websites & none: the planner may follow links to any site & C & data the agent types reaches that site \\
-Browser traffic & page requests logged in the harness & E & Chromium background traffic not observed \\
+Browser traffic & none in the agent; the test harness logs page-request URLs & E & Chromium background traffic, WebSockets and DNS not observed \\
 Screenshots & stored in the local evidence folder & C & not redacted; may show account data \\
 Retention & no deletion policy & C & evidence grows without bound \\
 High-risk actions & approval before posting, sending, purchasing, deleting & C, T & model-assigned label; once per task \\

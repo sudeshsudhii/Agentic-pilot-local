@@ -10,7 +10,7 @@ Language-model agents now operate software for people: they open pages, fill in 
 \item[G3] \emph{Locality claims of local agents are rarely checked.} Running models locally is claimed to keep data on the machine, but whether an agent's process contacts other hosts is seldom measured. Test: the egress test of Section~\ref{sec:res-privacy}.
 \end{enumerate}
 
-\paragraph{Scope and terms} Agentic Pilot acts only in a Chromium browser. It is \emph{autonomous} in that, given a request, it plans and executes browser actions without step-by-step instructions; the user approves tasks classified as high-risk (posting, sending, purchasing, deleting, transferring) and solves CAPTCHAs, and no end-to-end task with a language model is evaluated in this paper. It is \emph{privacy-preserving} in that model inference is restricted to the user's machine and its records are stored there (Section~\ref{sec:safety}). Desktop, file and process control is a design (Appendix~\ref{app:computer}).
+\paragraph{Scope and terms} Agentic Pilot acts only in a Chromium browser. It is \emph{autonomous} in that, given a request, it plans and executes browser actions without step-by-step instructions; the user approves tasks classified as high-risk (posting, sending, purchasing, deleting, transferring) and solves CAPTCHAs, and no end-to-end task with a language model is evaluated in this paper. It is \emph{privacy-preserving} in a narrow sense: by default its model client sends prompts and screenshots only to a model server on the loopback interface, and it writes task records, memory and evidence only to local files (Section~\ref{sec:safety}); whether that server runs inference locally depends on its configuration. Desktop, file and process control is a design (Appendix~\ref{app:computer}).
 
 \paragraph{Research questions} The gaps lead to five questions (Section~\ref{sec:hypotheses}): whether evidence-gated completion reduces false completions (RQ1, G1) and improves decision reliability (RQ2, G1, G2), whether memory helps repeated workflows (RQ3), whether evidence-guided recovery helps (RQ4) and what verification costs (RQ5).
 
@@ -25,7 +25,7 @@ Language-model agents now operate software for people: they open pages, fill in 
 \begin{enumerate}
 \setcounter{enumi}{3}
 \item An open-source local agent with the gate inside its control loop (Algorithm~\ref{alg:loop}, Section~\ref{sec:arch}) and an implementation audit (Table~\ref{tab:status}).
-\item Enforcement and an \textsc{actual} test of local-only model traffic, addressing G3 (Sections~\ref{sec:impl} and~\ref{sec:res-privacy}).
+\item Enforcement of a loopback-only model endpoint and an \textsc{actual} test, with a stand-in model server, that the agent's Python processes connect only to loopback addresses, addressing G3 (Sections~\ref{sec:impl} and~\ref{sec:res-privacy}).
 \item An end-to-end harness: self-hosted sites with fictional content, 40 tasks with a dev/test split, an oracle validated on scripted trajectories, and baseline and ablation configurations (Section~\ref{sec:method-e2e}).
 \end{enumerate}
 

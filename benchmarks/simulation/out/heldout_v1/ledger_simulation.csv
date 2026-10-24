@@ -1,0 +1,60 @@
+claim,value,source,classification,location
+no_verification policy TP,43,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+no_verification policy FP,28,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+no_verification policy FN,3,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+no_verification policy TN,26,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+no_verification FCR,0.3944,FP/(TP+FP),SYNTHETIC,Table sim-baseline
+no_verification FRR,0.0652,FN/(TP+FN),SYNTHETIC,Table sim-baseline
+no_verification decision accuracy,43/71,decision_analysis.json (TP+TN)/claims,SYNTHETIC,Table sim-baseline
+basic_detection policy TP,42,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+basic_detection policy FP,24,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+basic_detection policy FN,4,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+basic_detection policy TN,30,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+basic_detection FCR,0.3636,FP/(TP+FP),SYNTHETIC,Table sim-baseline
+basic_detection FRR,0.087,FN/(TP+FN),SYNTHETIC,Table sim-baseline
+basic_detection decision accuracy,46/71,decision_analysis.json (TP+TN)/claims,SYNTHETIC,Table sim-baseline
+evidence_gated policy TP,37,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+evidence_gated policy FP,19,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+evidence_gated policy FN,10,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+evidence_gated policy TN,34,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+evidence_gated FCR,0.3393,FP/(TP+FP),SYNTHETIC,Table sim-baseline
+evidence_gated FRR,0.2128,FN/(TP+FN),SYNTHETIC,Table sim-baseline
+evidence_gated decision accuracy,45/71,decision_analysis.json (TP+TN)/claims,SYNTHETIC,Table sim-baseline
+enhanced_validation policy TP,39,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+enhanced_validation policy FP,8,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+enhanced_validation policy FN,12,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+enhanced_validation policy TN,41,out/heldout/results.json configs,SYNTHETIC,Table sim-baseline
+enhanced_validation FCR,0.1702,FP/(TP+FP),SYNTHETIC,Table sim-baseline
+enhanced_validation FRR,0.2353,FN/(TP+FN),SYNTHETIC,Table sim-baseline
+enhanced_validation decision accuracy,54/71,decision_analysis.json (TP+TN)/claims,SYNTHETIC,Table sim-baseline
+no_verification McNemar p (episode false completion vs evidence_gated),0.0039,exact McNemar on paired FP indicators,SYNTHETIC,Table sim-tests
+no_verification McNemar p (decision correctness vs evidence_gated),0.8036,decision_analysis.json,SYNTHETIC,Table sim-tests
+no_verification McNemar p (task success vs evidence_gated),0.0703,decision_analysis.json,SYNTHETIC,Table sim-tests
+basic_detection McNemar p (episode false completion vs evidence_gated),0.0625,exact McNemar on paired FP indicators,SYNTHETIC,Table sim-tests
+basic_detection McNemar p (decision correctness vs evidence_gated),1.0,decision_analysis.json,SYNTHETIC,Table sim-tests
+basic_detection McNemar p (task success vs evidence_gated),0.125,decision_analysis.json,SYNTHETIC,Table sim-tests
+enhanced_validation McNemar p (episode false completion vs evidence_gated),0.001,exact McNemar on paired FP indicators,SYNTHETIC,Table sim-tests
+enhanced_validation McNemar p (decision correctness vs evidence_gated),0.0225,decision_analysis.json,SYNTHETIC,Table sim-tests
+enhanced_validation McNemar p (task success vs evidence_gated),0.6875,decision_analysis.json,SYNTHETIC,Table sim-tests
+evidence_gated TSR,0.37,TP/N,SYNTHETIC,Table sim-ablation
+abl_no_evidence_collection TSR,0.37,TP/N,SYNTHETIC,Table sim-ablation
+abl_no_evidence_validation TSR,0.43,TP/N,SYNTHETIC,Table sim-ablation
+abl_no_memory TSR,0.38,TP/N,SYNTHETIC,Table sim-ablation
+abl_no_recovery TSR,0.3,TP/N,SYNTHETIC,Table sim-ablation
+retrieval precision@3,0.519,inputs/m4_memory.csv,ACTUAL (synthetic corpus),Table sim-memory
+retrieval recall@3,1.0,inputs/m4_memory.csv,ACTUAL (synthetic corpus),Table sim-memory
+retrieval MRR,0.926,inputs/m4_memory.csv,ACTUAL (synthetic corpus),Table sim-memory
+queries with misleading top-1,3/10,inputs/m4_memory.csv,ACTUAL (synthetic corpus),Table sim-memory
+recovery no_recovery success,0/93,recovery_scenarios.csv,SYNTHETIC,Table sim-recovery
+recovery retry_based success,69/93,recovery_scenarios.csv,SYNTHETIC,Table sim-recovery
+recovery evidence_guided success,87/93,recovery_scenarios.csv,SYNTHETIC,Table sim-recovery
+actual latency navigate median ms,17.14,inputs/m2_latency.json,ACTUAL,Table sim-overhead
+actual latency click median ms,65.21,inputs/m2_latency.json,ACTUAL,Table sim-overhead
+actual latency fill median ms,12.52,inputs/m2_latency.json,ACTUAL,Table sim-overhead
+actual latency dom_extract median ms,76.39,inputs/m2_latency.json,ACTUAL,Table sim-overhead
+actual latency screenshot median ms,61.26,inputs/m2_latency.json,ACTUAL,Table sim-overhead
+actual latency phi median ms,5.16,inputs/m2_latency.json,ACTUAL,Table sim-overhead
+sim latency no_verification median s,17.01,latency_study,SYNTHETIC,Table sim-overhead
+sim latency evidence_gated median s,17.04,latency_study,SYNTHETIC,Table sim-overhead
+sim latency self_verification median s,21.7,latency_study,SYNTHETIC,Table sim-overhead
+sim latency enhanced_validation median s,21.73,latency_study,SYNTHETIC,Table sim-overhead

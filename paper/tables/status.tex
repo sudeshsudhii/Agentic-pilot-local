@@ -1,6 +1,6 @@
 \begin{table}[t]
 \centering
-\caption{Implementation audit, traced through the code. Class: IE implemented and experimentally evaluated (component level, \textsc{actual}); IS implemented, studied only by simulation; IN implemented, not evaluated; PI partially implemented; PR proposed. Evidence: C component study, O oracle validation, E egress test, M measured input to the simulation, S simulation.}
+\caption{Implementation audit, traced through the code. Class: IE implemented and experimentally evaluated (component level, \textsc{actual}); IS implemented, studied only by simulation; IN implemented, not evaluated; PI partially implemented; PR proposed. Evidence: C component study, O oracle validation, E egress test with a stand-in model server, T unit test, M measured input to the simulation, S simulation.}
 \label{tab:status}
 \scriptsize
 \setlength{\tabcolsep}{2.4pt}
@@ -10,7 +10,7 @@ Component & Class & Evidence \\
 \midrule
 Completion predicate $\Phi$, bot-check halt & IE & C (92 states), M, S \\
 Browser control (Playwright), DOM extraction & IE & C, M (latency) \\
-Local-only model endpoint, no telemetry & IE & E (70 episodes) \\
+Loopback-only model endpoint; Chroma telemetry off & IE & E (70 stand-in episodes), T \\
 End-to-end harness and oracle $\Phi^{\star}$ & IE & O (114 trajectories) \\
 Recovery engine: classification, strategy order & IS & M (6 failure modes), S \\
 Memory store retrieval (Chroma, SQLite) & IS & M (10 queries), S \\

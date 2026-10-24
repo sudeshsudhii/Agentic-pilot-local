@@ -1,0 +1,7 @@
+set,gate_only_correct(W),dispatch_only_correct(FR),p_degenerate_W_vs_0,p_correct_decisions
+design after,20,1,1.9073486328125e-06,2.09808349609375e-05
+design before,15,3,6.103515625e-05,0.007537841796875
+held_out after,2,1,0.5,1.0
+held_out before,1,1,1.0,1.0
+held_out_2 after,9,1,0.00390625,0.021484375
+held_out 1+2 after,11,2,0.0009765625,0.0224609375
