@@ -52,8 +52,8 @@ def main() -> None:
     out = []
     gate = lambda r: r["gate_reports_complete"] == "1"  # noqa: E731
     live = lambda r: r["live_verbose_reports_complete"] == "1"  # noqa: E731
-    for split in ("design", "held_out", "held_out_2"):
-        sub = [r for r in cur if r["split"] == split]
+    for split in ("design", "held_out", "held_out_2", "held_out_1+2"):
+        sub = [r for r in cur if r["split"] in split.replace("held_out_1+2", "held_out held_out_2").split()]
         if not sub:
             continue
         cats = sorted({r["category"] for r in sub})
@@ -67,6 +67,14 @@ def main() -> None:
                     pos = [r for r in part if r["oracle_satisfied"] == "1"]
                     rec["p_fc_vs_dispatch"] = mcnemar_exact(sum(1 for r in neg if not acc(r)), 0)
                     rec["p_fr_vs_dispatch"] = mcnemar_exact(0, sum(1 for r in pos if not acc(r)))
+                    # p_fc_vs_dispatch tests the withheld count alone against 0 and ignores false rejections,
+                    # so it overstates the evidence. The test reported in the paper is on paired decision
+                    # correctness: the gate alone is correct on withheld unsatisfied states (W), the dispatch-only
+                    # rule alone on satisfied states the gate rejects (FR).
+                    w_ = sum(1 for r in neg if not acc(r))
+                    fr_ = sum(1 for r in pos if not acc(r))
+                    rec.update({"gate_only_correct": w_, "dispatch_only_correct": fr_,
+                                "p_correct_vs_dispatch": mcnemar_exact(w_, fr_)})
                     # paired vs the gate before the fixes (same states, correct/incorrect decision)
                     if all(r["case"] in pre for r in part):
                         pre_acc = (lambda r: pre[r["case"]]["gate_reports_complete"] == "1") if rule == "gate" else \

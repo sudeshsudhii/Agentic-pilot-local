@@ -1,20 +1,20 @@
 \begin{table}[t]
 \centering
-\caption{\textsc{Simulation-based (synthetic)} Study~E: 120 failure scenarios, 20 per mode; 27 drawn as permanent (25\% expected), none of them a missing confirmation. Detected: failure noticed by the agent; FC: undetected missing confirmations reported complete; Unnec.: attempts spent on permanent failures; Cost: mean seconds per scenario. Strategy sequences are those of the real recovery engine. $^{\ddagger}$Not implemented.}
+\caption{\textsc{Simulation-based (synthetic)} Study~E: 120 failure scenarios, 20 per mode; 27 drawn as permanent (25\% expected), none of them a missing confirmation. Entry paths and strategy sequences follow the code: action errors are retried three times inline before the engine is called; navigation failures and requests for help go to the engine directly; a missing confirmation raises no error and is handled only by rejection and continuation. Per-attempt success rates are ASSUMED (PROPOSED for the guided variant), so differences between rows follow from them. Detected: failure noticed; FC: undetected missing confirmations reported complete; Unnec.: attempts on permanent failures; Att.: mean attempts. $^{\ddagger}$Not implemented.}
 \label{tab:sim-recovery}
 \scriptsize
 \setlength{\tabcolsep}{2pt}
 \begin{tabular}{@{}lccccc@{}}
 \toprule
-Recovery & Detected & Recovered & FC & Unnec. & Cost \\
+Recovery & Detected & Recovered & FC & Unnec. & Att. \\
 \midrule
-No recovery & 111/120 [0.86,0.96] & 0/93 [0.00,0.04] & 9 & 0 & 0.0 \\
-Retry-based (implemented) & 111/120 [0.86,0.96] & 69/93 [0.64,0.82] & 9 & 162 & 10.9 \\
-Evidence-guided$^{\ddagger}$ & 118/120 [0.94,1.00] & 87/93 [0.87,0.97] & 2 & 162 & 10.0 \\
+Inline retries only & 111/120 [0.86,0.96] & 29/93 [0.23,0.41] & 9 & 51 & 1.28 \\
+Retry + engine (impl.) & 111/120 [0.86,0.96] & 67/93 [0.62,0.80] & 9 & 162 & 3.12 \\
+Evidence-guided$^{\ddagger}$ & 118/120 [0.94,1.00] & 87/93 [0.87,0.97] & 2 & 162 & 3.17 \\
 \midrule
-\multicolumn{6}{@{}l}{\emph{Recovered / recoverable by failure mode (retry-based; evidence-guided)}} \\
-\multicolumn{6}{@{}l}{nav. 14/16; 16, time-out 12/14; 13, missing el. 13/15; 14} \\
-\multicolumn{6}{@{}l}{invalid sub. 13/14; 14, unexp. state 13/14; 13, missing conf. 4/20; 17} \\
+\multicolumn{6}{@{}l}{\emph{Recovered / recoverable by mode (inline only; retry + engine; guided)}} \\
+\multicolumn{6}{@{}l}{nav. 0; 14; 16 / 16, time-out 9; 12; 13 / 14, missing el. 9; 13; 14 / 15} \\
+\multicolumn{6}{@{}l}{invalid sub. 9; 13; 14 / 14, unexp. state 0; 13; 13 / 14, missing conf. 2; 2; 17 / 20} \\
 \bottomrule
 \end{tabular}
 \end{table}

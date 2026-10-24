@@ -9,8 +9,8 @@
 System & Env. & Exec. & Completion & Evid. & Mem. & Deploy. & Eval. \\
 \midrule
 ReAct~\cite{yao2023react}               & Ws & A & model & N & N & H & E2E \\
-Reflexion~\cite{shinn2023reflexion}     & Ws & A & model$^{a}$ & N & Y & n.r. & E2E \\
-WebArena~\cite{zhou2024webarena}        & Wr & B & benchmark & n.r. & N & n.r. & E2E \\
+Reflexion~\cite{shinn2023reflexion}     & Ws & A & model$^{a}$ & N & Y & H & E2E \\
+WebArena~\cite{zhou2024webarena}        & Wr & B & benchmark & n.r. & N & H & E2E \\
 Mind2Web~\cite{deng2023mind2web}        & Wr & B & n/a & P & N & L & Off \\
 WebVoyager~\cite{he2024webvoyager}      & W & A & model; judge$^{b}$ & Y & N & H & E2E \\
 SeeAct~\cite{zheng2024seeact}           & W, Wr & A & model & n.r. & N & P & E2E, Off \\
@@ -18,14 +18,14 @@ OSWorld~\cite{xie2024osworld}           & D & B & benchmark & n.r. & N & L & E2E
 UFO~\cite{zhang2025ufo}                 & D & A & model & n.r. & P & H & E2E \\
 AppAgent~\cite{zhang2025appagent}       & Mo & A & model & n.r. & Y & H & E2E \\
 CogAgent~\cite{hong2024cogagent}        & Wr, Mo & M & n/a & N & N & L & Off \\
-MemGPT~\cite{packer2023memgpt}          & n/a & A & n/a & N & Y & n.r. & n/a \\
+MemGPT~\cite{packer2023memgpt}          & Ws & A & n/a & N & Y & H & E2E$^{e}$ \\
 AgentDojo~\cite{debenedetti2024agentdojo} & Ws & B & benchmark & n.r. & N & L & E2E \\
 \midrule
-Agentic Pilot (ours)                    & W$^{c}$ & A & in-loop rule & Y & P$^{d}$ & L & C+S \\
+Agentic Pilot (ours)                    & Wr$^{c}$ & A & in-loop rule & Y & P$^{d}$ & L & C+S \\
 \bottomrule
 \end{tabular}
 \vspace{2pt}
 
 \raggedright\scriptsize
-$^{a}$An evaluator gives feedback between trials. $^{b}$Used for evaluation. $^{c}$Implemented backend; a desktop backend is designed (Appendix~\ref{app:computer}). $^{d}$Implemented; studied only by simulation.
+$^{a}$An evaluator gives feedback between trials. $^{b}$Used for evaluation. $^{c}$Evaluated only on constructed states and self-hosted sites; the implemented backend targets live websites, and a desktop backend is designed (Appendix~\ref{app:computer}). $^{d}$Implemented; studied only by simulation. $^{e}$Document QA and conversation tasks, not web tasks.
 \end{table}

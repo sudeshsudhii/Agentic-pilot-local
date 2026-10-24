@@ -138,8 +138,8 @@ C.~Zhang, Z.~Yang, J.~Liu, Y.~Li, Y.~Han, X.~Chen, Z.~Huang, B.~Fu, and G.~Yu,
 
 \bibitem{hong2024cogagent}
 W.~Hong, W.~Wang, Q.~Lv, J.~Xu, W.~Yu, J.~Ji, Y.~Wang, Z.~Wang, Y.~Dong,
-  M.~Ding, J.~Tang \emph{et~al.}, ``{CogAgent}: A visual language model for
-  {GUI} agents,'' in \emph{Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit.
+  M.~Ding, and J.~Tang, ``{CogAgent}: A visual language model for {GUI}
+  agents,'' in \emph{Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit.
   (CVPR)}, 2024, pp. 14\,281--14\,290.
 
 \bibitem{cheng2024seeclick}
@@ -217,7 +217,7 @@ Y.~Ruan, H.~Dong, A.~Wang, S.~Pitis, Y.~Zhou, J.~Ba, Y.~Dubois, C.~J. Maddison,
 T.~Kuntz, A.~Duzan, H.~Zhao, F.~Croce, Z.~Kolter, N.~Flammarion, and
   M.~Andriushchenko, ``{OS-Harm}: A benchmark for measuring safety of computer
   use agents,'' in \emph{Proc. Adv. Neural Inf. Process. Syst. (NeurIPS)
-  Datasets and Benchmarks Track}, 2025.
+  Datasets and Benchmarks Track}, vol.~38, 2025.
 
 \bibitem{debenedetti2025camel}
 E.~Debenedetti, I.~Shumailov, T.~Fan, J.~Hayes, N.~Carlini, D.~Fabian, C.~Kern,
