@@ -7,6 +7,7 @@ This statement is suitable for the author's cover letter, and its substance is i
 1. **Completion gate Φ.** It was exercised in the agent's real verification node, called directly with stubbed I/O, on 92 constructed browser states.
    - On 42 held-out states frozen before testing, it withheld 9 of 22 premature completions and rejected 1 of 20 completed states.
    - It was correct on significantly more states than a rule that accepts every dispatched action (exact McNemar p = 0.021).
+   - It was **not** significantly better than the measured detector that applies only its error check (7 vs 1 discordant states, p = 0.070; pooled p = 0.11).
    - On the states its rules were fixed on, it withheld 20 of 23. That figure is optimistic and is reported without a test.
    - A decision costs a median of 26.8 ms and no model call.
    - A per-conjunct ablation shows which checks fire.
@@ -14,7 +15,7 @@ This statement is suitable for the author's cover letter, and its substance is i
    - the memory store returns a relevant record in its top three for every query that has one, but it has no relevance threshold;
    - the recovery engine classifies a missing confirmation as unknown;
    - browser and evidence operations take tens of milliseconds.
-3. **Locality.** By default the model client refuses non-loopback endpoints. In 70 control-loop episodes against a scripted stand-in model server, the agent's Python processes connected only to that stand-in on 127.0.0.1.
+3. **Locality.** By default the model client refuses non-loopback endpoints. In 70 control-loop episodes against a scripted stand-in model server, run on a clean commit, the agent's Python processes connected only to that stand-in on 127.0.0.1.
 4. **Oracle.** The end-to-end oracle made no error on 35 correct solutions and 34 near misses written to test it.
 
 **What has been studied only by simulation (SYNTHETIC, conditional on ASSUMED inputs; model v2, revised post hoc):**

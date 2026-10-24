@@ -105,3 +105,21 @@ These assumptions are listed in Table XVI. Every synthetic p-value and interval 
 | Sensitivity sets per point | 300 |
 | Recovery failures | 120 |
 | Repeated workflows | 44 |
+
+## 6. Added after the academic review: the gate against its own error check
+
+The academic reviewer (Agent 7) pointed out that dispatch-only accepts every state, which makes it a weak baseline. The stronger baseline is the measured basic detector, which applies only the error check E (`basic_accepts` in `benchmarks/simulation/inputs/m1_gate_rules.csv`).
+
+The comparison uses an exact McNemar test on paired decision correctness. It is now computed by `gate_stats.py` (rows `basic_E_only`; column `p_correct_vs_basic`).
+
+| Set | Basic (E only): withheld / FR | Φ only correct | E only correct | p |
+|---|---|---|---|---|
+| Held-out 1 | 1/5, 0/7 | 1 | 1 | 1.0 |
+| Held-out 2 | 2/22, 0/20 | 7 | 1 | **0.070** |
+| Pooled held-out | 3/27, 0/27 | 8 | 2 | **0.11** |
+| Design (circular, not reported as a test) | 6/23, 0/15 | 14 | 1 | 0.001 |
+
+**Conclusion.** On new phrasings, the evidence that the conjuncts beyond E add decision accuracy is suggestive but not significant. This is now stated in:
+- the abstract;
+- Table IV (new column p_E and new "E only" rows);
+- §VIII-A, Table III, §VI, §X and the conclusion.

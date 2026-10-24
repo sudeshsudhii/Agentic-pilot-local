@@ -228,3 +228,16 @@ Four audits fed this round: statistics, methodology, research integrity and priv
 - **Gate statistics.** `gate_stats.py` now also produces the corrected test for the gate before the fixes, which replaces the hand-made `gate_stats_corrected_tests.csv`.
 - **Text, labels and reports.** About 20 smaller wording, labelling and pointer fixes; see `final_audit/audit_final_independent_review.md`.
 - **Deliverables.** `final_audit/1`–`4`, plus the changed-number ledger.
+
+# Addendum (2026-10-24, round 2): seven-agent audit and submission preparation
+
+Seven agents audited the paper: methodology, statistics, experiments, integrity, privacy, reproducibility and an independent reviewer. Their reports and the seven deliverables are in `artifacts/results/final_audit_r2/`.
+
+Main changes:
+- **Acknowledgment.** It now states the AI's role accurately. The author should confirm their own role.
+- **Gate comparison.** The gate is compared with the measured error-check-only detector: held-out 2 p = 0.070 and pooled p = 0.11, neither significant. The result is reported in Table IV and in the text.
+- **Table VII.** Structural zeros are handled: the paired difference in false completions with its Monte Carlo interval replaces p-values that would only restate a count.
+- **Locality test.** Rerun on clean commit `7133301` with the same result. Raw logs and scripts are released.
+- **Evidence classes.** Six classes are now used; the simulated "claim" is defined; the per-task retry counter is described correctly; the post-hoc disclosures are complete.
+- **Length and format.** The paper is condensed to 8 pages plus references, with a cross-referenced supplement (`paper/supplement.pdf`). The abstract is 249 words.
+- **Reproducibility.** `requirements-paper.lock`, `make reproduce-paper` and a deterministic PDF build.

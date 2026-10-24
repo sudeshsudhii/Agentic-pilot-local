@@ -8,7 +8,7 @@ The reproducibility auditor (Agent 6) verified this list in fresh clones; after 
 | `python -m benchmarks.simulation.make_tables` → `paper/tables/sim/*.tex` (9 files), `ledger_simulation.csv` | ✔ | ✔ byte for byte | <1 s |
 | `python artifacts/experiments/gate_stats.py` → `gate_stats.csv` (stdout → `gate_stats.txt`) | ✔ | ✔ byte for byte | Fails loudly if an input is missing |
 | `python benchmarks/e2e/egress/summarize_egress.py artifacts/results/e2e_smoke_stub` → `egress_summary.json` | ✔ (new) | ✔ same content | Raw logs now committed, with SHA-256 in the README |
-| `sh paper/build.sh` → `paper/main.pdf` | ✔ | ✔ text identical; bit-identical with `SOURCE_DATE_EPOCH` | TeX Live 2023, IEEEtran 1.8b; 0 errors, 0 overfull boxes, 0 float warnings |
+| `sh paper/build.sh` → `paper/main.pdf` (8 pages + references) and `paper/supplement.pdf` (8 pages), cross-referenced with `xr-hyper` | ✔ | ✔ text identical; bit-identical with `SOURCE_DATE_EPOCH` | TeX Live 2023, IEEEtran 1.8b; 0 errors, 0 overfull boxes, 0 float warnings |
 | `make reproduce-paper` (whole chain + `git diff --exit-code`) | ✔ (new) | — | Single entry point |
 | `python -m benchmarks.simulation.simulate --set heldout` (v1) | ✔ | ✔ | Writes `out/heldout/`, which is identical to `out/heldout_v1/`; see `out/README.md` |
 | `python -m benchmarks.simulation.simulate --set dev` | ✔ | ✔ (refreshed) | Not reported |
@@ -20,7 +20,7 @@ The reproducibility auditor (Agent 6) verified this list in fresh clones; after 
 | Before-fix gate decisions | ✔ (outputs) | Not scripted | Study script run against the agent code of `08653e2`, checked out separately |
 | `python -m benchmarks.e2e.validate_oracle` | ✔ | `.txt` identical; `.csv` differs only in a random port | Use the `-m` form |
 | `python -m pytest` | ✔ | Not rerun in this audit | `pytest_revision.txt`: 144/147 |
-| 70-episode egress run | Raw outputs ✔ | Not rerun; command reconstructed in the README | It ran on an uncommitted tree that cannot be recovered |
+| 70-episode egress run: `python benchmarks/e2e/egress/run_egress.py <out>` | ✔ | ✔ rerun on clean commit `7133301`: same counts (555 connects, all loopback; 54/60 memory episodes) | Original dirty-tree run kept in `e2e_smoke_stub/` |
 | `tables/gate_results.tex`, `tables/ablation.tex` | ✔ | Hand-copied from `gate_stats.csv` (values verified) | Recommended: generate them with a script |
 
 ## Versions
@@ -60,5 +60,5 @@ The reproducibility auditor (Agent 6) verified this list in fresh clones; after 
 2. **No continuous integration** for the paper chain. Recommended: run `make reproduce-paper` in CI on the paper branch.
 3. **Hand-copied gate tables** (`gate_results.tex`, `ablation.tex`). Their values are verified, but no generator exists.
 4. **Before-fix gate decisions are not scripted.** They were produced with a separate checkout of `08653e2`.
-5. **The egress run cannot be re-executed exactly.** It ran on a dirty tree; the raw data is released.
+5. **The original egress run cannot be re-executed exactly** (dirty tree). It was replaced as the reported run by a scripted rerun on a clean commit.
 6. **Absolute paths in raw logs** (for example `/home/user/...` inside `episodes.jsonl`) are harmless provenance.
