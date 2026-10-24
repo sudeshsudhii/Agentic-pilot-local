@@ -174,3 +174,50 @@
   - The paired Monte Carlo ΔFC replaces the overlapping marginal ranges: mean 0.11 [0.05, 0.17]; p < 0.05 in 96% of sets.
   - The gate-code change after the held-out-2 freeze is described (default-off switches).
   - The pytest failure cause is corrected: the failures need live web or a running local model.
+
+# Addendum (2026-10-24): final technical and statistical audit
+
+Four audits fed this round: statistics, methodology, research integrity and privacy. An independent final review followed them. The full reports and the deliverables are in `artifacts/results/final_audit/`; every changed number is in `changed_numbers_ledger.csv`.
+
+## Statistics (ACTUAL gate data)
+
+- **Gate vs dispatch-only.** The McNemar test now uses paired decision correctness; the old test was degenerate. Implemented in `artifacts/experiments/gate_stats.py`, which adds the column `p_correct_vs_dispatch` and a pooled split. The 84 existing rows of `gate_stats.csv` are unchanged.
+
+  | Set | Old p | New p |
+  |---|---|---|
+  | Held-out 2 | 0.004 | 0.021 |
+  | Pooled | 0.001 | 0.022 |
+
+- **Design-set significance tests removed.** They were circular; the paper reports counts only.
+
+## Simulation
+
+- **Decision level vs policy level.** `decision_analysis.py` separates the two. The p = 0.80 mixed indicator is withdrawn.
+- **Additive output fields in v1.** `simulate.py` (v1) gained three fields; its outputs are otherwise byte-identical.
+- **Corrected model v2 (`simulate_v2.py`, post hoc, not pre-registered)** fixes the following:
+  - false-rejection rates from the mapped categories;
+  - fail-closed basic detection;
+  - re-verification after continuation;
+  - recovery entry paths taken from the code;
+  - rate uncertainty in the Monte Carlo;
+  - re-planning in the latency model;
+  - a sweep of the continuation rate.
+- **Outputs.** v2 outputs are in `out/heldout_v2/`; v1 is archived in `out/heldout_v1/`.
+- **Table generation.** `make_tables.py` now reads v2.
+
+## Paper
+
+- **Abstract and conclusion.** Three-way framing: measured, simulated, not executed.
+- **Privacy claims narrowed.** Default loopback endpoint; Python processes only; scripted stand-in model server; a list of what the claim does not cover.
+- **Section IX.** Rewritten with the v2 numbers.
+- **H1 result.** Stated as true by construction.
+- **H2 result.** Not supported: decision accuracy 52/74 vs 46/74, p = 0.15.
+- **H3 result.** Underpowered.
+- **H4 result and the enhanced variant of H2.** Hold only by assumption.
+- **Ablation table.** The stored-evidence row is removed; the labels match the code switches.
+- **Table I.** Five cells corrected.
+- **Bibliography.** CogAgent authors and OS-Harm volume.
+- **Repository reference.** The branch and the agent-code commit are named, and the paper notes that the default branch has diverged.
+- **Memory corpus.** 22 records.
+- **Parameter table.** Completed.
+- **Rounding.** Half-up rounding throughout.

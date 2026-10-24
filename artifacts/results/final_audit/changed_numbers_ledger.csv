@@ -1,0 +1,42 @@
+location,quantity,old_value,new_value,source,calculation,reason
+Abstract; 07_results VIII-A; Table IV,"Gate vs dispatch-only p, held-out 2",0.004,0.021,artifacts/results/gate_stats.csv col p_correct_vs_dispatch,"exact McNemar on paired decision correctness, b=9 (withheld unsatisfied) c=1 (rejected satisfied): 2*sum_{i<=1}C(10,i)/2^10",old test ignored false rejections (p=2^(1-W)); audit A2
+Table IV,"Gate vs dispatch-only p, held-out 1+2 pooled",.001,.022,artifacts/results/gate_stats.csv col p_correct_vs_dispatch,"b=11, c=2",audit A2
+Table IV,"Gate vs dispatch-only p, held-out 1 after",.50,1.0,artifacts/results/gate_stats.csv col p_correct_vs_dispatch,"b=2, c=1",audit A2
+Table IV,"Gate vs dispatch-only p, held-out 1 before",1.0,1.0,artifacts/results/gate_stats.csv col p_correct_vs_dispatch,"b=1, c=1",unchanged
+Table IV; 07_results,"Gate vs dispatch-only p, design after / before",<.001 / <.001,-- / -- (not tested; text reports counts only),artifacts/results/gate_stats.csv col p_correct_vs_dispatch (2.1e-5 / 0.0075 kept in CSV),"b=20,c=1 / b=15,c=3",circular on design states; audit A3
+07_results VIII-A,Gate vs earlier gate on design states,p=0.016,"counts only (7 fixed, 0 broken)",gate_stats.csv p_vs_pre,"b=7,c=0",circular; audit A3
+07_results; 08_discussion,False-rejection rate wording,'low false-rejection rate',1/20 held-out-2 (upper 95% bound 0.24),gate_stats.csv FRR,"Wilson(1,20)=[0.01,0.24]",quantified
+Table sim-baseline; 07b IX-A,Decision level: claims / true at claim,71 / 43,74 / 46,benchmarks/simulation/out/heldout_v1/results.json (+decision_analysis.json) -> benchmarks/simulation/out/heldout_v2/results.json,count of scenarios with claimed=1 / y_claim=1,v2 model change C3/C4 alters which episodes claim
+Table sim-baseline; 07b; abstract,Decision accuracy Phi vs none,45/71 vs 43/71 (p=0.80),"52/74 vs 46/74 (b/c 9/3, p=0.146)",benchmarks/simulation/out/heldout_v2/results.json decision,exact McNemar on first-decision correctness,v2; p=0.80 analysis replaced at decision level (issue A)
+Abstract; 07b,Withdrawn mixed-indicator test,p=0.80 on correct=(reported==y),withdrawn,heldout_v1 paired_tests correct_ref_only=9/7,y differs by configuration,issue A/B
+Table sim-baseline,"Policy TP/FP/FN/TN, no verification",43/28/3/26,46/28/3/23,benchmarks/simulation/out/heldout_v2/results.json,,v2 C4 recovery paths
+Table sim-baseline,"Policy TP/FP/FN/TN, basic",42/24/4/30,43/24/6/27,benchmarks/simulation/out/heldout_v2/results.json,,v2 C1-C4
+Table sim-baseline,"Policy TP/FP/FN/TN, Phi",37/19/10/34,44/19/6/31,benchmarks/simulation/out/heldout_v2/results.json,,"v2 C1 (FR rate 0.089->0.02), C3, C4"
+Table sim-baseline,"Policy TP/FP/FN/TN, enhanced",39/8/12/41,46/8/8/38,benchmarks/simulation/out/heldout_v2/results.json,,
+Table sim-tests; 07b H1,"FC b/c and p, Phi vs none","9/0, p=0.004","9/0, p=0.0039 (unchanged); now stated as structural (one cell always 0)",benchmarks/simulation/out/heldout_v2/results.json,exact McNemar,
+07b H1,MC paired FC reduction,"0.11 [0.05,0.17], p<.05 in 96%","0.11 [0.05,0.18], p<.05 in 94%",benchmarks/simulation/out/heldout_v2/results.json monte_carlo_paired,"1000 sets, rates ~ Beta(k+.5,n-k+.5)",v2 C5
+07b H2,Policy success Phi vs none,"37 vs 43 (1/7, p=0.07)","44 vs 46 (1/3, p=0.625)",benchmarks/simulation/out/heldout_v2/results.json,exact McNemar on success,
+Table sim-tests,Decision Phi vs enhanced,(not reported),"11/2, p=0.0225 (by assumption)",benchmarks/simulation/out/heldout_v2/results.json,,
+Table sim-ablation; 07b C,TSR full vs no recovery,0.37 vs 0.30; MC 0.44 vs 0.38,"0.44 vs 0.35 (0/9, p=0.0039); MC 0.47 vs 0.42",benchmarks/simulation/out/heldout_v2/results.json,,v2 C4: inline retries remain; P(recover) from Study E
+Table sim-ablation,Stored-evidence ablation row,present (evid. 0.89 vs 0),removed (not simulated; Phi reads the live page),code inspection,,issue I
+Table sim-ablation,Memory row label,"-- memory, RAG",-- memory,backend config enable_memory,,issue I
+Table sim-memory; 07b D,Memory corpus size,23 records,22 records,measure_inputs.MEMORY_GROUPS (14) + DISTRACTORS (8),,audit M1
+Table sim-memory; 07b D,Repeated workflows success off/on/filtered,19/18/19 of 44,19/19/20 of 44,benchmarks/simulation/out/heldout_v2/results.json memory,,
+Table sim-memory; 07b D,Contextual accuracy 0.64 -> 0.86,reported,removed; replaced by P(misleading) 0.30 measured / 0.10 assumed,params.json,,by construction; audit A10
+Table sim-recovery; 07b E,Recovered of 93: none / retry / guided,0 / 69 / 87,29 / 67 / 87,benchmarks/simulation/out/heldout_v2/results.json recovery,,v2 C4 inline retries + entry paths
+Table sim-recovery,Missing confirmations recovered (retry),4 of 20,2 of 20 (by continuation),benchmarks/simulation/out/heldout_v2/results.json,,v2 C4
+Table sim-recovery,Unnecessary attempts none / retry / guided,0 / 162 / 162,51 / 162 / 162,benchmarks/simulation/out/heldout_v2/results.json,,
+Table sim-overhead; 07b F,Median episode s none / Phi / self / enhanced,17.0 / 17.0 / 21.7 / 21.7,18.1 / 18.9 / 21.2 / 22.6,benchmarks/simulation/out/heldout_v2/results.json latency,,v2 C6 re-planning after rejection
+07b F,Phi mean overhead,+0.2%,+2.6% (verification share 0.11%),benchmarks/simulation/out/heldout_v2/results.json,mean_s ratio 20.17/19.66,
+07b F,Self-check mean overhead,+24%,+14%,benchmarks/simulation/out/heldout_v2/results.json,22.40/19.66,
+07b F,Inference share,84%,80%,benchmarks/simulation/out/heldout_v2/results.json,,
+07b F,Latency sweep 1.5/3/6 s,8.9 / 17.0 / 32.6,10.0 / 18.9 / 36.8,benchmarks/simulation/out/heldout_v2/results.json latency_sweep,,
+Fig. sim-sens; 07b H,Phi FRR across pi,~0.16,~0.14,benchmarks/simulation/out/heldout_v2/results.json sensitivity,,
+07b H,Phi detection x0.5 FCR,0.31 ('close to no verification'),"0.30 ('about halfway', none 0.36)",benchmarks/simulation/out/heldout_v2/results.json,,audit W1
+Table sim-sens,Continuation-rate sweep,"claimed in text, not run",run: Phi TSR .45/.47/.50 at 0.1/0.35/0.6,benchmarks/simulation/out/heldout_v2/results.json,,v2 C7
+05b Table III,H1/H2/H3/H4/H5 cells,p=.004; acc .63 vs .61 p=.80; 18 vs 19; 87 vs 69; +0.2%,by construction 19 vs 28; .70 vs .62 p=.15; 19 vs 19 underpowered; 87 vs 67; +2.6%,benchmarks/simulation/out/heldout_v2/results.json,,
+Table sim-params,False rejection rate Phi / basic,0.089 / 0.018 (all 27 satisfied states incl. bot-check),0.02 / 0.02 (0/24 satisfied states of mapped categories),benchmarks/simulation/out/heldout_v2/results.json rates,(k+0.5)/(n+1),v2 C1
+Table sim-params,Missing rows,"category mix, P(goal|class), ambiguous factor, contradiction reject, permanent share, guided rates, steps",added,params.json,,audit M2
+Table I,"Own Env / Reflexion, WebArena, MemGPT Deploy / MemGPT Env, Eval","W / n.r. / n/a, n/a","Wr^c / H / Ws, E2E^e",papers' reported models,,"audit O5, Table I fairness"
+Bibliography,CogAgent authors; OS-Harm volume,'and others'; no volume,11 authors; volume 38,CVPR 2024 listing; NeurIPS 2025,,
+06_methodology; 07_results,Egress claim,'all 555 socket connections of the agent process',Python processes' connect calls; stand-in server; no real inference,artifacts/results/e2e_smoke_stub/egress_summary.json,,

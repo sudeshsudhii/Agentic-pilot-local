@@ -53,9 +53,9 @@ One constraint shaped this revision: the environment in which it was prepared co
 **R7. Claim strength ("privacy-preserving", "autonomous").**
 - **Title:** the author asked to keep the title. We matched the claims to evidence instead of weakening the words.
 - **Privacy:**
-  - It is defined precisely: model inference restricted to the machine; records stored only on its disk.
+  - It is defined in a narrow sense: by default the model client sends prompts and screenshots only to a model server on the loopback interface, and records are stored on the local disk (established by code inspection). Where a model server itself sends requests is outside the claim. *(Revised in the final audit; supersedes the earlier wording "model inference restricted to the machine".)*
   - It is now **enforced** in code: a non-loopback model endpoint is refused unless the user explicitly overrides it, and Chroma telemetry is off.
-  - It is **tested**: in 70 full agent episodes, all 555 socket connections of the agent process went to 127.0.0.1. A repository test reproduces this.
+  - It is **tested** with a scripted stand-in for the Ollama server (no real inference): in 70 agent episodes, all 555 connect calls logged in the agent's Python processes went to 127.0.0.1. Chromium's own traffic was not captured. A repository test reproduces this.
   - What it does not cover is listed: data entered on websites, one-time downloads, unencrypted storage, Chromium background traffic.
 - **Autonomy:** stated as browser-only, with user approval for high-risk tasks, CAPTCHAs handed to the user, and no end-to-end evaluation.
 - **Threat model:** extended.
@@ -80,7 +80,7 @@ One constraint shaped this revision: the environment in which it was prepared co
   - Definitions are restated with explicit counts (Eq. 2).
   - Every rate in Table IV is reported as k/n with Wilson 95% intervals; Clopper–Pearson intervals are in `gate_stats.csv`.
   - There is a per-category breakdown for the design set and held-out 2.
-  - Exact McNemar tests compare against dispatch-only, against the gate before the fixes, and against each ablation.
+  - Exact McNemar tests on paired decision correctness compare against dispatch-only (corrected in the final audit: held-out 2 p = 0.021, pooled p = 0.022; design-set tests removed as circular), and against each ablation.
   - **Operating point:** Φ is rule-based with no tunable threshold, which we now state (§III). The trade-off is shown through the ablation instead (only removing β, and removing X on the design set, trades FC for FR).
   - Bootstrap intervals for success differences are implemented for the episode-level analysis (`analyze_e2e.py`).
 - **Location:** §III (p. 3), Table IV (p. 6), Table V (p. 6).
