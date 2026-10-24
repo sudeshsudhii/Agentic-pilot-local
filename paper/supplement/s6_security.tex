@@ -1,0 +1,6 @@
+\section{Threat Surfaces and Security Limitations}
+\label{sec:sec-full}
+
+\input{tables/threats}
+
+\paragraph{What it does not provide} The sanitizer is a fixed denylist, which systematic evaluations find insufficient~\cite{liu2024formalizing}; titles, extracted text and memory are not filtered. The action label and risk level that trigger approval come from a small model and are decided once per task, so an injected instruction that steers the planner to submit a form mid-task is not gated. The API on 127.0.0.1 has no authentication and checks neither the Host header nor the Origin of WebSocket connections, so a web page open on the same machine, including one the agent visits, may be able to reach it (DNS rebinding, cross-site WebSocket access) and read task events, records and evidence screenshots, subject to the browser's local-network protections; typed text is stored in clear, and screenshots are not redacted. We make no security claim. The browser hides common automation signals; we consider this acceptable only for a personal assistant acting at human pace on its user's requests, and deployments should disable it where a site's terms prohibit automated access.

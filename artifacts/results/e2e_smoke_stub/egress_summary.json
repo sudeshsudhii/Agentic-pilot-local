@@ -7,5 +7,5 @@
   "127.0.0.1:11435": 555
  },
  "python_processes": 8,
- "note": "Stand-in model server listened on 127.0.0.1:11435; raw per-connection log in egress_raw.jsonl"
+ "note": "Stand-in model server listened on http://127.0.0.1:11435; raw per-connection log in egress_raw.jsonl"
 }

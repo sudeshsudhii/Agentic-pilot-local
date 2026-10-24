@@ -1,6 +1,6 @@
 \begin{table}[t]
 \centering
-\caption{Comparison with representative systems, from what each paper reports. Env.: W live websites, Wr self-hosted or cached pages, Ws simulated web, tool or text environment, D desktop OS, Mo mobile. Exec.: A agent, B benchmark, M model. Completion: who decides that a task is done---the agent's model, a benchmark checker after the episode, a model judge after the episode, or a rule over observed state inside the loop; n/a if the system does not end tasks. Evid.: persists per-step state artifacts. Mem.: memory across steps or episodes. Deploy.: L open-weight models used or supported, H hosted models only. Eval.: E2E end-to-end tasks, Off offline step prediction, C+S component tests and simulation. Y yes, P partial, N no, n.r.\ not reported. All listed systems released code.}
+\caption{Comparison with representative systems, from what each paper reports. Env.: W live websites, Wr self-hosted or cached pages, Ws simulated web, tool or text environment, D desktop OS, Mo mobile. Exec.: A agent, B benchmark, M model. Completion: who decides that a task is done. Evid.: per-step state artifacts. Mem.: memory across steps or episodes. Deploy.: L open-weight models, H hosted only. Eval.: E2E end-to-end tasks, Off offline step prediction, C+S component tests and simulation. Y yes, P partial, N no, n.r.\ not reported. All listed systems released code.}
 \label{tab:related}
 \setlength{\tabcolsep}{1.7pt}
 \scriptsize
@@ -27,5 +27,5 @@ Agentic Pilot (ours)                    & Wr$^{c}$ & A & in-loop rule & Y & P$^{
 \vspace{2pt}
 
 \raggedright\scriptsize
-$^{a}$An evaluator gives feedback between trials. $^{b}$Used for evaluation. $^{c}$Evaluated only on constructed states and self-hosted sites; the implemented backend targets live websites, and a desktop backend is designed (Appendix~\ref{app:computer}). $^{d}$Implemented; retrieval measured on 10 queries over a synthetic corpus, effect on tasks studied only by simulation. $^{e}$Document QA and conversation tasks, not web tasks.
+$^{a}$An evaluator gives feedback between trials. $^{b}$Used for evaluation. $^{c}$Evaluated only on constructed states and self-hosted sites; the implemented backend targets live websites, and a desktop backend is designed (Supplement, Section~\ref{app:computer}). $^{d}$Implemented; retrieval measured on 10 queries over a synthetic corpus, effect on tasks studied only by simulation. $^{e}$Document QA and conversation tasks, not web tasks.
 \end{table}

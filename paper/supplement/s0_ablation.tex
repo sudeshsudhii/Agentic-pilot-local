@@ -1,0 +1,7 @@
+\section{Gate Ablation}
+\label{sec:abl-full}
+
+\input{tables/ablation}
+
+Table~\ref{tab:ablation} removes one conjunct at a time. On the design states every removal raises false completions, most for the error check $E$ (3$\to$8) and the search-home check $H$ (3$\to$7), but with 23 unsatisfied states no single removal changes more than five decisions, and with at most five discordant states the smallest attainable exact McNemar $p$ is 0.063, so the test could not reach $p<0.05$; this is not evidence that a conjunct is unnecessary. On the held-out sets each removal changes at most three decisions, and removing $Q$ or $X$ changes none: these conjuncts rarely fire on phrasings they were not written for. Only two removals trade false completions for false rejections: the bot-check halt $\beta$ (held-out~2: 13$\to$15 FC, 1$\to$0 FR) and, on the design states, the answer check $X$ (3$\to$6 FC, 1$\to$0 FR). Evidence types thus contribute on the states that trigger them, and the gate's coverage, not the strength of any single check, limits it.
+

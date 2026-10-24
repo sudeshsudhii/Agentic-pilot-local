@@ -255,10 +255,6 @@ E.~B. Wilson, ``Probable inference, the law of succession, and statistical
   inference,'' \emph{Journal of the American Statistical Association}, vol.~22,
   no. 158, pp. 209--212, 1927.
 
-\bibitem{cohen1960coefficient}
-J.~Cohen, ``A coefficient of agreement for nominal scales,'' \emph{Educational
-  and Psychological Measurement}, vol.~20, no.~1, pp. 37--46, 1960.
-
 \bibitem{clopper1934use}
 C.~J. Clopper and E.~S. Pearson, ``The use of confidence or fiducial limits
   illustrated in the case of the binomial,'' \emph{Biometrika}, vol.~26, no.~4,
@@ -268,9 +264,5 @@ C.~J. Clopper and E.~S. Pearson, ``The use of confidence or fiducial limits
 Q.~McNemar, ``Note on the sampling error of the difference between correlated
   proportions or percentages,'' \emph{Psychometrika}, vol.~12, no.~2, pp.
   153--157, 1947.
-
-\bibitem{efron1979bootstrap}
-B.~Efron, ``Bootstrap methods: Another look at the jackknife,'' \emph{The
-  Annals of Statistics}, vol.~7, no.~1, pp. 1--26, 1979.
 
 \end{thebibliography}

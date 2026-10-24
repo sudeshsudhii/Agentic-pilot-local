@@ -22,7 +22,9 @@ def main(run_dir: str) -> None:
         "episodes": episodes,
         "connections_by_host_port": dict(Counter(f"{r['host']}:{r['port']}" for r in raw)),
         "python_processes": len({r["pid"] for r in raw}),
-        "note": "Stand-in model server listened on 127.0.0.1:11435; raw per-connection log in egress_raw.jsonl",
+        "note": "Stand-in model server listened on "
+                + ((d / "stand_in_url.txt").read_text().strip() if (d / "stand_in_url.txt").exists() else "http://127.0.0.1:11435")
+                + "; raw per-connection log in egress_raw.jsonl",
     }
     (d / "egress_summary.json").write_text(json.dumps(out, indent=1) + "\n")
     print(json.dumps(out, indent=1))

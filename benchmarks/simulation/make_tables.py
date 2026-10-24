@@ -104,6 +104,15 @@ table("baseline", f"{SIM} Study~B on the same 100 held-out synthetic scenarios (
       "tab:sim-baseline", "lccccccccc", ["Configuration", "TP", "FP", "FN", "TN", "TSR", "FCR", "FRR", "Decision TP/FP/FN/TN", "Decision acc."], rows,
       size="\\footnotesize", sep="4pt", wide=True)
 
+# ---- Table: compact excerpt of the baseline table for the paper (full table in the supplement)
+rows = []
+for c, nm in NAMES.items():
+    m = C[c]; d = DEC[c]
+    rows.append([nm.replace(" success detection", "").replace(" validation", "").replace("No verification", "None").replace("Evidence-gated ", ""),
+                 f"{m['FP']}", f"{m['TP']}", f"{d['TP'] + d['TN']}/{NCL}", f"{MC[c]['FCR']['mean']:.2f}"])
+table("baseline_short", f"{SIM} Study~B, 100 synthetic scenarios (v2, post hoc). FC: episodes ending in a false completion; Succ.: tasks achieved and reported; Dec.: correct first decisions on the {NCL} claims; MC FCR: mean over {P['monte_carlo_replications']} regenerated sets. Full table with intervals: Supplement, Table~\\ref{{tab:sim-baseline}}. $^{{\\ddagger}}$Not implemented.",
+      "tab:sim-baseline-short", "lcccc", ["Config.", "FC", "Succ.", "Dec.", "MC FCR"], rows, size="\\scriptsize", sep="4pt")
+
 # ---- Table: paired tests and Monte Carlo
 MP = R["monte_carlo_paired"]
 FD = MP["fc_difference_other_minus_phi"]

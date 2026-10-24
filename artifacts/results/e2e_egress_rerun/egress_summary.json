@@ -1,0 +1,11 @@
+{
+ "connections_by_host": {
+  "127.0.0.1": 555
+ },
+ "episodes": 70,
+ "connections_by_host_port": {
+  "127.0.0.1:46651": 555
+ },
+ "python_processes": 8,
+ "note": "Stand-in model server listened on http://127.0.0.1:46651; raw per-connection log in egress_raw.jsonl"
+}
