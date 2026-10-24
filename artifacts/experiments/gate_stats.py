@@ -85,6 +85,11 @@ def main() -> None:
                         rec.update({"fixed_vs_pre": b, "broken_vs_pre": c, "p_vs_pre": mcnemar_exact(b, c)})
                         dpre = describe(part, pre_acc)
                         rec["pre_fc"], rec["pre_fr"] = dpre["fc"], dpre["fr"]
+                        # the gate before the fixes against dispatch-only, same corrected test
+                        pw = sum(1 for r in neg if not pre_acc(r))
+                        pfr = sum(1 for r in pos if not pre_acc(r))
+                        rec.update({"pre_gate_only_correct": pw, "pre_dispatch_only_correct": pfr,
+                                    "pre_p_correct_vs_dispatch": mcnemar_exact(pw, pfr)})
                 out.append(rec)
 
     abl = rows("verification_gate_ablation.csv")

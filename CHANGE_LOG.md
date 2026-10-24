@@ -221,3 +221,10 @@ Four audits fed this round: statistics, methodology, research integrity and priv
 - **Memory corpus.** 22 records.
 - **Parameter table.** Completed.
 - **Rounding.** Half-up rounding throughout.
+
+**After the independent final review:**
+- **Simulation fix.** The simulated recovery paths now match the code: a planner's request for help gets three inline retries, and a failed initial navigation gets three retries in the browser executor, before the recovery engine is called.
+  - Studies C and E were regenerated: 51, 68 and 87 of 93 recovered; with the engine off, TSR is 0.41 against 0.44 (p = 0.25).
+- **Gate statistics.** `gate_stats.py` now also produces the corrected test for the gate before the fixes, which replaces the hand-made `gate_stats_corrected_tests.csv`.
+- **Text, labels and reports.** About 20 smaller wording, labelling and pointer fixes; see `final_audit/audit_final_independent_review.md`.
+- **Deliverables.** `final_audit/1`–`4`, plus the changed-number ledger.

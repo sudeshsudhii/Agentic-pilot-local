@@ -25,7 +25,7 @@ Language-model agents now operate software for people: they open pages, fill in 
 \begin{enumerate}
 \setcounter{enumi}{3}
 \item An open-source local agent with the gate inside its control loop (Algorithm~\ref{alg:loop}, Section~\ref{sec:arch}) and an implementation audit (Table~\ref{tab:status}).
-\item Enforcement of a loopback-only model endpoint and an \textsc{actual} test, with a stand-in model server, that the agent's Python processes connect only to loopback addresses, addressing G3 (Sections~\ref{sec:impl} and~\ref{sec:res-privacy}).
+\item Enforcement of a loopback-only model endpoint and an \textsc{actual} test, with a stand-in model server, that the agent's Python processes connect only to loopback addresses, partially addressing G3 (Sections~\ref{sec:impl} and~\ref{sec:res-privacy}).
 \item An end-to-end harness: self-hosted sites with fictional content, 40 tasks with a dev/test split, an oracle validated on scripted trajectories, and baseline and ablation configurations (Section~\ref{sec:method-e2e}).
 \end{enumerate}
 

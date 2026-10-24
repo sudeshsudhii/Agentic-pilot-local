@@ -169,7 +169,7 @@ table("memory", f"Study~D, memory and retrieval. Upper block ACTUAL (real store,
 REC = R["recovery"]
 REC_ROWS = [r for r in csv.DictReader(open(OUT / "recovery_scenarios.csv")) if r["config"] == "retry_based"]
 rows = []
-for c, nm in (("no_recovery", "Inline retries only"), ("retry_based", "Retry + engine (impl.)"), ("evidence_guided", "Evidence-guided$^{\\ddagger}$")):
+for c, nm in (("no_recovery", "Engine off$^{\\S}$"), ("retry_based", "Engine on (impl.)"), ("evidence_guided", "Evidence-guided$^{\\ddagger}$")):
     d = REC[c]
     rows.append([nm, ci(*d["failure_detection"]), ci(*d["recovery_success"]), str(d["false_completions"]),
                  str(d["unnecessary_attempts"]), f"{d['mean_attempts']:.2f}"])
@@ -182,11 +182,11 @@ modes = ["navigation_failure", "timeout", "missing_element", "invalid_submission
 short = {"navigation_failure": "nav.", "timeout": "time-out", "missing_element": "missing el.", "invalid_submission": "invalid sub.",
          "unexpected_state": "unexp. state", "missing_confirmation": "missing conf."}
 rows.append(["MIDRULE"])
-rows.append(["\\multicolumn{6}{@{}l}{\\emph{Recovered / recoverable by mode (inline only; retry + engine; guided)}}"])
+rows.append(["\\multicolumn{6}{@{}l}{\\emph{Recovered / recoverable by mode (engine off; engine on; guided)}}"])
 cells = [f"{short[m]} {REC['no_recovery']['by_mode'][m][0]}; {REC['retry_based']['by_mode'][m][0]}; {REC['evidence_guided']['by_mode'][m][0]} / {REC['retry_based']['by_mode'][m][1]}" for m in modes]
 rows.append(["\\multicolumn{6}{@{}l}{" + ", ".join(cells[:3]) + "}"])
 rows.append(["\\multicolumn{6}{@{}l}{" + ", ".join(cells[3:]) + "}"])
-table("recovery", f"{SIM} Study~E: 120 failure scenarios, 20 per mode; {sum(int(r['permanent']) for r in REC_ROWS)} drawn as permanent ({int(P['recovery']['permanent_share']['value']*100)}\\% expected), none of them a missing confirmation. Entry paths and strategy sequences follow the code: action errors are retried three times inline before the engine is called; navigation failures and requests for help go to the engine directly; a missing confirmation raises no error and is handled only by rejection and continuation. Per-attempt success rates are ASSUMED (PROPOSED for the guided variant), so differences between rows follow from them. Detected: failure noticed; FC: undetected missing confirmations reported complete; Unnec.: attempts on permanent failures; Att.: mean attempts. $^{{\\ddagger}}$Not implemented.",
+table("recovery", f"{SIM} Study~E: 120 failure scenarios, 20 per mode; {sum(int(r['permanent']) for r in REC_ROWS)} drawn as permanent ({int(P['recovery']['permanent_share']['value']*100)}\\% expected), none of them a missing confirmation. Entry paths and strategy sequences follow the code: action errors, including a planner's request for help, are retried three times inline before the engine is called; a failed initial navigation is retried three times by the browser executor and then passed to the engine; a missing confirmation raises no error and is handled only by rejection and continuation. $^{{\\S}}$The retries before the engine remain. Per-attempt success rates are ASSUMED (PROPOSED for the guided variant), so differences between rows follow from them. Detected: failure noticed; FC: undetected missing confirmations reported complete; Unnec.: attempts on permanent failures; Att.: mean attempts. $^{{\\ddagger}}$Not implemented.",
       "tab:sim-recovery", "lccccc", ["Recovery", "Detected", "Recovered", "FC", "Unnec.", "Att."], rows, size="\\scriptsize", sep="2pt")
 
 # ---- Table: overhead (Study F) — ACTUAL components + SYNTHETIC totals, separate blocks
@@ -212,7 +212,7 @@ for c, nm in (("no_verification", "No verification"), ("evidence_gated", "Eviden
     led(f"sim latency {c} mean s", round(d["mean_s"], 2), f"{SRC} latency", "SYNTHETIC", "Table sim-overhead")
 led("sim latency Phi mean overhead vs none", f"{100*(L['evidence_gated']['mean_s']/L['no_verification']['mean_s']-1):.1f}%", "mean_s ratio", "SYNTHETIC", "Sec. sim-results F")
 led("sim latency self-check mean overhead vs none", f"{100*(L['self_verification']['mean_s']/L['no_verification']['mean_s']-1):.1f}%", "mean_s ratio", "SYNTHETIC", "Sec. sim-results F")
-table("overhead", f"Study~F, verification overhead. Upper block ACTUAL; p95 is the order statistic of rank $\\mathrm{{round}}(0.95(n-1))+1$. $^{{*}}$83 decisions on the constructed gate states, each the median of 20 repetitions (Section~\\ref{{sec:res-overhead}}). Lower block {SIM}, built from the ACTUAL component samples and an ASSUMED inference time, with re-planning after rejections and recovery attempts included; the two blocks are not combined into one claim. Inference takes {100*L['evidence_gated']['inference_share']:.0f}\\% of synthetic episode time under $\\Phi$, evidence screenshots {100*L['evidence_gated']['evidence_share']:.1f}\\%. $^{{\\ddagger}}$Not implemented.",
+table("overhead", f"Study~F, verification overhead. Upper block ACTUAL; p95 is the order statistic of rank $\\mathrm{{round}}(0.95(n-1))+1$. $^{{*}}$83 decisions on the constructed gate states, each the median of 20 repetitions (Section~\\ref{{sec:res-overhead}}), measured on 2026-10-04 on a 2.1\\,GHz machine; the other rows on 2026-10-23 on a 2.8\\,GHz machine, so the two $\\Phi$ rows are not directly comparable. Lower block {SIM}, built from the ACTUAL component samples and an ASSUMED inference time, with re-planning after rejections and recovery attempts included; the two blocks are not combined into one claim. Inference takes {100*L['evidence_gated']['inference_share']:.0f}\\% of synthetic episode time under $\\Phi$, evidence screenshots {100*L['evidence_gated']['evidence_share']:.1f}\\%. $^{{\\ddagger}}$Not implemented.",
       "tab:sim-overhead", "lccc", ["", "", "", ""], rows, size="\\scriptsize", sep="3pt")
 
 # ---- Sensitivity figure data (Study H)
@@ -277,7 +277,7 @@ add("Enhanced: extra catch / extra false rej. / contradiction rej.", f"{P['enhan
 add("Finish after rejection (continuation is verified again)", f"{P['p_continue_success_after_reject']['value']}", "ASSUMED")
 add("Action failure; recovered with / without engine", f"{P['p_action_failure']['value']}; {R['recovery_probabilities_used']['recovery_on']:.2f} / {R['recovery_probabilities_used']['recovery_off']:.2f}", "ASSUMED; from Study E")
 add("Repeated workflows; memory gain / loss", f"{P['repeated_workflow_share']['value']}; {P['memory_helpful_gain']['value']} / {P['memory_misleading_loss']['value']}", "ASSUMED")
-add("Misleading retrieval: store / filtered", f"{d['memory_misleading']['rate']:.2f} / {P['memory_misleading_prob_filtered']['value']}", "DERIVED / PROPOSED")
+add("Misleading retrieval: store / filtered", f"{d['memory_misleading']['rate']:.2f} (raw $k/n$) / {P['memory_misleading_prob_filtered']['value']}", "DERIVED / PROPOSED")
 add("Recovery: permanent share; max attempts", f"{P['recovery']['permanent_share']['value']}; {P['recovery']['max_attempts']}", "ASSUMED")
 add("Recovery entry paths and strategy sequences", "code (Table~\\ref{tab:sim-recovery})", "ACTUAL")
 add("Recovery success per attempt", "0.10--0.45 (re-plan), 0.05--0.35 (vision); guided 0.35--0.55", "ASSUMED / PROPOSED")
@@ -285,7 +285,7 @@ add("Missing-confirmation detection: retry / guided", f"{r2(d['missing_confirmat
 add("Steps per episode by category (same order as above)", " / ".join(str(P['latency']['steps_by_category'][k]) for k in ['navigation','search','form','data_entry','extraction','multi_step']), "ASSUMED")
 add("Inference time per call (median, log-sd)", f"{P['latency']['inference_median_s']['value']} s, {P['latency']['inference_log_sigma']['value']}", "ASSUMED")
 add("Browser, DOM, screenshot, $\\Phi$ latency", "resampled from measurements", "ACTUAL")
-table("params", "Simulation parameters of the corrected model v2 and their provenance (\\texttt{benchmarks/simulation/params.json}, \\texttt{simulate\\_v2.py}). DERIVED rates use $(k+0.5)/(n+1)$ on the held-out gate states; Monte Carlo sets draw them from Beta$(k+0.5, n-k+0.5)$.",
+table("params", "Simulation parameters of the corrected model v2 and their provenance (\\texttt{benchmarks/simulation/params.json}, \\texttt{simulate\\_v2.py}). DERIVED gate rates use $(k+0.5)/(n+1)$ on the held-out gate states (the misleading-retrieval rate is the raw share $3/10$); Monte Carlo sets draw them from Beta$(k+0.5, n-k+0.5)$.",
       "tab:sim-params", "p{3.6cm}p{3.0cm}p{1.3cm}", ["Parameter", "Value", "Class"], rows, size="\\scriptsize", sep="2pt")
 
 with open(OUT / "ledger_simulation.csv", "w", newline="") as f:

@@ -1,7 +1,7 @@
 """Corrected simulation model (v2). SYNTHETIC; NOT an execution of the agent.
 
 v2 was written after the v1 results and after an independent methodology audit
-(artifacts/results/audit_*.md). It is therefore not pre-registered. It reuses v1's scenario generator, seeds
+(artifacts/results/final_audit/audit_*.md). It is therefore not pre-registered. It reuses v1's scenario generator, seeds
 and assumptions, so scenario identities are the same, and changes only what the audit showed to contradict
 the implementation or the measurements:
 
@@ -49,11 +49,17 @@ FAILURE_MSG = {
     "invalid_submission": "Input verification failed: field value does not match requested text",
     "unexpected_state": "Agent needed assistance: page layout differs from plan, need_help",
 }
-# Entry path per failure mode (code inspection, backend/agent/graph.py and nodes.py):
-#   inline: action error -> verify_node retries up to 3 times through a fresh observation, then error_recovery
-#   engine: navigation failure or need_help -> error_recovery directly
-ENTRY = {"navigation_failure": "engine", "timeout": "inline", "missing_element": "inline",
-         "invalid_submission": "inline", "unexpected_state": "engine", "missing_confirmation": "continuation"}
+# Entry path per failure mode (code inspection, backend/agent/graph.py, nodes.py, browser/executor.py):
+#   inline:   action error -> verify_node retries up to 3 times through a fresh observation, then error_recovery
+#             from retry count 3. need_help is turned into an error by execute_action_node, so it takes this
+#             path too (the need_help branch of verify_node is reached only after the error check).
+#   executor: initial navigation -> PlaywrightExecutor.navigate retries transient net::ERR_/timeout errors up to
+#             3 times itself, then navigate_node routes the error to error_recovery from retry count 0. The
+#             executor's immediate retries are modelled with the same assumed per-attempt success rate.
+#   (Correction after the independent final review: v2 first sent need_help and navigation failures to the
+#    engine directly, without these retries.)
+ENTRY = {"navigation_failure": "executor", "timeout": "inline", "missing_element": "inline",
+         "invalid_submission": "inline", "unexpected_state": "inline", "missing_confirmation": "continuation"}
 
 
 # ------------------------------------------------------------------ derived rates (C1)
@@ -116,7 +122,7 @@ def attempts_plan(mode: str, config: str) -> list[str]:
     """Ordered list of attempt kinds: 'replan' (fresh observation and planning) or 'vision'."""
     if ENTRY[mode] == "continuation":
         return []
-    inline = ["replan"] * 3 if ENTRY[mode] == "inline" else []
+    inline = ["replan"] * 3 if ENTRY[mode] in ("inline", "executor") else []
     if config == "no_recovery":
         return inline
     if config == "evidence_guided":

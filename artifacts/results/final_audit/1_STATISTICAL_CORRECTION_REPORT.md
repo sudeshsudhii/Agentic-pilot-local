@@ -111,7 +111,7 @@ The methodology audit (`audit_method.md`, H-1 to H-4) found four places where th
 | C1 | Φ false-rejection rate 0.089, from 2/27 satisfied states. Both rejections were bot-check pages, a category the scenarios do not contain. | — | 0/24 satisfied states of the mapped categories gives 0.02 for both Φ and basic. |
 | C2 | Basic detector ignored unreadable pages. | It shares the error check E, so it fails closed. | Fails closed. |
 | C3 | Continuation after a rejection was accepted without re-checking. A re-claim after a false rejection was accepted with probability 0.3. | `verify_node` checks every claim. | A continuation is verified again. A false rejection of an unchanged page is repeated, because the rule is deterministic. |
-| C4 | Recovery applied to every action failure with an assumed P = 0.55. | Action errors get 3 inline retries before the engine. Navigation failures and need_help go to the engine directly. A missing confirmation raises no error. | Entry paths from the code. P(recover) = 0.65 / 0.27, taken from Study E. "No recovery" keeps the inline retries. |
+| C4 | Recovery applied to every action failure with an assumed P = 0.55. | Action errors get 3 inline retries before the engine. Navigation failures and need_help go to the engine directly. A missing confirmation raises no error. | Entry paths from the code: 3 inline retries for action errors (including need_help), 3 executor retries for a failed initial navigation, then the engine. P(recover) = 0.66 / 0.49, taken from Study E. "No recovery" keeps the retries before the engine. (The first v2 draft sent need_help and navigation failures straight to the engine; the independent final review found this and it was corrected.) |
 | C5 | Monte Carlo treated derived rates as known. | — | Rates drawn from Beta(k + 0.5, n − k + 0.5) in each replication. |
 | C6 | Latency omitted re-planning after a rejection. | — | Re-planning, 3 screenshots per step plus 2 at completion, and recovery attempts are included. |
 | C7 | The text claimed the continuation rate was swept, but it was not. | — | The continuation rate is swept. |
@@ -134,7 +134,7 @@ The methodology audit (`audit_method.md`, H-1 to H-4) found four places where th
 - The test is now an exact McNemar on paired decision correctness:
   - b = W, the unsatisfied states only the gate decides correctly;
   - c = FR, the satisfied states only dispatch decides correctly.
-- It is computed by `artifacts/experiments/gate_stats.py` (new columns `gate_only_correct`, `dispatch_only_correct`, `p_correct_vs_dispatch`, and a pooled `held_out_1+2` split).
+- It is computed by `artifacts/experiments/gate_stats.py` (new columns `gate_only_correct`, `dispatch_only_correct`, `p_correct_vs_dispatch`, `pre_*` for the gate before the fixes, and a pooled `held_out_1+2` split).
 - All 84 previous rows of `gate_stats.csv` are byte-for-byte unchanged in value.
 
 | Set | W / FR | Old p | Corrected p | In paper |

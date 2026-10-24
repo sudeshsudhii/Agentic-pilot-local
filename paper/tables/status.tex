@@ -12,8 +12,8 @@ Completion predicate $\Phi$, bot-check halt & IE & C (92 states), M, S \\
 Browser control (Playwright), DOM extraction & IE & C, M (latency) \\
 Loopback-only model endpoint; Chroma telemetry off & IE & E (70 stand-in episodes), T \\
 End-to-end harness and oracle $\Phi^{\star}$ & IE & O (114 trajectories) \\
-Recovery engine: classification, strategy order & IS & M (6 failure modes), S \\
-Memory store retrieval (Chroma, SQLite) & IS & M (10 queries), S \\
+Recovery engine: classification, strategy order & IE & C (6 failure modes), S \\
+Memory store retrieval (Chroma, SQLite) & IE & C (10 queries, synthetic corpus), S \\
 Per-action evidence (screenshots, records) & IS & M (latency), S \\
 LLM planner in the full loop & IN & tests with mocked model \\
 Vision fallback; task-level human approval & IN & tests \\

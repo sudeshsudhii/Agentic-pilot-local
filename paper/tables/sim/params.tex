@@ -1,6 +1,6 @@
 \begin{table}[t]
 \centering
-\caption{Simulation parameters of the corrected model v2 and their provenance (\texttt{benchmarks/simulation/params.json}, \texttt{simulate\_v2.py}). DERIVED rates use $(k+0.5)/(n+1)$ on the held-out gate states; Monte Carlo sets draw them from Beta$(k+0.5, n-k+0.5)$.}
+\caption{Simulation parameters of the corrected model v2 and their provenance (\texttt{benchmarks/simulation/params.json}, \texttt{simulate\_v2.py}). DERIVED gate rates use $(k+0.5)/(n+1)$ on the held-out gate states (the misleading-retrieval rate is the raw share $3/10$); Monte Carlo sets draw them from Beta$(k+0.5, n-k+0.5)$.}
 \label{tab:sim-params}
 \scriptsize
 \setlength{\tabcolsep}{2pt}
@@ -20,9 +20,9 @@ Ambiguous-class detection factor & 0.5 & ASSUMED \\
 Verifier rejects when evidence is missing ($\Phi$ and basic) & 0.8 & ASSUMED rate \\
 Enhanced: extra catch / extra false rej. / contradiction rej. & 0.5 / 0.05 / 0.7 & PROPOSED \\
 Finish after rejection (continuation is verified again) & 0.35 & ASSUMED \\
-Action failure; recovered with / without engine & 0.25; 0.65 / 0.27 & ASSUMED; from Study E \\
+Action failure; recovered with / without engine & 0.25; 0.66 / 0.49 & ASSUMED; from Study E \\
 Repeated workflows; memory gain / loss & 0.4; 0.08 / 0.1 & ASSUMED \\
-Misleading retrieval: store / filtered & 0.30 / 0.1 & DERIVED / PROPOSED \\
+Misleading retrieval: store / filtered & 0.30 (raw $k/n$) / 0.1 & DERIVED / PROPOSED \\
 Recovery: permanent share; max attempts & 0.25; 6 & ASSUMED \\
 Recovery entry paths and strategy sequences & code (Table~\ref{tab:sim-recovery}) & ACTUAL \\
 Recovery success per attempt & 0.10--0.45 (re-plan), 0.05--0.35 (vision); guided 0.35--0.55 & ASSUMED / PROPOSED \\
