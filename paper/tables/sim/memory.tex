@@ -1,6 +1,6 @@
 \begin{table}[t]
 \centering
-\caption{Study~D, memory and retrieval. Upper block ACTUAL (real store, synthetic records); lower block \textsc{Simulation-based (synthetic)}. P(misleading): probability that the retrieved context misleads the planner; for the filter it is an assumed input, so any effect of the filter follows from that assumption. With 44 repeated workflows the study cannot detect an effect of the assumed size (gain 0.08, loss 0.10). $^{\ddagger}$Not implemented.}
+\caption{Study~D, memory and retrieval. Upper block ACTUAL (real store, synthetic records); lower block \textsc{Simulation-based (synthetic)}. P(misleading): probability that the retrieved context misleads the planner; for the store it is set to the measured share of irrelevant top-1 records (DERIVED; that this share is the probability of misleading the planner is ASSUMED); for the filter it is an assumed input, so any effect of the filter follows from that assumption. With 44 repeated workflows the study cannot detect an effect of the assumed size (gain 0.08, loss 0.10). $^{\ddagger}$Not implemented.}
 \label{tab:sim-memory}
 \scriptsize
 \setlength{\tabcolsep}{3pt}
@@ -13,7 +13,7 @@ Top-1 irrelevant or failed (all 10 queries) & 3/10 &  &  &  \\
 \multicolumn{5}{@{}l}{\emph{SYNTHETIC repeated workflows (n=44)}} \\
 Configuration & TSR & FCR & P(misleading) &  \\
 Memory disabled & 19/44 [0.30,0.58] & .387 & -- &  \\
-Memory enabled & 19/44 [0.30,0.58] & .367 & 0.30 (derived; mapping assumed) &  \\
+Memory enabled & 19/44 [0.30,0.58] & .367 & 0.30 (der.) &  \\
 Relevance-filtered$^{\ddagger}$ & 20/44 [0.32,0.60] & .355 & 0.10 (assumed) &  \\
 \bottomrule
 \end{tabular}

@@ -157,12 +157,12 @@ rows = [["\\multicolumn{5}{@{}l}{\\emph{ACTUAL retrieval, real store, " + str(NR
         ["MIDRULE"],
         ["\\multicolumn{5}{@{}l}{\\emph{SYNTHETIC repeated workflows (n=" + str(M['evidence_gated']['N']) + ")}}"],
         ["Configuration", "TSR", "FCR", "P(misleading)", ""]]
-for c, nm, pm in (("abl_no_memory", "Memory disabled", "--"), ("evidence_gated", "Memory enabled", f"{mis['k'] / mis['n']:.2f} (derived; mapping assumed)"),
+for c, nm, pm in (("abl_no_memory", "Memory disabled", "--"), ("evidence_gated", "Memory enabled", f"{mis['k'] / mis['n']:.2f} (der.)"),
                   ("mem_filtered", "Relevance-filtered$^{\\ddagger}$", f"{P['memory_misleading_prob_filtered']['value']:.2f} (assumed)")):
     m = M[c]
     rows.append([nm, ci(m["TP"], m["N"]), f3(m["FCR"]), pm, ""])
     led(f"memory {c} successes", f"{m['TP']}/{m['N']}", f"{SRC} memory", "SYNTHETIC", "Table sim-memory")
-table("memory", f"Study~D, memory and retrieval. Upper block ACTUAL (real store, synthetic records); lower block {SIM}. P(misleading): probability that the retrieved context misleads the planner; for the filter it is an assumed input, so any effect of the filter follows from that assumption. With 44 repeated workflows the study cannot detect an effect of the assumed size (gain 0.08, loss 0.10). $^{{\\ddagger}}$Not implemented.",
+table("memory", f"Study~D, memory and retrieval. Upper block ACTUAL (real store, synthetic records); lower block {SIM}. P(misleading): probability that the retrieved context misleads the planner; for the store it is set to the measured share of irrelevant top-1 records (DERIVED; that this share is the probability of misleading the planner is ASSUMED); for the filter it is an assumed input, so any effect of the filter follows from that assumption. With 44 repeated workflows the study cannot detect an effect of the assumed size (gain 0.08, loss 0.10). $^{{\\ddagger}}$Not implemented.",
       "tab:sim-memory", "lcccc", ["", "", "", "", ""], rows, size="\\scriptsize", sep="3pt")
 
 # ---- Table: recovery (Study E)
