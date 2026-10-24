@@ -304,7 +304,7 @@ add("Episode time structure", "1 planner call, DOM extraction and action per ste
 add("Self-check baseline", "one model call per claim; never rejects (cost only)", "ASSUMED")
 add("Monte Carlo; sensitivity grid", "1000 sets, assumed values and recovery probabilities fixed; 300 sets per point", "design")
 table("params", "Simulation parameters of the corrected model v2 and their provenance (\\texttt{benchmarks/simulation/params.json}, \\texttt{simulate\\_v2.py}). DERIVED gate rates use $(k+0.5)/(n+1)$ on the held-out gate states (the misleading-retrieval rate is the raw share $3/10$); Monte Carlo sets draw them from Beta$(k+0.5, n-k+0.5)$.",
-      "tab:sim-params", "p{3.6cm}p{3.0cm}p{1.3cm}", ["Parameter", "Value", "Class"], rows, size="\\scriptsize", sep="2pt")
+      "tab:sim-params", "p{6.2cm}p{8.4cm}p{2.6cm}", ["Parameter", "Value", "Class"], rows, size="\\scriptsize", sep="3pt", wide=True)
 
 with open(OUT / "ledger_simulation.csv", "w", newline="") as f:
     w = csv.DictWriter(f, fieldnames=list(LEDGER[0]))

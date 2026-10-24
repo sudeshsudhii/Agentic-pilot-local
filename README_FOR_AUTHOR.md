@@ -1,3 +1,5 @@
+> **Note (2026-10-24):** this file describes an earlier revision. For the current state see `artifacts/results/final_audit/` (final audit reports, provenance matrix, reproducibility checklist) and `CHANGE_LOG.md`. Numbers below that differ from the paper are superseded by the paper.
+
 > **Revision for reviewer requirements R1–R18 (2026-10-04).** Start with `RESPONSE_TO_REVIEWERS.md`, then:
 > - `CHANGE_LOG.md` lists every edit and the source of every number;
 > - `AUTHOR_ACTIONS.md` gives the end-to-end runs and checks you must do yourself (no model weights could be downloaded in this session);
@@ -45,7 +47,7 @@ Environment: 4 vCPU Xeon, Python 3.11, Playwright 1.56 / Chromium 141, LangGraph
 | Gate study, 12 held-out states, written after the fixes | Before: 1 of 5 caught. After: **2 of 5** caught. 1 of 7 rejected both times. **Rule fixes generalize only partially.** | same files, `split=held_out` |
 | Gate latency | Median 30.6 ms per decision | `verification_gate_run.log` |
 | Routing | Fixes confirmed. One trade-off remains: with all models installed, the planner model is never used within a normal task, because of within-task stickiness. | `routing_resolution*.csv` |
-| Tests | 129 tests: 126 pass. The 3 failures need live web (one also needs Ollama). 0 collection errors. Observatory 20/20. Coverage 65.0% (was 62.0%). | `results/junit_after_fixes.xml`, `coverage_after_fixes.txt` |
+| Tests | 129 tests: 126 pass. The 3 failures need live web (one also needs Ollama). 0 collection errors. Observatory 20/20. Coverage 65.0% (was 62.0%). | `artifacts/results/junit_after_fixes.xml`, `coverage_after_fixes.txt` |
 
 **Caveat:** I wrote all fixtures and labels, and designed the fixes on the design states. Treat the post-fix design numbers as optimistic; the held-out row is the honest one. Review every case in `artifacts/experiments/verification_gate_study.py`.
 
@@ -97,7 +99,7 @@ artifacts/
   02_local_system_extension.md  desktop audit and extension design (A2)
   03_literature_matrix.md       35 verified references and comparison table (A3)
   04_results_raw.md             environment, original test runs, eval protocol (A4)
-  05_formal_model.tex           formal model (also paper/sections/04c_formal_model.tex)
+  05_formal_model.tex           formal model 
   06_citation_audit.md          C1
   07_claims_ledger.md           C2: every claim and its source
   08_style_report.md            C3

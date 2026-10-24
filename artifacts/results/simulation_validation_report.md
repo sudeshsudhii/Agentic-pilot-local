@@ -1,6 +1,6 @@
-# Independent validation report: heldout simulation (Agent 4)
+# Recomputation check (AI agent, same pipeline): heldout simulation v1
 
-Inputs: `benchmarks/simulation/out/heldout/{scenarios.csv, recovery_scenarios.csv, results.json}`. All values recomputed from the CSVs with independent code (`/tmp/claude-0/-home-user-Agentic-pilot-local/9002c3ac-134c-52d7-af0a-ddf50aa21ff5/scratchpad/validator.py`); the authors' simulate.py / stats.py were not read or imported. Wilson 95% intervals use z = 1.959964. Comparison tolerance = 0.001.
+Inputs: `benchmarks/simulation/out/heldout/{scenarios.csv, recovery_scenarios.csv, results.json}`. All values recomputed from the CSVs with independent code (`benchmarks/simulation/independent_validator.py`; an AI agent of the same authoring pipeline wrote it, so this is a recomputation check, not an independent replication); the authors' simulate.py / stats.py were not read or imported. Wilson 95% intervals use z = 1.959964. Comparison tolerance = 0.001.
 
 ## Sanity checks
 

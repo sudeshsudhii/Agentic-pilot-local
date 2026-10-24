@@ -24,7 +24,9 @@ RES = REPO / "artifacts" / "results"
 
 def rows(name: str) -> list[dict]:
     p = RES / name
-    return list(csv.DictReader(open(p))) if p.exists() else []
+    if not p.exists():
+        raise FileNotFoundError(f"required input missing: {p}")
+    return list(csv.DictReader(open(p)))
 
 
 def interval(k: int, n: int) -> str:

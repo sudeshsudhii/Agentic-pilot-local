@@ -3,8 +3,9 @@ Written from scratch; does not import the authors' simulate.py or stats.py."""
 import csv, json, math, sys
 from math import comb
 
-BASE = "/home/user/Agentic-pilot-local/benchmarks/simulation/out/heldout/"
-OUT = "/tmp/claude-0/-home-user-Agentic-pilot-local/9002c3ac-134c-52d7-af0a-ddf50aa21ff5/scratchpad/validation_report.md"
+from pathlib import Path
+BASE = str(Path(__file__).parent / "out" / "heldout_v1") + "/"
+OUT = sys.argv[1] if len(sys.argv) > 1 else "validation_report.md"
 CONFIGS = ["no_verification", "basic_detection", "evidence_gated", "enhanced_validation",
            "abl_no_evidence_collection", "abl_no_evidence_validation", "abl_no_memory",
            "abl_no_recovery", "mem_filtered"]

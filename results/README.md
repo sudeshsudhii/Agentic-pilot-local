@@ -8,9 +8,13 @@ The scripts, seeds, raw outputs and analysis code for the experiments run in thi
 | Gate ablation | `verification_gate_study.py --ablation` | `artifacts/results/verification_gate_ablation.csv`, `.log` | Deterministic |
 | Gate statistics | `artifacts/experiments/gate_stats.py` | `artifacts/results/gate_stats.csv`, `.txt` | Exact methods (no random sampling) |
 | Held-out 2 freeze | `artifacts/experiments/gate_heldout2.py` | `artifacts/results/gate_heldout2_freeze.txt` (SHA-256), commit `b9d5088` | — |
-| Oracle validation | `benchmarks/e2e/validate_oracle.py` | `artifacts/results/e2e_oracle_validation.csv`, `.txt` | Deterministic scripted trajectories |
-| Egress (locality) | `benchmarks/e2e/run_e2e.py` with `benchmarks/e2e/egress/` on `PYTHONPATH` and `fake_ollama.py` | `artifacts/results/e2e_smoke_stub/egress_summary.json` | Stand-in model; **episode outcomes are not results** |
+| Oracle validation | `python -m benchmarks.e2e.validate_oracle` | `artifacts/results/e2e_oracle_validation.csv`, `.txt` | Deterministic scripted trajectories |
+| Egress (locality) | `benchmarks/e2e/run_e2e.py` with `benchmarks/e2e/egress/` on `PYTHONPATH` and `fake_ollama.py` | `artifacts/results/e2e_smoke_stub/egress_summary.json`, raw logs alongside | Stand-in model; **episode outcomes are not results** |
 | Test suite | `pytest` with `PILOT_HEADLESS_BROWSER=true --timeout 240` | `artifacts/results/pytest_revision.txt`, `junit_revision.xml` | — |
+| Egress raw data | `benchmarks/e2e/egress/summarize_egress.py` | `artifacts/results/e2e_smoke_stub/{egress_raw,episodes}.jsonl` (SHA-256 in its README) | — |
+| Simulation v2 (Studies A–H, SYNTHETIC) | `python -m benchmarks.simulation.simulate_v2`, `make_tables` | `benchmarks/simulation/out/heldout_v2/`, `paper/tables/sim/` | seeds 202 (held-out), 1000 MC sets; `params.json` |
+| Audit recomputation | `artifacts/results/final_audit/scripts/*.py` | printed to stdout | — |
+| All of the above at once | `make reproduce-paper` | — | pinned versions in `requirements-paper.lock` |
 | End-to-end runs (not run here) | `benchmarks/e2e/run_e2e.py`, `analyze_e2e.py` | written to `artifacts/results/e2e/<run>/` | temperature 0, seed 7 (defaults); see `AUTHOR_ACTIONS.md` A1 |
 
 The bootstrap in `benchmarks/e2e/stats.py` uses `seed=7` and 10,000 resamples.

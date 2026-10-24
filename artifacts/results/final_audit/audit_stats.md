@@ -6,7 +6,7 @@ Auditor scripts (own code, run with `.venv-eval/bin/python -I -B`, no repository
 - `audit_sim.py` → `audit_sim.out`: Studies A–H (SYNTHETIC). Counts come from `scenarios.csv` and `recovery_scenarios.csv` with my own code. For the Monte Carlo, sensitivity and latency values I imported the repository's `generate`/`episode`/`latency_study` functions without writing anything, and did the aggregation, percentiles and tests myself.
 - `extra.py`: smoothing artefact, re-claim count, task set, egress episodes
 
-All files are in `/tmp/claude-0/-home-user-Agentic-pilot-local/9002c3ac-134c-52d7-af0a-ddf50aa21ff5/scratchpad/`.
+These were working files of the audit session and are not archived; the round-2 recomputation scripts are in `artifacts/results/final_audit/scripts/`.
 
 Conventions used in this audit:
 
