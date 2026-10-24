@@ -26,9 +26,8 @@ B.~Efron, ``Bootstrap methods: Another look at the jackknife,'' \emph{The
   Annals of Statistics}, vol.~7, no.~1, pp. 1--26, 1979.
 
 \bibitem{debenedetti2025camel}
-E.~Debenedetti, I.~Shumailov, T.~Fan, J.~Hayes, N.~Carlini, D.~Fabian, C.~Kern,
-  C.~Shi, A.~Terzis, and F.~Tram{\`e}r, ``Defeating prompt injections by
-  design,'' arXiv:2503.18813, 2025.
+E.~Debenedetti \emph{et~al.}, ``Defeating prompt injections by design,''
+  arXiv:2503.18813, 2025.
 
 \bibitem{liu2024formalizing}
 Y.~Liu, Y.~Jia, R.~Geng, J.~Jia, and N.~Z. Gong, ``Formalizing and benchmarking
