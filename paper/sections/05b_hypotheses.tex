@@ -5,7 +5,7 @@ The gaps of Section~\ref{sec:intro} lead to five research questions: does eviden
 
 \begin{table}[t]
 \centering
-\caption{Hypotheses with null (H$_0$) and alternative (H$_1$) forms. Controls for all: same scenarios, planner behaviour, budget and seeds. Test: exact McNemar on paired scenario outcomes, Wilson intervals, Monte Carlo over regenerated sets. Last column: \textsc{synthetic} outcome in the simulation (Section~\ref{sec:sim-results}); it is not an empirical result. Component-level \textsc{actual} evidence bearing on H1/H2 (Section~\ref{sec:res-gate}): on held-out~2 the gate withholds 9 of 22 unsatisfied states and rejects 1 of 20 satisfied ones (exact McNemar against dispatch-only $p=0.021$); it concerns constructed states, not agent episodes.}
+\caption{Hypotheses with null (H$_0$) and alternative (H$_1$) forms. Controls for all: same scenarios, planner behaviour, budget and seeds. Test: exact McNemar on paired scenario outcomes, Wilson intervals, Monte Carlo over regenerated sets. Last column: \textsc{synthetic} outcome in the simulation (v2, revised post hoc) (Section~\ref{sec:sim-results}); it is not an empirical result. Component-level \textsc{actual} evidence bearing on H1/H2 (Section~\ref{sec:res-gate}): on held-out~2 the gate withholds 9 of 22 unsatisfied states and rejects 1 of 20 satisfied ones (exact McNemar against dispatch-only $p=0.021$); it concerns constructed states, not agent episodes.}
 \label{tab:hyp}
 \scriptsize
 \setlength{\tabcolsep}{1.6pt}
@@ -14,7 +14,7 @@ The gaps of Section~\ref{sec:intro} lead to five research questions: does eviden
  & H$_1$ (H$_0$: no difference) & IV & DV & Simulated outcome \\
 \midrule
 H1 & Evidence-gated verification lowers false completions vs.\ accepting every claim & $\Phi$ on / off & FC per scenario, FCR & lower by construction; size 19 vs 28 FC (cond.) \\
-H2 & Evidence validation raises decision reliability & $\Phi$ on / off; enhanced & decision accuracy & component (\textsc{actual}): 28 vs 20 of 42 correct, $p{=}.021$; simulation: no significant difference at $n{=}74$ (.70 vs .62, $p{=}.15$ cond.), 2 of 3 false rejections from assumed missing evidence; enhanced: follows from assumed rates, no evidence \\
+H2 & Evidence validation raises decision reliability & $\Phi$ on / off; enhanced & decision accuracy & component (\textsc{actual}): 28 vs 20 of 42 correct, $p{=}0.021$; simulation: no significant difference at $n{=}74$ (.70 vs .62, $p{=}0.15$ cond.), 2 of 3 false rejections from assumed missing evidence; enhanced: follows from assumed rates, no evidence \\
 H3 & Memory raises contextual consistency on repeated workflows & memory off / on / filtered & TSR on repeated workflows & uninformative; underpowered (19 vs 19 of 44) \\
 H4 & Evidence-guided recovery recovers more failures than retry & recovery mode & recovered share & higher by assumption (87 vs 68 of 93; proposed) \\
 H5 & Verification adds overhead and makes decisions more conservative & verifier & time, FRR & $\Phi$ 5.2--26.8\,ms (\textsc{actual}); episode +2.6\% mean; decision FRR 3/46 vs 0/46 (cond.) \\

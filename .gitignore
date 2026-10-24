@@ -55,3 +55,6 @@ certify_output*.txt
 Thumbs.db
 .vscode/
 .idea/
+
+# released raw data of the stand-in egress run (referenced by the paper)
+!artifacts/results/e2e_smoke_stub/*.jsonl

@@ -31,13 +31,19 @@ enhanced_validation FCR,0.1481,FP/(TP+FP),SYNTHETIC,Table sim-baseline
 enhanced_validation FRR,0.1481,FN/(TP+FN),SYNTHETIC,Table sim-baseline
 enhanced_validation decision TP/FP/FN/TN,41/8/5/20,out/heldout_v2/results.json decision,SYNTHETIC,Table sim-baseline
 enhanced_validation decision accuracy,61/74,(TP+TN)/claims,SYNTHETIC,Table sim-baseline
-no_verification McNemar p (episode false completion vs evidence_gated),0.0039,exact McNemar on paired FP indicators,SYNTHETIC,Table sim-tests
+no_verification FC discordant b/c vs evidence_gated,9/0,paired FP indicators,SYNTHETIC,Table sim-tests
+"no_verification MC paired FC difference (other - Phi) mean [p2.5,p97.5]","0.111 [0.05,0.18]",out/heldout_v2/results.json monte_carlo_paired,SYNTHETIC,Table sim-tests
+"no_verification McNemar p (episode false completion vs evidence_gated; descriptive, structural zero)",0.0039,exact McNemar on paired FP indicators,SYNTHETIC,not printed
 no_verification McNemar p (decision correctness vs evidence_gated),0.146,exact McNemar on paired first-decision correctness,SYNTHETIC,Table sim-tests
 no_verification McNemar p (task success vs evidence_gated),0.625,exact McNemar on paired success indicators,SYNTHETIC,Table sim-tests
-basic_detection McNemar p (episode false completion vs evidence_gated),0.0625,exact McNemar on paired FP indicators,SYNTHETIC,Table sim-tests
+basic_detection FC discordant b/c vs evidence_gated,5/0,paired FP indicators,SYNTHETIC,Table sim-tests
+"basic_detection MC paired FC difference (other - Phi) mean [p2.5,p97.5]","0.060 [0.00,0.12]",out/heldout_v2/results.json monte_carlo_paired,SYNTHETIC,Table sim-tests
+"basic_detection McNemar p (episode false completion vs evidence_gated; descriptive, structural zero)",0.0625,exact McNemar on paired FP indicators,SYNTHETIC,not printed
 basic_detection McNemar p (decision correctness vs evidence_gated),0.0625,exact McNemar on paired first-decision correctness,SYNTHETIC,Table sim-tests
 basic_detection McNemar p (task success vs evidence_gated),1.0,exact McNemar on paired success indicators,SYNTHETIC,Table sim-tests
-enhanced_validation McNemar p (episode false completion vs evidence_gated),0.001,exact McNemar on paired FP indicators,SYNTHETIC,Table sim-tests
+enhanced_validation FC discordant b/c vs evidence_gated,0/11,paired FP indicators,SYNTHETIC,Table sim-tests
+"enhanced_validation MC paired FC difference (other - Phi) mean [p2.5,p97.5]","-0.083 [-0.14,-0.03]",out/heldout_v2/results.json monte_carlo_paired,SYNTHETIC,Table sim-tests
+"enhanced_validation McNemar p (episode false completion vs evidence_gated; descriptive, structural zero)",0.001,exact McNemar on paired FP indicators,SYNTHETIC,not printed
 enhanced_validation McNemar p (decision correctness vs evidence_gated),0.0225,exact McNemar on paired first-decision correctness,SYNTHETIC,Table sim-tests
 enhanced_validation McNemar p (task success vs evidence_gated),0.6875,exact McNemar on paired success indicators,SYNTHETIC,Table sim-tests
 "MC paired FC reduction Phi vs none (mean [p2.5,p97.5])","0.111 [0.05,0.18]",out/heldout_v2/results.json monte_carlo_paired,SYNTHETIC,Sec. sim-results H1

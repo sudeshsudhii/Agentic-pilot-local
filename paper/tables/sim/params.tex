@@ -23,13 +23,19 @@ Finish after rejection (continuation is verified again) & 0.35 & ASSUMED \\
 Action failure; recovered with / without engine & 0.25; 0.66 / 0.49 & ASSUMED; SYNTHETIC (Study E) \\
 Repeated workflows; memory gain / loss & 0.4; 0.08 / 0.1 & ASSUMED \\
 Misleading retrieval: store / filtered & 0.30 (raw $k/n$) / 0.1 & DERIVED (mapping ASSUMED) / PROPOSED \\
-Recovery: permanent share; max attempts & 0.25; 6 & ASSUMED \\
-Recovery entry paths and strategy sequences & code (Table~\ref{tab:sim-recovery}) & ACTUAL \\
+Recovery: permanent share; attempts & 0.25; 3 inline + up to 3 engine; 3 executor + up to 6 engine (navigation) & ASSUMED; code \\
+Recovery entry paths; strategy sequences & code (Table~\ref{tab:sim-recovery}) & code inspection; ACTUAL \\
 Recovery success per attempt & 0.10--0.45 (re-plan), 0.05--0.35 (vision); guided 0.35--0.55 & ASSUMED / PROPOSED \\
 Missing-confirmation detection: retry / guided & 0.63 / 0.9 & DERIVED via ASSUMED proxy / PROPOSED \\
 Steps per episode by category (same order as above) & 2 / 3 / 5 / 3 / 3 / 6 & ASSUMED \\
 Inference time per call (median, log-sd) & 3.0 s, 0.5 & ASSUMED \\
-Browser, DOM, screenshot, $\Phi$ latency & resampled from measurements & ACTUAL \\
+Browser, DOM, screenshot latency; $\Phi$ latency & resampled from site measurements; from the gate-state measurements & ACTUAL \\
+Category mapping (simulated to gate categories) & Section~\ref{sec:sim} & ASSUMED \\
+Executor and inline retries & scored at the re-plan success rate & ASSUMED \\
+Missing confirmation after rejection & one continuation attempt at the finish-after-rejection rate & ASSUMED \\
+Episode time structure & 1 planner call, DOM extraction and action per step; 3 screenshots per step, 2 at completion; 1 extra step per rejection; recovery attempts from Study~E & ASSUMED (code-based) \\
+Self-check baseline & one model call per claim; never rejects (cost only) & ASSUMED \\
+Monte Carlo; sensitivity grid & 1000 sets, assumed values and recovery probabilities fixed; 300 sets per point & design \\
 \bottomrule
 \end{tabular}
 \end{table}

@@ -170,7 +170,15 @@ def recovery_study(rates: dict | None = None, seed: int = SEED) -> dict:
                         continue
                     p = {"replan": R["p_success_replan"][m], "vision": R["p_success_vision"][m],
                          "guided": R["p_success_evidence_guided"][m]}[kind]
-                    if s["u"][k % len(s["u"])] < p:
+                    # a failed initial navigation can take 3 executor retries + 6 engine attempts = 9 > len(u);
+                    # draws beyond the first six come from a separate per-scenario stream (fix of an earlier
+                    # k % 6 reuse that made attempts 7-9 unable to succeed), so the first six are unchanged
+                    if k < len(s["u"]):
+                        u_k = s["u"][k]
+                    else:
+                        extra = random.Random(f"{s['id']}-v2rec")
+                        u_k = [extra.random() for _ in range(k - len(s["u"]) + 1)][-1]
+                    if u_k < p:
                         recovered = True
                         break
             rows.append({"id": s["id"], "mode": m, "permanent": s["permanent"], "detected": int(detected),
@@ -312,6 +320,9 @@ def main() -> None:
     rng = random.Random(SEED * 31)
     mc = {c: {"FCR": [], "TSR": [], "dec_acc": []} for c in CONFIGS}
     mc_fc_diff, mc_sig_fc, mc_sig_dec = [], 0, 0
+    # paired FC difference (other - Phi) per scenario for every verifier; no extra random draws
+    mc_fc_diff_all = {c: [] for c in VERIFIERS if c != ref}
+    mc_phi_only_fc = {c: 0 for c in VERIFIERS if c != ref}
     reps = P["monte_carlo_replications"]
     for r in range(reps):
         rates = sample_rates(rng)
@@ -330,6 +341,10 @@ def main() -> None:
         fr_ = [int(x["reported"] and not x["y"]) for x in e[ref]]
         mc_fc_diff.append((sum(fo) - sum(fr_)) / len(sc))
         mc_sig_fc += paired(fo, fr_)[2] < 0.05
+        for c in mc_fc_diff_all:
+            fc_c = [int(x["reported"] and not x["y"]) for x in e[c]]
+            mc_fc_diff_all[c].append((sum(fc_c) - sum(fr_)) / len(sc))
+            mc_phi_only_fc[c] += any(b and not a for a, b in zip(fc_c, fr_))
         if cl:
             do = [int(e["no_verification"][i]["accepted"] == e["no_verification"][i]["y_claim"]) for i in cl]
             dr = [int(e[ref][i]["accepted"] == e[ref][i]["y_claim"]) for i in cl]
@@ -341,7 +356,9 @@ def main() -> None:
 
     res["monte_carlo"] = {c: {k: summ(v) for k, v in d.items() if v} for c, d in mc.items()}
     res["monte_carlo_paired"] = {"fc_reduction_phi_vs_none": summ(mc_fc_diff), "share_fc_p_lt_05": mc_sig_fc / reps,
-                                 "share_decision_phi_better_p_lt_05": mc_sig_dec / reps}
+                                 "share_decision_phi_better_p_lt_05": mc_sig_dec / reps,
+                                 "fc_difference_other_minus_phi": {c: summ(v) for c, v in mc_fc_diff_all.items()},
+                                 "share_sets_with_phi_only_fc": {c: k / reps for c, k in mc_phi_only_fc.items()}}
 
     # memory subset (repeated workflows), labelled memory only
     rep = [i for i, s in enumerate(scen) if s["repeated"]]

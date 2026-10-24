@@ -473,7 +473,29 @@
    "p97.5": 0.18
   },
   "share_fc_p_lt_05": 0.941,
-  "share_decision_phi_better_p_lt_05": 0.419
+  "share_decision_phi_better_p_lt_05": 0.419,
+  "fc_difference_other_minus_phi": {
+   "no_verification": {
+    "mean": 0.1106,
+    "p2.5": 0.05,
+    "p97.5": 0.18
+   },
+   "basic_detection": {
+    "mean": 0.06023,
+    "p2.5": 0.0,
+    "p97.5": 0.12
+   },
+   "enhanced_validation": {
+    "mean": -0.08279,
+    "p2.5": -0.14,
+    "p97.5": -0.03
+   }
+  },
+  "share_sets_with_phi_only_fc": {
+   "no_verification": 0.0,
+   "basic_detection": 0.394,
+   "enhanced_validation": 1.0
+  }
  },
  "memory": {
   "abl_no_memory": {

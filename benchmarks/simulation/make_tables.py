@@ -44,8 +44,15 @@ def r2(x: float) -> str:
 
 
 def pf(p: float) -> str:
-    """Exact p-value to three significant figures (no half-even rounding surprises at 0.0625)."""
-    return "<0.001" if p < 0.001 else f"{p:.3g}"
+    """Exact p-value, two significant figures, ties half up, leading zero; "<0.001" below 0.001; 1 printed as 1.0."""
+    from decimal import ROUND_HALF_UP, Decimal
+    if p < 0.001:
+        return "<0.001"
+    if p >= 0.995:
+        return "1.0"
+    d = Decimal(repr(p))
+    q = Decimal(1).scaleb(d.adjusted() - 1)
+    return str(d.quantize(q, rounding=ROUND_HALF_UP))
 
 
 def led(claim: str, value, source: str, cls: str, where: str) -> None:
@@ -98,25 +105,30 @@ table("baseline", f"{SIM} Study~B on the same 100 held-out synthetic scenarios (
       size="\\footnotesize", sep="4pt", wide=True)
 
 # ---- Table: paired tests and Monte Carlo
+MP = R["monte_carlo_paired"]
+FD = MP["fc_difference_other_minus_phi"]
 rows = []
 for c, nm in NAMES.items():
-    mc = MC[c]["FCR"]
     mcd = MC[c]["dec_acc"]
-    mcs = f"{d2(mc['mean'])} [{d2(mc['p2.5'])},{d2(mc['p97.5'])}]; {d2(mcd['mean'])}"
     if c == "evidence_gated":
-        rows.append(["$\\Phi$", "ref.", "", "ref.", "", "ref.", "", mcs])
+        rows.append(["$\\Phi$", "ref.", "", "ref.", "", "ref.", "", d2(mcd["mean"])])
         continue
     t = T[c]
+    fd = FD[c]
+    sec = "$^{\\S}$" if c in ("no_verification", "enhanced_validation") else "$^{\\P}$"
+    dec_p = pf(t['decision_p']) + ("$^{\\P}$" if c == "basic_detection" else "")
+    suc_p = pf(t['success_p']) + ("$^{\\P}$" if c == "basic_detection" else "")
     rows.append([nm.replace(" success detection", "").replace(" validation", "").replace("No verification", "None"),
-                 f"{t['fc_other_only']}/{t['fc_phi_only']}", pf(t['fc_p']),
-                 f"{t['decision_other_only']}/{t['decision_phi_only']}", pf(t['decision_p']),
-                 f"{t['success_other_only']}/{t['success_phi_only']}", pf(t['success_p']), mcs])
-    led(f"{c} McNemar p (episode false completion vs evidence_gated)", round(t["fc_p"], 4), "exact McNemar on paired FP indicators", "SYNTHETIC", "Table sim-tests")
+                 f"{t['fc_other_only']}/{t['fc_phi_only']}{sec}", f"{fd['mean']:+.2f} [{fd['p2.5']:+.2f},{fd['p97.5']:+.2f}]",
+                 f"{t['decision_other_only']}/{t['decision_phi_only']}", dec_p,
+                 f"{t['success_other_only']}/{t['success_phi_only']}", suc_p, d2(mcd["mean"])])
+    led(f"{c} FC discordant b/c vs evidence_gated", f"{t['fc_other_only']}/{t['fc_phi_only']}", "paired FP indicators", "SYNTHETIC", "Table sim-tests")
+    led(f"{c} MC paired FC difference (other - Phi) mean [p2.5,p97.5]", f"{fd['mean']:.3f} [{fd['p2.5']:.2f},{fd['p97.5']:.2f}]", f"{SRC} monte_carlo_paired", "SYNTHETIC", "Table sim-tests")
+    led(f"{c} McNemar p (episode false completion vs evidence_gated; descriptive, structural zero)", round(t["fc_p"], 4), "exact McNemar on paired FP indicators", "SYNTHETIC", "not printed")
     led(f"{c} McNemar p (decision correctness vs evidence_gated)", round(t["decision_p"], 4), "exact McNemar on paired first-decision correctness", "SYNTHETIC", "Table sim-tests")
     led(f"{c} McNemar p (task success vs evidence_gated)", round(t["success_p"], 4), "exact McNemar on paired success indicators", "SYNTHETIC", "Table sim-tests")
-table("tests", f"{SIM} Paired comparisons with $\\Phi$, exact McNemar tests on discordant pairs $b/c$ ($b$: only the other configuration; $c$: only $\\Phi$). FC: episode ends in a false completion (100 scenarios). Dec.: first decision correct ({NCL} claims). Succ.: task achieved and reported (100 scenarios). MC: mean FCR [2.5--97.5th percentiles]; mean decision accuracy, over {P['monte_carlo_replications']} regenerated scenario sets with rates drawn from their Beta posteriors. For FC against None and Basic, $c=0$ by construction ($\\Phi$ only withholds claims; for Enhanced, $b=0$ likewise), so those $p$-values carry no information about direction; the size of the reduction and its Monte Carlo interval are the informative quantities. {COND}",
-      "tab:sim-tests", "lccccccc", ["Config.", "FC $b/c$", "$p$", "Dec.\\ $b/c$", "$p$", "Succ.\\ $b/c$", "$p$", "MC FCR; dec.\\ acc."], rows, size="\\scriptsize", sep="1.5pt")
-MP = R["monte_carlo_paired"]
+table("tests", f"{SIM} Paired comparisons with $\\Phi$ on the same synthetic scenarios (v2, post hoc). Discordant pairs $b/c$ ($b$: only the other configuration; $c$: only $\\Phi$). FC: episode ends in a false completion (100 scenarios); $\\Delta$FC: false completions per scenario of the other configuration minus $\\Phi$, mean [2.5--97.5th percentiles] over {P['monte_carlo_replications']} regenerated sets with rates drawn from their Beta posteriors. Dec.: first decision correct ({NCL} claims), exact McNemar $p$. Succ.: task achieved and reported (100 scenarios), exact McNemar $p$. MC acc.: mean decision accuracy over the regenerated sets. $^{{\\S}}$One cell is 0 by construction of the model ($\\Phi$ only withholds claims that no verification accepts; enhanced validation withholds every claim $\\Phi$ withholds), so no McNemar $p$ is given: it would only restate $b$ or $c$. $^{{\\P}}$Zero cell from the nesting of basic detection within $\\Phi$ at the point-estimate rates; in the regenerated sets, where the two rates are drawn independently, $\\Phi$-only false completions occur in {MP['share_sets_with_phi_only_fc']['basic_detection']*100:.0f}\\% of sets. {COND}",
+      "tab:sim-tests", "lccccccc", ["Config.", "FC $b/c$", "$\\Delta$FC [MC]", "Dec.\\ $b/c$", "$p$", "Succ.\\ $b/c$", "$p$", "MC acc."], rows, size="\\scriptsize", sep="1.5pt")
 led("MC paired FC reduction Phi vs none (mean [p2.5,p97.5])", f"{MP['fc_reduction_phi_vs_none']['mean']:.3f} [{MP['fc_reduction_phi_vs_none']['p2.5']:.2f},{MP['fc_reduction_phi_vs_none']['p97.5']:.2f}]", f"{SRC} monte_carlo_paired", "SYNTHETIC", "Sec. sim-results H1")
 led("MC share of sets with FC McNemar p<0.05", MP["share_fc_p_lt_05"], f"{SRC} monte_carlo_paired", "SYNTHETIC", "Sec. sim-results H1")
 led("MC share of sets with Phi decision accuracy better at p<0.05", MP["share_decision_phi_better_p_lt_05"], f"{SRC} monte_carlo_paired", "SYNTHETIC", "Sec. sim-results H2")
@@ -278,13 +290,19 @@ add("Finish after rejection (continuation is verified again)", f"{P['p_continue_
 add("Action failure; recovered with / without engine", f"{P['p_action_failure']['value']}; {R['recovery_probabilities_used']['recovery_on']:.2f} / {R['recovery_probabilities_used']['recovery_off']:.2f}", "ASSUMED; SYNTHETIC (Study E)")
 add("Repeated workflows; memory gain / loss", f"{P['repeated_workflow_share']['value']}; {P['memory_helpful_gain']['value']} / {P['memory_misleading_loss']['value']}", "ASSUMED")
 add("Misleading retrieval: store / filtered", f"{d['memory_misleading']['rate']:.2f} (raw $k/n$) / {P['memory_misleading_prob_filtered']['value']}", "DERIVED (mapping ASSUMED) / PROPOSED")
-add("Recovery: permanent share; max attempts", f"{P['recovery']['permanent_share']['value']}; {P['recovery']['max_attempts']}", "ASSUMED")
-add("Recovery entry paths and strategy sequences", "code (Table~\\ref{tab:sim-recovery})", "ACTUAL")
+add("Recovery: permanent share; attempts", f"{P['recovery']['permanent_share']['value']}; 3 inline + up to 3 engine; 3 executor + up to 6 engine (navigation)", "ASSUMED; code")
+add("Recovery entry paths; strategy sequences", "code (Table~\\ref{tab:sim-recovery})", "code inspection; ACTUAL")
 add("Recovery success per attempt", "0.10--0.45 (re-plan), 0.05--0.35 (vision); guided 0.35--0.55", "ASSUMED / PROPOSED")
 add("Missing-confirmation detection: retry / guided", f"{r2(d['missing_confirmation_detection']['rate'])} / {P['recovery']['evidence_guided_confirmation_detection']['value']}", "DERIVED via ASSUMED proxy / PROPOSED")
 add("Steps per episode by category (same order as above)", " / ".join(str(P['latency']['steps_by_category'][k]) for k in ['navigation','search','form','data_entry','extraction','multi_step']), "ASSUMED")
 add("Inference time per call (median, log-sd)", f"{P['latency']['inference_median_s']['value']} s, {P['latency']['inference_log_sigma']['value']}", "ASSUMED")
-add("Browser, DOM, screenshot, $\\Phi$ latency", "resampled from measurements", "ACTUAL")
+add("Browser, DOM, screenshot latency; $\\Phi$ latency", "resampled from site measurements; from the gate-state measurements", "ACTUAL")
+add("Category mapping (simulated to gate categories)", "Section~\\ref{sec:sim}", "ASSUMED")
+add("Executor and inline retries", "scored at the re-plan success rate", "ASSUMED")
+add("Missing confirmation after rejection", "one continuation attempt at the finish-after-rejection rate", "ASSUMED")
+add("Episode time structure", "1 planner call, DOM extraction and action per step; 3 screenshots per step, 2 at completion; 1 extra step per rejection; recovery attempts from Study~E", "ASSUMED (code-based)")
+add("Self-check baseline", "one model call per claim; never rejects (cost only)", "ASSUMED")
+add("Monte Carlo; sensitivity grid", "1000 sets, assumed values and recovery probabilities fixed; 300 sets per point", "design")
 table("params", "Simulation parameters of the corrected model v2 and their provenance (\\texttt{benchmarks/simulation/params.json}, \\texttt{simulate\\_v2.py}). DERIVED gate rates use $(k+0.5)/(n+1)$ on the held-out gate states (the misleading-retrieval rate is the raw share $3/10$); Monte Carlo sets draw them from Beta$(k+0.5, n-k+0.5)$.",
       "tab:sim-params", "p{3.6cm}p{3.0cm}p{1.3cm}", ["Parameter", "Value", "Class"], rows, size="\\scriptsize", sep="2pt")
 
