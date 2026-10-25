@@ -3,7 +3,7 @@
 
 \paragraph{Internal validity} The same AI agent wrote all gate states and labels and designed the fixes on the design states, so the design results are optimistic. Held-out~2 was frozen before testing, but its author knew the gate's rules; independent states and labels would give a less biased estimate. 
 
-\paragraph{External validity} Gate measurements use small, static offline pages (with 22 unsatisfied held-out~2 states the withheld share's interval spans 0.23--0.61); real pages are larger and change. The locality test used a stand-in model server and self-hosted pages and instrumented only the Python processes, so it does not show what a real model server, Chromium or the desktop client send off the machine. 
+\paragraph{External validity} Gate measurements use small, static offline pages (with 22 unsatisfied held-out~2 states the withheld share's interval spans 0.23--0.61); real pages are larger and change. The locality test used a stand-in model server and self-hosted pages and instrumented only the Python processes, so it does not cover what a real model server, Chromium or the desktop client send off the machine. 
 
 
 \paragraph{Simulation validity} Simulated results follow from assumptions about planner behaviour, failures and memory that no measurement supports, rest on small measured samples, and come from a model revised twice after its first results were known (not pre-registered; the corrections moved results in favour of $\Phi$). Synthetic $p$-values describe the synthetic sample, whose size we chose.

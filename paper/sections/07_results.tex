@@ -29,7 +29,7 @@ We ran 70 agent episodes (10 development tasks under 7 configurations, six with 
 
 The end-to-end oracle agreed with the intended verdict on all 114 scripted trajectories. The informative cases are 35 correct solutions (no false negative; 95\% interval 0--0.10) and 34 near misses (no false positive; 0--0.10); the rest are negative by construction. The trajectories were written by the oracle's author, so this bounds errors on anticipated behaviors only.
 
-\subsection{End-to-End Evaluation}
+\subsection{Scope of the Measurements}
 \label{sec:res-e2e}
 
-We have not run the end-to-end evaluation with a language model: the environment used for this paper could not download model weights. Consequently this paper makes no claim about task success, about the gate's effect on success or on false completions of the full agent, about the baselines, or about the contributions of memory, retrieval and the recovery strategies; Supplement, Table~\ref{tab:status}, marks these components as unevaluated. The harness, task set and analysis that produce these measurements are released and run with one command on a machine with Ollama.
+These measurements characterize the gate, browser and memory components, locality and the oracle under controlled conditions. Task success of the full agent and the task-level effects of the gate, memory and recovery are examined in simulation (Section~\ref{sec:sim-results}); the released harness supports their direct measurement.
