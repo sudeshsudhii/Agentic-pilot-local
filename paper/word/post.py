@@ -27,8 +27,65 @@ t = final_sect.find(qn('w:type'))
 if t is None:
     t = OxmlElement('w:type'); final_sect.insert(0, t)
 t.set(qn('w:val'), 'continuous')
+# 1b) IEEE author block: two authors side by side (name / affiliation / e-mail), borderless table
+authors = [p for p in d.paragraphs if p.style.name == 'Author']
+if authors:
+    blocks = [[x.strip() for x in p.text.split(',')] for p in authors if p.text.strip()]
+    anchor = authors[0]._p
+    tbl = d.add_table(rows=1, cols=len(blocks))
+    tbl.autofit = True
+    tblPr = tbl._tbl.tblPr
+    bd = OxmlElement('w:tblBorders')
+    for edge in ('top', 'left', 'bottom', 'right', 'insideH', 'insideV'):
+        e = OxmlElement(f'w:{edge}'); e.set(qn('w:val'), 'nil'); bd.append(e)
+    tblPr.append(bd)
+    jc = OxmlElement('w:jc'); jc.set(qn('w:val'), 'center'); tblPr.append(jc)
+    w = OxmlElement('w:tblW'); w.set(qn('w:type'), 'pct'); w.set(qn('w:w'), '5000')
+    old = tblPr.find(qn('w:tblW'))
+    if old is not None: tblPr.remove(old)
+    tblPr.append(w)
+    for cell, lines in zip(tbl.rows[0].cells, blocks):
+        cell.paragraphs[0].text = ''
+        for i, line in enumerate(lines):
+            p = cell.paragraphs[0] if i == 0 else cell.add_paragraph()
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            p.paragraph_format.space_after = Pt(0); p.paragraph_format.space_before = Pt(0)
+            r = p.add_run(line); r.font.name = 'Times New Roman'
+            r.font.size = Pt(11) if i == 0 else Pt(10)
+    anchor.addprevious(tbl._tbl)
+    for p in authors:
+        p._p.getparent().remove(p._p)
+    author_tbl = tbl._tbl
+else:
+    author_tbl = None
+
+# 1c) title in Times New Roman (drop theme-font overrides); IEEE inline "Abstract---"
+for p in d.paragraphs:
+    if p.style.name == 'Title':
+        for r in p.runs:
+            rpr = r._r.get_or_add_rPr()
+            rf = rpr.find(qn('w:rFonts'))
+            if rf is None:
+                rf = OxmlElement('w:rFonts'); rpr.insert(0, rf)
+            for k in list(rf.attrib):
+                del rf.attrib[k]
+            for a_ in ('ascii', 'hAnsi', 'cs', 'eastAsia'):
+                rf.set(qn('w:' + a_), 'Times New Roman')
+            r.font.size = Pt(22)
+abs_title = next((p for p in d.paragraphs if p.style.name == 'Abstract Title'), None)
+if abs_title is not None:
+    nxt = abs_title._p.getnext()
+    abs_title._p.getparent().remove(abs_title._p)
+    from docx.text.paragraph import Paragraph
+    ap = Paragraph(nxt, abs_title._parent)
+    first = ap.runs[0]._r if ap.runs else None
+    lead = ap.add_run('Abstract\u2014'); lead.italic = True; lead.bold = True
+    if first is not None:
+        first.addprevious(lead._r)
+
 # 2) tables: 8 pt text, booktabs-like rules, autofit to column
 for tbl in d.tables:
+    if tbl._tbl is author_tbl: continue
     tblPr = tbl._tbl.tblPr
     borders = OxmlElement('w:tblBorders')
     for edge, sz in (('top', 8), ('bottom', 8), ('insideH', 0), ('insideV', 0), ('left', 0), ('right', 0)):
@@ -59,6 +116,7 @@ for tbl in d.tables:
                     r.font.size = Pt(7.5); r.font.name = 'Times New Roman'
 # merge repeated header cells produced from \\multicolumn
 for tbl in d.tables:
+    if tbl._tbl is author_tbl: continue
     row = tbl.rows[0]; cells = row.cells; j = 0
     while j < len(cells):
         k = j
