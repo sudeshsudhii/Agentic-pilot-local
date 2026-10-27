@@ -1,0 +1,44 @@
+\documentclass[varwidth=3.5in,border=4pt]{standalone}
+\usepackage{amsmath,amssymb}
+\usepackage{times}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric,fit,backgrounds,calc}
+\usepackage{pgfplots}\pgfplotsset{compat=1.18}
+\usepackage{algpseudocode}
+\setlength{\columnwidth}{3.5in}\setlength{\textwidth}{3.5in}
+\newcommand{\status}[1]{\textsc{#1}}
+\begin{document}
+
+
+
+\footnotesize
+\textbf{Algorithm 1} Evidence-gated control loop (browser backend)\par\vspace{2pt}\hrule\vspace{2pt}
+\begin{algorithmic}[1]
+\Require goal $g$; budget of $K{=}15$ model calls
+\State $I \gets \Call{ParseIntent}{g}$; $P \gets \Call{Decompose}{g}$ if multi-step
+\If{$I$ is high-risk and not approved} \Return \textsc{WaitApproval} \EndIf
+\State \Call{Navigate}{$I.\mathit{site}$}; on failure go to line~\ref{alg:recover}
+\Loop
+  \State $o \gets \Call{Observe}{}$ \Comment{sanitized DOM, screenshot}
+  \If{$\beta(o)$} \Return \textsc{Blocked} \Comment{hand off to user} \label{alg:beta}
+  \EndIf
+  \State $a \gets \Call{Plan}{g, P, o, \textsc{Retrieve}(g)}$ \Comment{model call}
+  \State $\alpha \gets \Call{Execute}{a}$; save before/after evidence
+  \If{$\alpha = 0$}
+    \If{fewer than 3 retries} \textbf{continue} \EndIf
+    \State $\textit{st} \gets \Call{Recover}{\text{error}}$ \label{alg:recover}
+    \If{$\textit{st}$ is blocked} \Return \textsc{Blocked} \EndIf
+    \If{$\textit{st}$ is exhausted} \Return \textsc{Failed} \EndIf
+    \State \textbf{continue} \Comment{retry, vision, \dots}
+  \EndIf
+  \If{$a \neq \texttt{complete}$} mark step done; \textbf{if} steps remain \textbf{continue} \EndIf
+  \If{$a = \texttt{complete}$ or last step or text typed}
+    \State $(v, \text{obs}) \gets \Phi(g, s, P)$; save as evidence \label{alg:phi}
+    \If{$v$} store memory; \Return \textsc{Completed} \EndIf
+  \EndIf
+  \If{model calls $\geq K$} go to line~\ref{alg:recover} \Comment{budget failure enters recovery} \EndIf
+\EndLoop
+\end{algorithmic}
+
+
+\end{document}
