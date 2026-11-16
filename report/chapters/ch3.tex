@@ -82,10 +82,32 @@ Let $\mathcal{T}$ be a set of end states, $\mathcal{T}_c$ those reported complet
 \mathrm{FRR} = \frac{N_{\mathrm{FR}}}{\lvert\{\tau\in\mathcal{T}:\Phi^{\star}(\tau)=1\}\rvert}.
 \label{eq:fcr}
 \end{equation}
-Because a dispatch-only rule reports every state complete, I also report the share of unsatisfied states that the gate withholds. Counts carry Wilson 95\% intervals~\cite{wilson1927probable}; paired comparisons on the same states use the exact McNemar test~\cite{mcnemar1947note} on decision correctness.
+Because a dispatch-only rule reports every state complete, I also report the share of unsatisfied states that the gate withholds. Counts carry Wilson 95\% confidence intervals (CI)~\cite{wilson1927probable}; paired comparisons on the same states use the exact McNemar test~\cite{mcnemar1947note} on decision correctness.
 
 \subsection{Gate study design}
 A state is a goal, a URL, an HTML document served through Playwright request interception, the agent's answer and plan state where relevant, and an oracle label. Every state ends with a dispatched action, so a dispatch-only rule accepts all of them. The \emph{design} set (38 states in six categories) was used to find the gate's defects and design fixes. \emph{Held-out~1} (12 states) was written after the fixes and not used to change them. \emph{Held-out~2} (42 states, 22 unsatisfied) was written to a fixed procedure with varied user phrasings and committed (\texttt{b9d5088}, SHA-256 recorded) before the gate was run on it. Each state is judged by the predicate called directly and by the real verification node with database, browser-pool and evidence I/O stubbed. Latency is the median of 20 repetitions after a warm-up.
+
+\subsection{Methods and the question each one answers}
+Table~\ref{tab:methods} summarises the methods of analysis and the question each one answers.
+
+\begin{table}[h]
+\caption{Methods of analysis and the question each one answers}
+\label{tab:methods}
+\small\singlespacing
+\begin{tabularx}{\textwidth}{|p{3.6cm}|L|p{2.3cm}|}
+\hline\hrow \textbf{Method} & \textbf{Question it answers} & \textbf{Class}\\\hline
+Gate study on design and held-out states & Does $\Phi$ withhold premature completions, and how many good states does it reject? (G1) & \textsc{actual}\\\hline
+Wilson and Clopper--Pearson intervals & How precise is each rate, given the small sets? & \textsc{derived}\\\hline
+Exact McNemar test on paired decisions & Is $\Phi$ correct on more states than dispatch-only or $E$-only? & \textsc{derived}\\\hline
+Per-conjunct ablation & How much does each check contribute? (G2) & \textsc{actual}\\\hline
+Repeated latency measurement & What does a decision cost in time? & \textsc{actual}\\\hline
+Socket logging over 70 episodes & Does the agent's process contact any non-local host? (G3) & \textsc{actual}\\\hline
+Retrieval ranking metrics (P@3, R@3, MRR) & Does memory return relevant records first? & \textsc{actual}\\\hline
+Recovery classification of failure messages & Does recovery recognise each failure mode? & \textsc{actual}\\\hline
+Oracle validation on scripted trajectories & Can the end-to-end oracle be trusted? & \textsc{actual}\\\hline
+Seeded simulation with Monte Carlo and sweeps & What do the measured parts imply for whole tasks? (H1--H5) & \textsc{synthetic}\\\hline
+\end{tabularx}
+\end{table}
 
 \subsection{Simulation design}
 The simulation draws 100 scenarios (seed 202), each with a task category and an outcome class that sets whether the goal is met. Detection and false-rejection rates are derived from the held-out gate states, latencies are resampled from the component measurements, and planner behaviour is assumed: chiefly the probability $\pi=0.65$ that a point at which the code evaluates $\Phi$ is reached while the task is unfinished, swept from 0.3 to 0.95. Monte Carlo replications regenerate 1{,}000 scenario sets with rates drawn from their Beta posteriors. The first model (v1) was committed before its scenarios were generated; an audit found four places where it contradicted the code, and the reported model, v2, was written after the v1 results were known. It is therefore post hoc, and the corrections moved results in favour of $\Phi$.
@@ -178,7 +200,7 @@ I ran 70 agent episodes (10 development tasks under 7 configurations, six with m
 In addition, the model client refuses any endpoint whose host is not a loopback address or a \texttt{localhost} name, before connecting, unless the user sets \texttt{PILOT\_ALLOW\_REMOTE\_MODEL=true} (Listing~\ref{lst:locality}). Unit tests confirm that a remote model address is refused and that Chroma telemetry is off.
 
 \subsection{Memory and recovery}
-Memory retrieval was measured on 10 queries over 22 stored records (a synthetic corpus), 9 of which had a relevant record: precision at 3 was 0.52, the largest value attainable on this corpus; recall at 3 was 1.00; and the mean reciprocal rank was 0.93. In 3 of 10 queries, however, the top-ranked record was irrelevant or retrieval failed, because retrieval has no relevance threshold.
+Memory retrieval was measured on 10 queries over 22 stored records (a synthetic corpus), 9 of which had a relevant record: precision at 3 (P@3) was 0.52, the largest value attainable on this corpus; recall at 3 (R@3) was 1.00; and the mean reciprocal rank (MRR) was 0.93. In 3 of 10 queries, however, the top-ranked record was irrelevant or retrieval failed, because retrieval has no relevance threshold.
 
 The recovery engine classified 6 failure messages and assigned the strategy sequence shown in Table~\ref{tab:rec}. A missing confirmation, where the task ended without its goal being met, was classified as \emph{unknown} and given the generic sequence; the engine does not recognise it.
 
@@ -226,6 +248,40 @@ Two of the three false rejections by $\Phi$ in the simulation come from scenario
 \caption{Sensitivity of false completion and false rejection rates to the premature-claim rate $\pi$ (\textsc{synthetic}; 300 scenario sets per point)}
 \label{fig:sens}
 \end{figure}
+
+\subsection{The system in operation}
+Figs.~\ref{fig:demo} and~\ref{fig:obs} show the system running. They come from recordings committed to the repository from earlier builds than the evaluated commit, and they illustrate the system; they are not evidence for any result in this chapter.
+
+\begin{figure}[p]
+\centering
+{\small (a)}\par\includegraphics[width=0.66\textwidth]{fig/demo_a.png}\par\vspace{4pt}
+{\small (b)}\par\includegraphics[width=0.66\textwidth]{fig/demo_b.png}\par\vspace{4pt}
+{\small (c)}\par\includegraphics[width=0.66\textwidth]{fig/demo_c.png}
+\caption{Three frames of a recorded search task in the agent-controlled Chromium browser: the search page opens (a), the agent types the query ``Agentic AI'' (b), and the results page is shown (c). Recorded demonstration, earlier build (\texttt{docs/assets/demo.webp}, committed June 2026)}
+\label{fig:demo}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth]{fig/observatory.png}
+\caption{The read-only Agent Observatory on 127.0.0.1:3001 during a text-entry task, showing backend and event-stream status, the run identifier and task, and the local Ollama models in use (planner \texttt{qwen2.5:1.5b}, vision \texttt{qwen3-vl:2b}). Live capture, earlier build (\texttt{docs/images/observatory\_preview.png}, committed September 2026); the site address in the task text was replaced with an example domain before it was committed}
+\label{fig:obs}
+\end{figure}
+
+\subsection{SWOT analysis}
+Table~\ref{tab:swot} summarises the strengths, weaknesses, opportunities and threats of the case, drawn from the results above.
+
+\begin{table}[h]
+\caption{SWOT analysis of the case}
+\label{tab:swot}
+\small\singlespacing
+\begin{tabularx}{\textwidth}{|L|L|}
+\hline\hrow \textbf{Strengths} & \textbf{Weaknesses}\\\hline
+Correct on more held-out states than dispatch-only ($p=0.021$); 1 false rejection in 20; 27\,ms per decision with no model call; every decision stored with its evidence; loopback-only model endpoint by default; open-source code, data and scripts & Checks keyed to request wording (9 of 22 withheld on held-out states against 20 of 23 on design states); not significantly better than the error check alone ($p=0.070$); memory has no relevance threshold; recovery does not recognise a missing confirmation; constructed states labelled without a second annotator\\\hline
+\hrow \textbf{Opportunities} & \textbf{Threats}\\\hline
+Wider trigger vocabularies and typed answer checks; a model judge for requests no rule covers; running the released 40-task harness with local models; the same predicate form for desktop, file and process state; demand for agents that keep personal data on the device & Small local models may plan poorly, so task success may stay low even with an honest gate; prompt injection through page content; a remote endpoint enabled by the override; website changes that break the checks; claims read as task-level results when they are component-level\\\hline
+\end{tabularx}
+\end{table}
 
 \section{Validation of findings}
 

@@ -14,20 +14,23 @@
 \end{enumerate}
 
 \section{Alternatives considered}
-Table~\ref{tab:alt} compares four ways to decide when a task is complete.
+Table~\ref{tab:alt} compares four ways to decide when a task is complete against five decision criteria. Entries are measured values from Chapter~\ref{ch:analysis} where they exist; otherwise the table says what is not yet measured.
 
 \begin{table}[h]
-\caption{Alternatives for deciding task completion}
+\caption{Alternatives compared against the decision criteria}
 \label{tab:alt}
-\small\singlespacing
-\begin{tabularx}{\textwidth}{|p{3.1cm}|L|L|}
-\hline\hrow \textbf{Alternative} & \textbf{Strengths} & \textbf{Weaknesses}\\\hline
-A. Accept the model's claim (dispatch-only) & Simplest; no false rejections & Every premature claim is reported as success\\\hline
-B. Model self-check & Handles any phrasing & Intrinsic self-correction is unreliable~\cite{huang2024cannot}; costs a model call; $+14\%$ episode time in simulation\\\hline
-C. Rule-based gate $\Phi$ (current) & Fast, inspectable, no model call; measured error rates & Coverage tied to request wording\\\hline
-D. Rule gate plus model judge for unchecked requests & Keeps C's guarantees where rules fire; widens coverage & More complex; the judge's errors must be measured separately\\\hline
+\footnotesize\singlespacing
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.5cm}|L|L|L|L|}
+\hline\hrow \textbf{Criterion} & \textbf{A. Accept the claim (dispatch-only)} & \textbf{B. Model self-check} & \textbf{C. Rule gate $\Phi$ (current)} & \textbf{D. Rule gate + model judge}\\\hline
+Premature claims withheld (held-out 2) & 0 of 22 & Not measured & 9 of 22 & Not measured (proposed)\\\hline
+Good states rejected (held-out 2) & 0 of 20 & Not measured & 1 of 20 & Not measured (proposed)\\\hline
+Cost per decision & None & One model call; $+14\%$ mean episode time (\textsc{synthetic}) & 26.8\,ms median, no model call & C's cost plus a model call where no rule fires\\\hline
+Inspectability & Nothing to inspect & Model output only & Every decision stored with the values it used & As C where rules fire\\\hline
+Coverage of new phrasings & Not applicable & Any phrasing, but self-correction is unreliable~\cite{huang2024cannot} & Limited to trigger words & Wider than C\\\hline
 \end{tabularx}
 \end{table}
+
+Alternative A fails the first criterion outright. B has no measurement here and relies on the same kind of model whose claims it checks. C is the only option with measured error rates on frozen data. D may widen C's coverage, but its judge would need its own measured error rates first.
 
 \section{Recommended decision and its justification}
 
@@ -71,4 +74,18 @@ Remote endpoint set by mistake & Default refusal; the override must be set expli
 
 \section{Expected impact and how it would be measured}
 
-If adopted, the recommendations should reduce false success reports without a large rise in refusals. Impact would be measured with the released end-to-end harness (Section~\ref{sec:harness}): 40 tasks on five self-hosted sites with fictional content, at four difficulty tiers, under the full system, a no-check baseline and a self-verification baseline, three trials per task at temperature 0, scored by an oracle that reads only server-side records, the final URL and ground-truth facts. The success measures are task success rate, false completion rate and false rejection rate with intervals, and the median added time per decision. Wider adoption would also support data minimisation for users who automate tasks involving personal accounts.
+If adopted, the recommendations should reduce false success reports without a large rise in refusals. Impact would be measured with the released end-to-end harness (Section~\ref{sec:harness}): 40 tasks on five self-hosted sites with fictional content, at four difficulty tiers, under the full system, a no-check baseline and a self-verification baseline, three trials per task at temperature 0, scored by an oracle that reads only server-side records, the final URL and ground-truth facts. Table~\ref{tab:impact} lists the expected impact of each recommendation and how it would be measured. Wider adoption would also support data minimisation for users who automate tasks involving personal accounts.
+
+\begin{table}[h]
+\caption{Expected impact and its measures}
+\label{tab:impact}
+\small\singlespacing
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.4cm}|L|L|}
+\hline\hrow \textbf{Recommendation} & \textbf{Expected impact} & \textbf{Measure}\\\hline
+Widen the $X$ and $T$ checks & More premature claims withheld on new phrasings & Withheld share and false rejections, with Wilson intervals, on a new frozen held-out set\\\hline
+Relevance threshold for memory & Fewer irrelevant records in planning prompts & Share of queries with an irrelevant top record (now 3 of 10); P@3, R@3, MRR\\\hline
+Missing-confirmation class in recovery & Failures without a confirmation recognised and handled & Classification of the six failure messages; recovered share in the harness\\\hline
+Model judge only where no rule fires & Coverage of requests that no rule checks & The judge's own false completion and false rejection rates\\\hline
+Run the end-to-end harness & Task-level evidence for H1--H5 & TSR, FCR and FRR per configuration with intervals; median added time per decision\\\hline
+\end{tabularx}
+\end{table}
