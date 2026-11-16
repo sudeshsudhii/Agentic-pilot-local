@@ -1,0 +1,100 @@
+\clearpage
+\appendix
+\renewcommand{\thechapter}{\Alph{chapter}}
+\titleformat{\chapter}[display]{\normalfont\bfseries\Large\centering}{APPENDIX \thechapter}{8pt}{\MakeUppercase}
+
+\chapter{Code Listings}
+All listings are taken verbatim from the evaluated branch.
+
+\section{Loopback-only model endpoint (backend/security/locality.py)}
+\lstinputlisting[caption={Locality enforcement},label={lst:locality}]{../backend/security/locality.py}
+
+\section{Error, search-home and query checks of $\Phi$ (backend/verification/manager.py)}
+\lstinputlisting[caption={Conjuncts $E$, $H$ and $Q$ of the completion predicate},label={lst:phi},firstline=221,lastline=287,firstnumber=221]{../backend/verification/manager.py}
+
+\section{When the verification node evaluates $\Phi$ (backend/agent/nodes.py)}
+\lstinputlisting[caption={Trigger for task-level verification},label={lst:trigger},firstline=1436,lastline=1445,firstnumber=1436]{../backend/agent/nodes.py}
+
+\chapter{Configuration}
+Settings are read from environment variables with the prefix \texttt{PILOT\_} (\texttt{backend/config.py}). Table~\ref{tab:config} lists those relevant to this study, with their defaults.
+
+\begin{table}[h]
+\caption{Configuration relevant to the study (defaults from backend/config.py)}
+\label{tab:config}
+\footnotesize\singlespacing
+\begin{tabularx}{\textwidth}{|p{6.1cm}|p{2.9cm}|L|}
+\hline\hrow \textbf{Variable} & \textbf{Default} & \textbf{Purpose}\\\hline
+\texttt{PILOT\_OLLAMA\_BASE\_URL} & \texttt{127.0.0.1:11434} & Model server address\\\hline
+\texttt{PILOT\_ALLOW\_REMOTE\_MODEL} & false & Allow a non-loopback endpoint\\\hline
+\texttt{PILOT\_VERIFICATION\_MODE} & rule & \texttt{rule} ($\Phi$), \texttt{self} or \texttt{none}\\\hline
+\texttt{PILOT\_VERIFICATION\_DISABLED\_CHECKS} & empty & Conjuncts removed for ablation\\\hline
+\texttt{PILOT\_ENABLE\_RECOVERY / \_MEMORY} & true & Component switches\\\hline
+\texttt{PILOT\_RECOVERY\_FIXED\_STRATEGY} & unset & Pin one recovery strategy\\\hline
+\texttt{PILOT\_MAX\_RETRY\_COUNT} & 3 & Inline retries per task\\\hline
+\texttt{PILOT\_MAX\_TASK\_DURATION\_MINUTES} & 5 & Wall-clock limit\\\hline
+\texttt{PILOT\_LLM\_TEMPERATURE / \_SEED} & unset & Sampling for reproducible runs\\\hline
+\texttt{PILOT\_MODEL\_REASONING} & \texttt{qwen2.5:7b} & Reasoning model\\\hline
+\texttt{PILOT\_OLLAMA\_MODEL} & \texttt{qwen2.5:1.5b} & Default and fallback model\\\hline
+\texttt{PILOT\_MODEL\_LIGHTWEIGHT} & \texttt{deepseek-r1:1.5b} & Light tasks\\\hline
+\texttt{PILOT\_SERVER\_PORT} & 8765 & Loopback API port\\\hline
+\end{tabularx}
+\end{table}
+
+\chapter{Data Samples}
+Table~\ref{tab:samples} shows nine of the 42 held-out-2 states, every fifth row of \texttt{artifacts/results/verification\_gate\_cases.csv}.
+
+\begin{table}[h]
+\caption{Sample held-out-2 gate states and decisions (\textsc{actual})}
+\label{tab:samples}
+\scriptsize\singlespacing
+\begin{tabularx}{\textwidth}{|p{0.6cm}|L|p{3.6cm}|p{0.6cm}|p{1.3cm}|}
+\hline\hrow \textbf{Case} & \textbf{Goal} & \textbf{Oracle rationale} & \textbf{$\Phi^{\star}$} & \textbf{Gate}\\\hline
+G1 & Look up `solar eclipse 2026' on Google & results for the requested query & 1 & completed\\\hline
+G6 & Search Google for `electric cars' and show me the results & query typed but not submitted & 0 & rejected\\\hline
+V5 & Take me to the contact page of example.org & contact page is open & 1 & completed\\\hline
+B2 & Open https://en.wikipedia.org/wiki/Turing\_test & article about the topic & 1 & completed\\\hline
+E1 & Go to notes.example.com and type `Buy milk' into the note & text present & 1 & completed\\\hline
+E6 & Go to forms.example.com and type `Priya Raman' as the name & name filled & 1 & completed\\\hline
+Xe & Find the capital of Australia on Wikipedia & wrong city & 0 & completed\\\hline
+Xj & Extract the population of Tokyo from Wikipedia & answer lacks the population & 0 & completed\\\hline
+M5 & Go to shop.example.com, open Laptops, then add the first laptop to the cart & add-to-cart dispatched but nothing added & 0 & completed\\\hline
+\end{tabularx}
+\end{table}
+
+Xe, Xj and M5 are false completions of the kind discussed in Section~3.3.1: the extraction check does not fire on ``find'' and accepts any answer that repeats a goal term, and no check reads the cart.
+
+\chapter{Run Records and Component Evidence}
+
+\begin{table}[h]
+\caption{Run records behind the results}
+\label{tab:runs}
+\scriptsize\singlespacing
+\begin{tabularx}{\textwidth}{|p{2.6cm}|L|p{3.6cm}|p{1.6cm}|}
+\hline\hrow \textbf{Result} & \textbf{File(s)} & \textbf{Command} & \textbf{Date / commit}\\\hline
+Gate study, all sets & \texttt{verification\_gate\_cases.csv}, \texttt{gate\_stats.csv} & \texttt{verification\_gate\_study.py}; \texttt{gate\_stats.py} & 2026-10-04\\\hline
+Held-out 2 freeze & \texttt{gate\_heldout2\_freeze.txt} & -- & \texttt{b9d5088}\\\hline
+Gate before fixes & \texttt{verification\_gate\_cases\_before\_fixes.csv} & same, on old code & \texttt{08653e2}\\\hline
+Ablation & \texttt{verification\_gate\_ablation.csv} & \texttt{verification\_gate\_study.py --ablation} & 2026-10-04\\\hline
+Component latency, recovery, memory & \texttt{inputs/m2\_latency.json}, \texttt{m3\_recovery.csv}, \texttt{m4\_memory.csv} & \texttt{measure\_inputs.py} & 2026-10-23\\\hline
+Egress & \texttt{e2e\_egress\_rerun/} & \texttt{run\_egress.py}; \texttt{summarize\_egress.py} & 2026-10-24, \texttt{7133301}\\\hline
+Oracle validation & \texttt{e2e\_oracle\_validation.csv} & \texttt{python -m benchmarks.e2e.validate\_oracle} & --\\\hline
+Tests & \texttt{pytest\_revision.txt} & \texttt{python -m pytest} & 2026-10-04\\\hline
+Simulation & \texttt{out/heldout\_v2/results.json} & \texttt{simulate\_v2}; \texttt{make\_tables.py} & seeds 101, 202\\\hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[h]
+\caption{Implementation status of the components}
+\label{tab:status}
+\small\singlespacing
+\begin{tabularx}{\textwidth}{|L|p{6.2cm}|}
+\hline\hrow \textbf{Component} & \textbf{Status}\\\hline
+Completion predicate $\Phi$, bot-check halt & Implemented, evaluated (\textsc{actual})\\\hline
+Browser control, DOM extraction & Implemented, evaluated (latency)\\\hline
+Loopback endpoint enforcement & Implemented, tested (egress, unit tests)\\\hline
+End-to-end oracle & Implemented, validated on 114 trajectories\\\hline
+Recovery engine, memory & Implemented; measured and simulated\\\hline
+Planner in the full loop, vision fallback, self-verification mode & Implemented, unit-tested, not separately evaluated\\\hline
+Desktop backend, action gate, enhanced validation, guided recovery, memory filter & \textsc{proposed}\\\hline
+\end{tabularx}
+\end{table}

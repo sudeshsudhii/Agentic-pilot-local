@@ -1,0 +1,99 @@
+\documentclass[12pt,a4paper,oneside]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}
+\usepackage{microtype}
+\usepackage[a4paper,left=1.25in,right=1in,top=1in,bottom=1in]{geometry}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{array,tabularx,longtable,multirow}
+\usepackage[table]{xcolor}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric,fit,calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+
+\onehalfspacing
+\setlength{\emergencystretch}{3em}
+\setlength{\parindent}{0.5in}
+\setlength{\parskip}{4pt}
+
+% Captions: "Fig 1.1:" and "Table 1.1:" in bold
+\DeclareCaptionLabelFormat{figlab}{Fig #2}
+\captionsetup[figure]{labelformat=figlab,labelsep=colon,labelfont=bf,font=small,justification=centering}
+\captionsetup[table]{labelsep=colon,labelfont=bf,font=small,justification=centering,skip=4pt}
+
+% Chapter heading: CHAPTER n, title in capitals, centred
+\titleformat{\chapter}[display]{\normalfont\bfseries\Large\centering}{CHAPTER \thechapter}{8pt}{\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{-20pt}{20pt}
+\titleformat{\section}{\normalfont\bfseries\large}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalfont\bfseries\normalsize}{\thesubsection}{0.6em}{\MakeUppercase}
+
+% Table of contents and lists
+\renewcommand{\contentsname}{\centering TABLE OF CONTENTS}
+\renewcommand{\listfigurename}{\centering LIST OF FIGURES}
+\renewcommand{\listtablename}{\centering LIST OF TABLES}
+\renewcommand{\cfttoctitlefont}{\hfill\Large\bfseries}
+\renewcommand{\cftaftertoctitle}{\hfill}
+\renewcommand{\cftloftitlefont}{\hfill\Large\bfseries}
+\renewcommand{\cftafterloftitle}{\hfill}
+\renewcommand{\cftlottitlefont}{\hfill\Large\bfseries}
+\renewcommand{\cftafterlottitle}{\hfill}
+\renewcommand{\cftchapfont}{\bfseries}
+\renewcommand{\cftchappagefont}{\bfseries}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftchappresnum}{}
+\setlength{\cftbeforechapskip}{6pt}
+\renewcommand{\cftfigpresnum}{}
+\renewcommand{\cfttabpresnum}{}
+\setlength{\cftfignumwidth}{2.4em}
+\setlength{\cfttabnumwidth}{2.4em}
+\renewcommand{\thefigure}{\thechapter.\arabic{figure}}
+\renewcommand{\thetable}{\thechapter.\arabic{table}}
+
+% Tables: grey header row
+\definecolor{hdr}{gray}{0.85}
+\newcommand{\hrow}{\rowcolor{hdr}}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\renewcommand{\arraystretch}{1.2}
+
+% Code listings
+\lstset{basicstyle=\ttfamily\scriptsize,breaklines=true,frame=single,columns=fullflexible,
+  keywordstyle=\bfseries,showstringspaces=false,numbers=left,numberstyle=\tiny,xleftmargin=1.5em,
+  language=Python,upquote=true}
+\renewcommand{\lstlistingname}{Listing}
+
+\newcommand{\cls}[1]{\textsc{#1}}
+
+\begin{document}
+
+\input{chapters/front}
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\input{chapters/ch1}
+\input{chapters/ch2}
+\input{chapters/ch3}
+\input{chapters/ch4}
+\input{chapters/ch5}
+\input{chapters/ch6}
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{REFERENCES}
+\renewcommand{\bibname}{\centering REFERENCES}
+{\singlespacing\small
+\bibliographystyle{IEEEtran}
+\bibliography{../paper/references}}
+
+\input{chapters/appendix}
+
+\end{document}

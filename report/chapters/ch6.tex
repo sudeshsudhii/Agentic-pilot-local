@@ -1,0 +1,26 @@
+\chapter{Conclusion and Future Scope}
+\label{ch:concl}
+
+\section{Summary of what was done and found}
+This case study examined Agentic Pilot, a local browser agent that may report a task complete only when a rule over the observed page holds and that keeps its model traffic on the user's machine. The evidence came from the project's own records. On 42 held-out constructed states frozen before testing, the gate withheld 9 of 22 unsatisfied states and rejected 1 of 20 satisfied ones, which is significantly better than accepting every dispatched action ($p=0.021$) but not significantly better than an error-check-only detector ($p=0.070$). A decision takes a median of 27\,ms with no model call. In 70 episodes the agent's Python processes connected only to 127.0.0.1. Memory retrieval lacks a relevance threshold, and recovery misses absent confirmations. A seeded, post-hoc simulation shows that the gate's benefit to whole tasks depends on how often the planner claims completion too early.
+
+\section{Lessons learnt}
+\begin{itemize}
+\item A successful action is not a finished task; making that distinction explicit in the control loop is cheap.
+\item Rules written on known cases must be tested on cases written afterwards; the gap between 20 of 23 and 9 of 22 is the most useful number in this study.
+\item Storing the evidence behind each decision finds bugs that tests miss.
+\item Labelling every number with its evidence class keeps measured and simulated results apart, in writing as well as in analysis.
+\end{itemize}
+
+\section{Limitations of the study}
+The states are constructed and were labelled by the AI assistant that designed the fixes, without a second annotator. The sets are small. The egress test used a stand-in model server and covered only the Python processes. The simulation is post hoc and depends on assumed planner behaviour. Task-level success of the full agent with a language-model planner is outside the scope of this study.
+
+\section{Future scope}
+\label{sec:harness}
+\begin{itemize}
+\item \textbf{End-to-end evaluation.} The released harness runs 40 tasks (10 development, 30 test) on five self-hosted sites under the full system, two baselines and one-factor ablations, with a validated oracle. Running it with local models would measure H1--H5 directly.
+\item \textbf{Broader gate coverage.} Typed answer checks for extraction, more text-entry phrasings, and a measured model judge for requests that no rule covers.
+\item \textbf{Memory and recovery.} A relevance threshold for retrieval and a missing-confirmation class with its own strategy.
+\item \textbf{Desktop backend.} The same predicate form applies to desktop, file and process state, whose postconditions are typed and exact; the design exists but is not implemented.
+\item \textbf{Wider locality testing.} Instrument DNS, UDP, the browser and the model server.
+\end{itemize}

@@ -1,0 +1,92 @@
+\chapter{Information Sources and Literature Review}
+\label{ch:lit}
+
+\section{Sources used}
+
+The case uses two kinds of source, listed in Table~\ref{tab:sources}: primary records that the project produced while building and testing the system, and secondary sources such as papers, documentation and law. No interviews, surveys or field observations took place, and no human participants were involved. The primary evidence is system evidence: run records, test logs, configuration, source code and saved outputs. Every number can be recomputed from files in the repository.
+
+\begin{table}[h]
+\caption{Sources used in the case study}
+\label{tab:sources}
+\small\singlespacing
+\begin{tabularx}{\textwidth}{|p{1.7cm}|L|L|}
+\hline\hrow \textbf{Type} & \textbf{Source} & \textbf{What it contributed}\\\hline
+Primary & Gate study records (\texttt{verification\_gate\_cases.csv}, 92 constructed states in three sets) & Decisions, oracle labels and latency of the completion gate\\\hline
+Primary & Ablation records (\texttt{verification\_gate\_ablation.csv}) & Effect of removing each conjunct\\\hline
+Primary & Component measurements (\texttt{m2\_latency.json}, \texttt{m3\_recovery.csv}, \texttt{m4\_memory.csv}) & Browser latencies, recovery classification, retrieval ranks\\\hline
+Primary & Egress logs (\texttt{e2e\_egress\_rerun/}, 70 episodes) & Every socket connection of the agent's Python processes\\\hline
+Primary & Oracle validation (\texttt{e2e\_oracle\_validation.csv}, 114 scripted trajectories) & Agreement of the end-to-end oracle with intended verdicts\\\hline
+Primary & Test logs (\texttt{pytest\_revision.txt}) & 144 of 147 unit and integration tests passing\\\hline
+Primary & Simulation code and outputs (\texttt{benchmarks/simulation}, seeds 101 and 202) & \textsc{synthetic} estimates for H1--H5 under stated assumptions\\\hline
+Primary & Source code and configuration (\texttt{backend/}, commit \texttt{bf0a8a5}) & Implementation audit; code listings in Appendix~A\\\hline
+Secondary & Conference and journal papers on agents, benchmarks, memory, security and statistics & Related work and methods (References)\\\hline
+Secondary & Legal and policy text (DPDP Act, 2023) & Legal viewpoint on personal data\\\hline
+\end{tabularx}
+\end{table}
+
+\section{Review of related work and similar cases}
+
+\subsection{Reasoning-and-acting agents}
+ReAct interleaves reasoning with tool actions~\cite{yao2023react}, building on chain-of-thought prompting~\cite{wei2022chain}. Toolformer learns when to call an API~\cite{schick2023toolformer}. Reflexion and RCI let the model critique and retry its own attempts~\cite{shinn2023reflexion,kim2023rci}, and Voyager accumulates skills that a model checks~\cite{wang2024voyager}. In all of these a model decides that the task is finished. Huang et al.\ found that intrinsic self-correction, without outside feedback, does not reliably improve reasoning~\cite{huang2024cannot}. This finding motivates a completion check that does not rely on the same model.
+
+\subsection{Web and computer-use agents and benchmarks}
+Mind2Web pairs a ranker over DOM elements with a language model~\cite{deng2023mind2web}. WebVoyager drives live websites from screenshots~\cite{he2024webvoyager}. SeeAct finds that grounding actions on the page is the main bottleneck~\cite{zheng2024seeact}, which Set-of-Mark prompting addresses~\cite{yang2023som}. WebArena, VisualWebArena and WorkArena evaluate agents on self-hosted or remote applications with functional checks~\cite{zhou2024webarena,koh2024visualwebarena,drouin2024workarena}. OSWorld and Windows Agent Arena do so in real operating systems~\cite{xie2024osworld,bonatti2024waa}. UFO, Agent S and AppAgent control desktop and mobile applications~\cite{zhang2025ufo,agashe2025agents,zhang2025appagent}, and CogAgent, SeeClick, UI-TARS and OmniParser ground actions in screenshots~\cite{hong2024cogagent,cheng2024seeclick,qin2025uitars,lu2024omniparser}. These works say little about when the agent itself may conclude that a task is done.
+
+\subsection{Completion checking}
+Benchmark checkers run after the episode has ended. WebVoyager evaluates trajectories with a multimodal judge~\cite{he2024webvoyager}. Pan et al.\ use model-based evaluators to judge and refine agents~\cite{pan2024autonomous}, and Sumyk and Kosovan evaluate a vision-language completion judge on macOS applications~\cite{sumyk2025done}. The gate in Agentic Pilot applies the older idea of execution monitoring from planning and robotics~\cite{fikes1972planex,pettersson2005execution} to an LLM agent's completion claims: a rule over the observed state, \emph{inside} the loop, whose inputs are recorded and whose errors are measured.
+
+\subsection{Memory, security and local inference}
+Retrieval-augmented generation~\cite{lewis2020rag,reimers2019sbert}, Generative Agents and MemGPT~\cite{park2023generative,packer2023memgpt} manage memory for language models and agents. Indirect prompt injection hides instructions in content that the agent reads~\cite{greshake2023indirect}; systematic evaluations find current defences insufficient~\cite{liu2024formalizing}. InjecAgent, AgentDojo, ToolEmu and OS-Harm measure unsafe agent behaviour~\cite{zhan2024injecagent,debenedetti2024agentdojo,ruan2024toolemu,kuntz2025osharm}, and CaMeL separates trusted control flow from untrusted data~\cite{debenedetti2025camel}. Open-weight models such as Qwen2.5 and Qwen2-VL~\cite{yang2024qwen25,wang2024qwen2vl} are released in sizes that, with 4-bit quantisation~\cite{lin2024awq}, run on consumer hardware. Surveys list trustworthiness among the open problems of LLM agents~\cite{wang2024survey,xi2025rise}.
+
+Table~\ref{tab:related} compares representative systems, using only what each paper reports.
+
+\begin{table}[h]
+\caption{Comparison of related work with the case, from what each paper reports}
+\label{tab:related}
+\scriptsize\singlespacing
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\textwidth}{|L|l|l|l|l|l|l|l|}
+\hline\hrow \textbf{System} & \textbf{Env.} & \textbf{Exec.} & \textbf{Completion decided by} & \textbf{Evid.} & \textbf{Mem.} & \textbf{Deploy.} & \textbf{Eval.}\\\hline
+ReAct~\cite{yao2023react} & Ws & A & model & N & N & H & E2E\\\hline
+Reflexion~\cite{shinn2023reflexion} & Ws & A & model$^{a}$ & N & Y & H & E2E\\\hline
+WebArena~\cite{zhou2024webarena} & Wr & B & benchmark & n.r. & N & H & E2E\\\hline
+Mind2Web~\cite{deng2023mind2web} & Wr & B & n/a & P & N & L & Off\\\hline
+WebVoyager~\cite{he2024webvoyager} & W & A & model; judge$^{b}$ & Y & N & H & E2E\\\hline
+SeeAct~\cite{zheng2024seeact} & W, Wr & A & model & n.r. & N & P & E2E, Off\\\hline
+OSWorld~\cite{xie2024osworld} & D & B & benchmark & n.r. & N & L & E2E\\\hline
+UFO~\cite{zhang2025ufo} & D & A & model & n.r. & P & H & E2E\\\hline
+AppAgent~\cite{zhang2025appagent} & Mo & A & model & n.r. & Y & H & E2E\\\hline
+CogAgent~\cite{hong2024cogagent} & Wr, Mo & M & n/a & N & N & L & Off\\\hline
+MemGPT~\cite{packer2023memgpt} & Ws & A & n/a & N & Y & H & E2E$^{e}$\\\hline
+AgentDojo~\cite{debenedetti2024agentdojo} & Ws & B & benchmark & n.r. & N & L & E2E\\\hline
+\textbf{Agentic Pilot (this case)} & Wr$^{c}$ & A & in-loop rule & Y & P$^{d}$ & L & C+S\\\hline
+\end{tabularx}
+
+\vspace{3pt}
+\raggedright
+Env.: W live websites, Wr self-hosted or cached pages, Ws simulated web, tool or text environment, D desktop OS, Mo mobile. Exec.: A agent, B benchmark, M model. Evid.: per-step state artefacts. Mem.: memory across steps or episodes. Deploy.: L open-weight models, H hosted only, P partly. Eval.: E2E end-to-end tasks, Off offline step prediction, C+S component tests and simulation. Y yes, P partial, N no, n.r.\ not reported.
+$^{a}$An evaluator gives feedback between trials. $^{b}$Used for evaluation. $^{c}$Evaluated on constructed states and self-hosted sites; the backend targets live websites. $^{d}$Implemented; retrieval measured on 10 queries over a synthetic corpus. $^{e}$Document QA and conversation tasks.
+\end{table}
+
+\section{Gaps identified and how this case addresses them}
+
+Table~\ref{tab:gaps} maps the gaps found in the literature to the response in this case.
+
+\begin{table}[h]
+\caption{Gaps in the literature and the case's response}
+\label{tab:gaps}
+\small\singlespacing
+\begin{tabularx}{\textwidth}{|p{0.7cm}|L|L|}
+\hline\hrow \textbf{Gap} & \textbf{What is missing} & \textbf{How this case responds}\\\hline
+G1 & Agents' own completion decisions are model-based; checks over observed state inside the loop are rarely measured on held-out data & A rule-based gate $\Phi$ in the verification node, evaluated on 92 constructed states including a set frozen before testing\\\hline
+G2 & The value of each kind of evidence is unknown & Per-conjunct ablation of $\Phi$ on design and held-out states\\\hline
+G3 & ``Local'' agents rarely test whether data leaves the machine & Loopback-only endpoint enforcement and a logged egress test over 70 episodes\\\hline
+-- & Memory and recovery are reported without their failure modes & Retrieval ranks and recovery classification measured on the real components\\\hline
+\end{tabularx}
+\end{table}
+
+\section{Credibility and currency of the sources}
+
+The secondary sources are peer-reviewed conference and journal papers from 2019 to 2026 at venues such as NeurIPS, ICLR, ICML, ACL, EMNLP, CVPR, IEEE S\&P and USENIX Security, together with the classic statistical papers on which the analysis relies~\cite{wilson1927probable,clopper1934use,mcnemar1947note,efron1979bootstrap}. Preprints are used only for model reports and tools (Qwen2.5, Qwen2-VL, MemGPT, OmniParser, UI-TARS, CaMeL, Set-of-Mark), where no peer-reviewed version exists. DOIs and venues were checked against the publishers' records.
+
+The primary sources are credible in a narrower sense. They are complete and reproducible: an independent recomputation of about 120 printed quantities from the raw files, with code that imported nothing from the project's analysis scripts, found no numerical mismatch, and reruns of the simulation and table generators in fresh clones gave byte-identical outputs. Their weakness is who wrote them: the constructed states and their labels were written by the same AI assistant that designed the gate fixes, and no second person has relabelled them. Chapter~\ref{ch:analysis} returns to this.

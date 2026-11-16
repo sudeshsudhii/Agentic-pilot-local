@@ -1,0 +1,74 @@
+\chapter{Insights, Decisions and Recommendations}
+\label{ch:insights}
+
+\section{Insights drawn from the analysis}
+
+\begin{enumerate}
+\item \textbf{Separating dispatch from completion pays off at low cost.} A rule over the observed page withheld 41\% of premature completions on held-out states, with one false rejection in 20 and a median decision time of 27\,ms with no model call.
+\item \textbf{Coverage, not strength, limits the gate.} Each check works when it fires, but checks keyed to request wording fire rarely on new phrasings; extraction requests are the weakest category.
+\item \textbf{The error check carries much of the measured benefit.} Against an $E$-only detector, the extra checks were correct on 7 more held-out states and wrong on 1 ($p=0.070$): promising, not yet established.
+\item \textbf{Stored evidence exposed real defects.} Recording what each decision used revealed fixed extraction text, a node that trusted planner reasoning, an over-eager bot-check rule and inert features, all now fixed.
+\item \textbf{Locality can be enforced and tested.} A loopback-only endpoint check and socket logging turned ``local'' from a claim into a tested property, within the stated scope.
+\item \textbf{Memory and recovery need their own guards.} Retrieval without a relevance threshold returned irrelevant top records in 3 of 10 queries, and recovery does not recognise a missing confirmation.
+\item \textbf{The agent-level benefit depends on the planner.} In simulation, how much the gate helps depends on how often the planner claims completion too early, which has not yet been measured.
+\end{enumerate}
+
+\section{Alternatives considered}
+Table~\ref{tab:alt} compares four ways to decide when a task is complete.
+
+\begin{table}[h]
+\caption{Alternatives for deciding task completion}
+\label{tab:alt}
+\small\singlespacing
+\begin{tabularx}{\textwidth}{|p{3.1cm}|L|L|}
+\hline\hrow \textbf{Alternative} & \textbf{Strengths} & \textbf{Weaknesses}\\\hline
+A. Accept the model's claim (dispatch-only) & Simplest; no false rejections & Every premature claim is reported as success\\\hline
+B. Model self-check & Handles any phrasing & Intrinsic self-correction is unreliable~\cite{huang2024cannot}; costs a model call; $+14\%$ episode time in simulation\\\hline
+C. Rule-based gate $\Phi$ (current) & Fast, inspectable, no model call; measured error rates & Coverage tied to request wording\\\hline
+D. Rule gate plus model judge for unchecked requests & Keeps C's guarantees where rules fire; widens coverage & More complex; the judge's errors must be measured separately\\\hline
+\end{tabularx}
+\end{table}
+
+\section{Recommended decision and its justification}
+
+I recommend keeping the rule-based gate (alternative C) as the fail-closed authority on completion, and improving it in four ways:
+\begin{enumerate}
+\item widen the trigger vocabulary of the extraction check $X$ and the text-entry check $T$, and require answers to contain a value of the requested type rather than any goal term;
+\item add a relevance threshold to memory retrieval, so that irrelevant records are not inserted into planning prompts;
+\item add a missing-confirmation failure class to the recovery engine, with a strategy that re-reads the page before re-planning; and
+\item consider alternative D only for requests on which no rule fires, with its own measured error rates.
+\end{enumerate}
+The justification is the evidence: the gate is correct on significantly more held-out states than accepting every claim, costs milliseconds, and its failures are specific enough to fix. A model self-check costs more and has no comparable measurement here.
+
+\section{Implementation plan, risks and mitigation}
+
+\begin{table}[h]
+\caption{Implementation plan}
+\label{tab:plan}
+\small\singlespacing
+\begin{tabularx}{\textwidth}{|p{1.6cm}|L|L|}
+\hline\hrow \textbf{Phase} & \textbf{Work} & \textbf{Exit criterion}\\\hline
+1 & Widen $X$ and $T$; write a new held-out set to a fixed procedure and freeze it before testing & Withheld share and false rejections reported with intervals on the new set\\\hline
+2 & Relevance threshold for memory; missing-confirmation class for recovery & Retrieval and classification re-measured on the existing inputs\\\hline
+3 & Run the released end-to-end harness with local models & Task success, false completions and false rejections per configuration\\\hline
+4 & Independent relabelling of gate states by a second annotator & Agreement statistic (Cohen's $\kappa$~\cite{cohen1960coefficient}) reported\\\hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[h]
+\caption{Main risks and their mitigation}
+\label{tab:risk}
+\small\singlespacing
+\begin{tabularx}{\textwidth}{|p{4.2cm}|L|}
+\hline\hrow \textbf{Risk} & \textbf{Mitigation}\\\hline
+Wider triggers raise false rejections & Report false rejections beside every gain; keep a frozen held-out set\\\hline
+Overfitting rules to test states & Design and held-out splits; freeze before running\\\hline
+Small local models plan poorly & Report task success honestly; the gate still prevents false success reports\\\hline
+Prompt injection through page text & Keep sanitisation; add injection tasks to the harness\\\hline
+Remote endpoint set by mistake & Default refusal; the override must be set explicitly\\\hline
+\end{tabularx}
+\end{table}
+
+\section{Expected impact and how it would be measured}
+
+If adopted, the recommendations should reduce false success reports without a large rise in refusals. Impact would be measured with the released end-to-end harness (Section~\ref{sec:harness}): 40 tasks on five self-hosted sites with fictional content, at four difficulty tiers, under the full system, a no-check baseline and a self-verification baseline, three trials per task at temperature 0, scored by an oracle that reads only server-side records, the final URL and ground-truth facts. The success measures are task success rate, false completion rate and false rejection rate with intervals, and the median added time per decision. Wider adoption would also support data minimisation for users who automate tasks involving personal accounts.
