@@ -397,7 +397,7 @@ bullets(s, [
     ("", "K. Greshake et al., “Not what you've signed up for: Compromising real-world LLM-integrated applications with indirect prompt injection,” ACM AISec, 2023."),
     ("", "E. B. Wilson, 1927; Q. McNemar, 1947 (interval and paired test)."),
     ("", "Code and data: github.com/sudeshsudhii/Agentic-pilot-local (branch ccr-4b8200f0-5i3k5m). Full list of references in the report."),
-    ("", "With thanks to my guide, Dr. Kanchana M, and the Department of Computing Technologies, SRM IST. AI assistance (Claude) is disclosed in the report."),
+    ("", "With thanks to my guide, Dr. Kanchana M, and the Department of Computing Technologies, SRM IST."),
 ], size=14, gap=6)
 
 # 23. Thank you --------------------------------------------------------------------------------

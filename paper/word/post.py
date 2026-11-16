@@ -144,5 +144,9 @@ for p in d.paragraphs:
         for r in p.runs: r.font.size = Pt(8)
 d.core_properties.author = 'Sudesh P; Dr. Kanchana M'
 d.core_properties.title = 'Agentic Pilot: An Evidence-Driven Local Autonomous AI Agent Framework for Privacy-Preserving Intelligent Task Automation'
+# drop local build paths that pandoc stores as image descriptions
+for el in d.element.body.iter():
+    if el.tag.endswith('}cNvPr') and el.get('descr'):
+        el.set('descr', '')
 d.save(sys.argv[2])
 print('saved')
