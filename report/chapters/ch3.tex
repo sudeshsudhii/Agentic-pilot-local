@@ -195,6 +195,7 @@ Predicate $\Phi$ & 5.2 & 6.9\\\hline
 \end{table}
 
 \subsection{Locality (G3)}
+\label{sec:locality}
 I ran 70 agent episodes (10 development tasks under 7 configurations, six with memory) through the real control loop and Chromium against local sites, with a scripted stand-in for the Ollama API on 127.0.0.1. Every \texttt{socket.connect} and \texttt{connect\_ex} call in the harness's eight Python processes was logged. All 555 connection attempts went to the stand-in on 127.0.0.1, and every page request that Playwright reported named host 127.0.0.1. A rerun on the clean commit \texttt{7133301} (agent code identical to \texttt{bf0a8a5}) gave the same result. Memory retrieval returned records in 54 of the 60 memory-enabled episodes. The stand-in performs no inference, and UDP, DNS lookups, the Playwright driver, Chromium and the model server were not instrumented; the result covers the agent's Python processes.
 
 In addition, the model client refuses any endpoint whose host is not a loopback address or a \texttt{localhost} name, before connecting, unless the user sets \texttt{PILOT\_ALLOW\_REMOTE\_MODEL=true} (Listing~\ref{lst:locality}). Unit tests confirm that a remote model address is refused and that Chroma telemetry is off.
@@ -266,6 +267,75 @@ Figs.~\ref{fig:demo} and~\ref{fig:obs} show the system running. They come from r
 \includegraphics[width=0.85\textwidth]{fig/observatory.png}
 \caption{The read-only Agent Observatory on 127.0.0.1:3001 during a text-entry task, showing backend and event-stream status, the run identifier and task, and the local Ollama models in use (planner \texttt{qwen2.5:1.5b}, vision \texttt{qwen3-vl:2b}). Live capture, earlier build (\texttt{docs/images/observatory\_preview.png}, committed September 2026); the site address in the task text was replaced with an example domain before it was committed}
 \label{fig:obs}
+\end{figure}
+
+\subsection{Prompt-to-CAD demonstration}
+\label{sec:cad}
+Figs.~\ref{fig:cad1} to~\ref{fig:cad9} show a nine-step capture of the agent's workbench turning one written request into a CAD model. The screenshots were taken on 17 November 2026 and committed to the \texttt{main} branch of the repository the same day (commit \texttt{d362430}, \texttt{docs/images/prompt-to-cad/}).
+
+\textbf{What the screenshots are, and are not.} They illustrate the system and its workbench; they are not evidence for any result in this report. The \texttt{main} branch is later than the evaluated commit \texttt{bf0a8a5}: it adds, among other work, a desktop automation subsystem, a provider setting whose default is a hosted Google Gemini model, and hybrid model routing. None of this was evaluated here. The evaluated agent is browser-only and its model client refuses non-loopback endpoints by default (Section~\ref{sec:harness} lists the desktop backend as future scope). The screenshots do not show which model or provider produced the plan, so this run is not an example of the loopback-only property tested in Section~\ref{sec:locality}. The tooth-pocket counts and measurements printed in the figures are read from the screens; they were not checked against the drawing or the request, and the demonstration has no oracle or false-completion measurement.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{fig/cad/01-workbench-idle.png}
+\caption{Step 1. The Pilot workbench in the browser at 127.0.0.1:1420 before any task: the side menu (Workbench, History, Plugins, Settings), the Run Task box and the Execution panel, which reads ``Idle'' and ``No task is running.''}
+\label{fig:cad1}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{fig/cad/02-sprocket-prompt.png}
+\caption{Step 2. The request typed into the Run Task box: ``Design a chain sprocket: a 70 mm diameter, 8 mm thick disc with a 20 mm central bore and sixteen 5 mm diameter semicircular tooth pockets cut evenly around the \ldots'' (the box shows the first lines of the text). The Execution panel is still idle.}
+\label{fig:cad2}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{fig/cad/03-reasoning.png}
+\caption{Step 3. After Run is pressed, the Execution panel shows ``Reasoning \ldots''. The Windows screenshot notice at the lower right is part of the capture.}
+\label{fig:cad3}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{fig/cad/04-reasoning-stage.png}
+\caption{Step 4. The reasoning stage of the same task: the Execution panel still shows ``Reasoning \ldots''.}
+\label{fig:cad4}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{fig/cad/05-building-tooth-pockets.png}
+\caption{Step 5. The build stage: the Execution panel shows ``Building \ldots'' with the progress note ``7/12 \textperiodcentered{} Tooth pocket 8''.}
+\label{fig:cad5}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{fig/cad/06-freecad-partial-build.png}
+\caption{Step 6. FreeCAD 1.1.4 with the document \texttt{PilotDesign} partly built: a disc with a bore and the first tooth pockets cut at its edge, and the model tree ending at ``Tooth pocket 4''.}
+\label{fig:cad6}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{fig/cad/07-model-open-in-freecad.png}
+\caption{Step 7. Back in the Pilot workbench, the result panel reads ``The model is open in FreeCAD.'' and offers a ``Load from FreeCAD'' button.}
+\label{fig:cad7}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{fig/cad/08-results-drawings-and-metrics.png}
+\caption{Step 8. The results panel: top, front and isometric line drawings of the part, with the reported bounding box ($69.82 \times 69.82 \times 8$ mm), volume ($27{,}036.75$ mm$^3$) and build time (45.7 s), and the exported files (FCSTD 7.7 KB, STEP 58.8 KB).}
+\label{fig:cad8}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{fig/cad/09-freecad-final-sprocket.png}
+\caption{Step 9. The finished model in FreeCAD: the disc with a ring of tooth pockets around its edge, the model tree ending at ``Tooth pocket 16''.}
+\label{fig:cad9}
 \end{figure}
 
 \subsection{SWOT analysis}

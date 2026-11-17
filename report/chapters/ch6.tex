@@ -21,6 +21,6 @@ The states are constructed and were labelled by the AI assistant that designed t
 \item \textbf{End-to-end evaluation.} The released harness runs 40 tasks (10 development, 30 test) on five self-hosted sites under the full system, two baselines and one-factor ablations, with a validated oracle. Running it with local models would measure H1--H5 directly.
 \item \textbf{Broader gate coverage.} Typed answer checks for extraction, more text-entry phrasings, and a measured model judge for requests that no rule covers.
 \item \textbf{Memory and recovery.} A relevance threshold for retrieval and a missing-confirmation class with its own strategy.
-\item \textbf{Desktop backend.} The same predicate form applies to desktop, file and process state, whose postconditions are typed and exact; the design exists but is not implemented.
+\item \textbf{Desktop backend.} The same predicate form applies to desktop, file and process state, whose postconditions are typed and exact; in the evaluated commit the design exists but is not implemented. A later desktop automation subsystem on the \texttt{main} branch (Section~\ref{sec:cad}) has not been evaluated.
 \item \textbf{Wider locality testing.} Instrument DNS, UDP, the browser and the model server.
 \end{itemize}
