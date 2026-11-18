@@ -1,6 +1,6 @@
 import { Save } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
-import { Settings as SettingsType } from "../api/client";
+import { Settings as SettingsType, isCloudProvider, providerLabel } from "../api/client";
 
 type Props = {
   settings: SettingsType | null;
@@ -10,6 +10,8 @@ type Props = {
 export function Settings({ settings, onSave }: Props) {
   const [model, setModel] = useState(settings?.ollama_model ?? "qwen2.5:7b");
   const [autoApprove, setAutoApprove] = useState(settings?.auto_approve_low_risk ?? true);
+  // The provider itself comes from LLM_PROVIDER, so it is displayed read-only here
+  const cloud = isCloudProvider(settings?.llm_provider);
 
   useEffect(() => {
     if (settings) {
@@ -30,9 +32,19 @@ export function Settings({ settings, onSave }: Props) {
       </div>
       <form className="settings-form" onSubmit={handleSubmit}>
         <label>
-          <span>Model</span>
-          <input value={model} onChange={(event) => setModel(event.target.value)} />
+          <span>Reasoning engine</span>
+          <input readOnly value={providerLabel(settings?.llm_provider)} />
         </label>
+        <label>
+          <span>Routed roles</span>
+          <input readOnly value="Planner · Executor · Vision · Recovery" />
+        </label>
+        {cloud ? null : (
+          <label>
+            <span>Model</span>
+            <input value={model} onChange={(event) => setModel(event.target.value)} />
+          </label>
+        )}
         <label className="toggle-row">
           <input type="checkbox" checked={autoApprove} onChange={(event) => setAutoApprove(event.target.checked)} />
           <span>Auto-approve low risk tasks</span>

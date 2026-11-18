@@ -44,6 +44,27 @@ export type Settings = {
   auto_approve_low_risk: boolean;
 };
 
+/** Providers that run off-device, so no local model or daemon is involved. */
+export const CLOUD_PROVIDERS = ["claude", "claude_cli"];
+
+export function isCloudProvider(provider: string | undefined): boolean {
+  return CLOUD_PROVIDERS.includes(provider ?? "");
+}
+
+/**
+ * Human label for the active reasoning backend.
+ *
+ * Deliberately provider-neutral: the architecture routes planner, executor,
+ * vision and recovery roles across interchangeable models, so the UI names the
+ * capability rather than a vendor. Operators can see the concrete provider and
+ * model in the backend health endpoint and logs.
+ */
+export function providerLabel(provider: string | undefined): string {
+  if (!provider) return "Reasoning engine";
+  if (provider === "ollama") return "Reasoning engine · on-device";
+  return "Reasoning engine · hosted";
+}
+
 export type PluginManifest = {
   plugin_id: string;
   name: string;
@@ -138,4 +159,90 @@ export async function closeBrowser(taskId: string): Promise<{ status: string; ta
 
 export async function getBrowserStatus(): Promise<BrowserStatus> {
   return request("/api/browser/status");
+}
+
+export type DesignJobStatus = "queued" | "generating" | "running" | "succeeded" | "failed";
+
+export type DesignMetrics = {
+  bbox_mm?: number[] | null;
+  volume_mm3?: number | null;
+};
+
+export type DesignFile = {
+  name: string;
+  kind: string;
+  size_bytes: number;
+  url: string;
+};
+
+export type DesignStepInfo = {
+  index: number;
+  label: string;
+  preview_url: string;
+};
+
+export type DesignJob = {
+  job_id: string;
+  status: DesignJobStatus;
+  prompt: string;
+  error?: string | null;
+  created_at: string;
+  duration_ms?: number | null;
+  metrics?: DesignMetrics | null;
+  script?: string | null;
+  preview_url?: string | null;
+  files?: DesignFile[] | null;
+  steps?: DesignStepInfo[] | null;
+  live?: boolean;
+  live_status?: string | null;
+  live_step?: string | null;
+  live_step_index?: number | null;
+  live_step_total?: number | null;
+};
+
+/** The API returns file/preview URLs as server-relative paths; make them loadable from the UI origin. */
+export function resolveApiUrl(path: string): string {
+  if (/^https?:\/\//i.test(path)) {
+    return path;
+  }
+  return `${API_BASE}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
+export type HealthComponents = {
+  llm?: { provider?: string; status?: string; model?: string; latency_ms?: number } | null;
+  ollama?: { status?: string; model?: string; vision_model?: string } | null;
+  database?: { status?: string; tasks_count?: number; db_size_mb?: number } | null;
+  browser?: { status?: string; active_sessions?: number } | null;
+  features?: Record<string, boolean> | null;
+};
+
+export type DetailedHealth = {
+  status: string;
+  components: HealthComponents;
+  uptime_seconds?: number;
+  version?: string;
+};
+
+export async function getDetailedHealth(): Promise<DetailedHealth> {
+  return request("/api/health/detailed");
+}
+
+export async function createDesignJob(
+  prompt: string,
+  live = false
+): Promise<{ job_id: string; status: string }> {
+  return request("/api/design/generate", {
+    method: "POST",
+    body: JSON.stringify({ prompt, live })
+  });
+}
+
+export async function getDesignJob(jobId: string): Promise<DesignJob> {
+  return request(`/api/design/jobs/${jobId}`);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function listDesignJobs(): Promise<DesignJob[]> {
+  const body = await request<{ jobs: DesignJob[] }>("/api/design/jobs");
+  return body.jobs ?? [];
 }

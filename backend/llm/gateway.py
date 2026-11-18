@@ -218,9 +218,9 @@ def get_llm_provider(config: PilotConfig | None = None) -> BaseLLMProvider:
     """Resolve active LLM provider based on LLM_PROVIDER configuration.
     
     Supported:
-    - 'gemini' (default): Official Google Gemini API cloud inference.
+    - 'claude' (default): Official Anthropic Claude API cloud inference.
+    - 'claude_cli': Local Claude Code CLI in headless print mode (no API key).
     - 'ollama': Local Ollama inference daemon.
-    - 'hybrid': Cloud Gemini primary with graceful Ollama fallback.
     """
     cfg = config or get_config()
 
@@ -231,20 +231,20 @@ def get_llm_provider(config: PilotConfig | None = None) -> BaseLLMProvider:
     ):
         return OllamaGateway(cfg)
 
-    provider_type = (cfg.llm_provider or "gemini").lower().strip()
+    provider_type = (cfg.llm_provider or "claude").lower().strip()
 
-    if provider_type == "gemini":
-        from backend.llm.gemini import GeminiGateway
-        return GeminiGateway(cfg)
-    elif provider_type == "hybrid":
-        from backend.llm.hybrid import HybridLLMProvider
-        return HybridLLMProvider(cfg)
+    if provider_type in ("claude_cli", "claude-cli", "cli"):
+        from backend.llm.claude_cli import ClaudeCLIGateway
+        return ClaudeCLIGateway(cfg)
+    elif provider_type == "claude":
+        from backend.llm.claude import ClaudeGateway
+        return ClaudeGateway(cfg)
     elif provider_type == "ollama":
         return OllamaGateway(cfg)
     else:
-        logger.warning("Unknown LLM_PROVIDER '%s', defaulting to Gemini.", provider_type)
-        from backend.llm.gemini import GeminiGateway
-        return GeminiGateway(cfg)
+        logger.warning("Unknown LLM_PROVIDER '%s', defaulting to Claude.", provider_type)
+        from backend.llm.claude import ClaudeGateway
+        return ClaudeGateway(cfg)
 
 
 class LLMGateway(BaseLLMProvider):

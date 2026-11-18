@@ -6,6 +6,7 @@ import {
   Settings as SettingsType,
   Task,
   cancelTask,
+  createDesignJob,
   createTask,
   getSettings,
   getTask,
@@ -16,6 +17,7 @@ import {
   updateSettings
 } from "./api/client";
 import { ApprovalModal } from "./components/ApprovalModal";
+import { DesignResult } from "./components/DesignResult";
 import { ExecutionPanel } from "./components/ExecutionPanel";
 import { PluginManager } from "./components/PluginManager";
 import { Settings } from "./components/Settings";
@@ -23,6 +25,7 @@ import { SetupWizard } from "./components/SetupWizard";
 import { TaskHistory } from "./components/TaskHistory";
 import { TaskInput } from "./components/TaskInput";
 import { useTaskStream } from "./hooks/useTaskStream";
+import { looksLikeDesign } from "./lib/routeIntent";
 
 type View = "workbench" | "history" | "plugins" | "settings";
 
@@ -33,6 +36,7 @@ export default function App() {
   const [approvals, setApprovals] = useState<Approval[]>([]);
   const [plugins, setPlugins] = useState<PluginManifest[]>([]);
   const [view, setView] = useState<View>("workbench");
+  const [designJobId, setDesignJobId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const events = useTaskStream(currentTask?.task_id ?? null);
   const currentTaskRef = useRef<Task | null>(null);
@@ -92,6 +96,14 @@ export default function App() {
   async function handleSubmit(input: string) {
     setBusy(true);
     try {
+      if (looksLikeDesign(input)) {
+        // CAD prompts go to the design pipeline; clear any previous web task.
+        setCurrentTask(null);
+        const created = await createDesignJob(input);
+        setDesignJobId(created.job_id);
+        return;
+      }
+      setDesignJobId(null);
       const created = await createTask(input);
       const task = await getTask(created.task_id);
       setCurrentTask(task);
@@ -155,11 +167,14 @@ export default function App() {
             <section className="panel command-panel">
               <div className="panel-heading">
                 <h1>Run Task</h1>
-                <span className="model-label">{settings?.llm_provider === "gemini" ? `Gemini · ${settings.active_model}` : settings?.llm_provider === "hybrid" ? `Hybrid · ${settings.active_model}` : settings?.active_model ?? settings?.ollama_model ?? "qwen2.5:7b"}</span>
               </div>
               <TaskInput busy={busy || Boolean(active)} onSubmit={handleSubmit} onCancel={handleCancel} />
             </section>
-            <ExecutionPanel task={currentTask} events={events} />
+            {designJobId ? (
+              <DesignResult jobId={designJobId} />
+            ) : (
+              <ExecutionPanel task={currentTask} events={events} />
+            )}
           </div>
         ) : null}
         {view === "history" ? <TaskHistory tasks={tasks} onRefresh={refreshTasks} onSelect={setCurrentTask} /> : null}

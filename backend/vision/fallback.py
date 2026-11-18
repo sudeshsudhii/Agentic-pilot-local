@@ -62,9 +62,13 @@ class VisionFallback:
         """Verify whether a true vision-capable model is accessible."""
         config = get_config()
         is_mocked = OllamaGateway.list_model_names is not _ORIGINAL_LIST_MODEL_NAMES
-        if not is_mocked and (config.llm_provider or "gemini").lower() in ("gemini", "hybrid"):
-            # Google Gemini models natively support vision multimodal inference
-            return True, config.gemini_model
+        active = (config.llm_provider or "claude").lower()
+        if not is_mocked and active == "claude":
+            # Claude models natively support vision multimodal inference
+            return True, config.claude_model
+        if not is_mocked and active in ("claude_cli", "claude-cli", "cli"):
+            # The Claude Code CLI reads the staged screenshot with its Read tool
+            return True, f"{config.claude_cli_model} (Claude Code CLI)"
 
         gateway = OllamaGateway()
         from backend.llm.registry import model_registry, ModelCapability

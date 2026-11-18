@@ -49,8 +49,13 @@ def mock_llm():
                 steps=[TaskStep(step_index=1, description="Step 1", target="mock", expected_outcome="Done")],
             )
             
-    with patch("backend.llm.gateway.OllamaGateway.complete_structured", new=mock_complete):
+    async def mock_health_check(self) -> bool:
+        return True
 
+    with (
+        patch("backend.llm.gateway.OllamaGateway.complete_structured", new=mock_complete),
+        patch("backend.llm.gateway.OllamaGateway.health_check", new=mock_health_check),
+    ):
         yield
 
 

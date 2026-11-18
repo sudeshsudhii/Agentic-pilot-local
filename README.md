@@ -69,17 +69,24 @@ graph TD
         LangGraph --> ModelRouter[Model Router]
         ModelRouter --> Ollama[Local Ollama Gateway :11434]
         
-        LangGraph --> BrowserPool[Playwright Browser Pool]
-        BrowserPool --> Chromium[Chromium Browser Context]
+        LangGraph --> EnvResolver{Environment Resolver}
         
+        EnvResolver -->|Browser Task| BrowserPool[Playwright Browser Pool]
+        BrowserPool --> Chromium[Chromium Browser Context]
         Chromium --> Grounding[DOM-First Grounding]
         Chromium --> Vision[Multimodal Vision Inference]
+        
+        EnvResolver -->|Desktop Task| DesktopExecutor[Desktop Executor]
+        DesktopExecutor --> OSUI[Windows UI Automation]
+        OSUI --> UIGrounding[UIA Element Grounding]
+        OSUI --> DesktopVision[Screen Capture / Vision]
         
         LangGraph --> Verifier[Verification Manager]
         Verifier --> Evidence[Evidence Store ~/.pilot/evidence]
         
         LangGraph --> Recovery[Recovery Engine]
-        Recovery -.->|Retry / Alt Selector / Vision| Grounding
+        Recovery -.->|Browser Retry| Grounding
+        Recovery -.->|Desktop Retry| UIGrounding
     end
 
     subgraph Developer Observability
@@ -257,6 +264,10 @@ cd observatory/frontend && npm install && cd ..
 ```
 
 ### 4. Pull Local Models
+
+> Only required for `LLM_PROVIDER=ollama`. Skip this step when running
+> against Claude.
+
 ```bash
 ollama pull qwen2.5:1.5b
 ollama pull moondream
@@ -272,6 +283,54 @@ ollama pull qwen2.5-coder:3b
 Copy the configuration template:
 ```bash
 cp .env.example .env
+```
+
+### LLM Provider Selection
+
+`LLM_PROVIDER` selects the inference backend. Cloud providers skip the local
+Ollama daemon entirely, leaving laptop CPU/GPU/RAM free.
+
+| Value | Backend | Required key | Vision |
+| --- | --- | --- | --- |
+| `claude_cli` | Local Claude Code CLI (`claude -p`) | none — reuses your Claude Code login | Reads screenshot via `Read` |
+| `claude` | Anthropic Claude API | `ANTHROPIC_API_KEY` | Native multimodal |
+| `ollama` | Local Ollama daemon | none | Local VLM (`moondream`) |
+
+#### Claude Code CLI provider (`claude_cli`)
+
+Drives the installed `claude` binary in headless print mode and treats it as an
+inference backend, so **no API key is needed** — it reuses whatever account
+Claude Code is already logged into.
+
+```ini
+LLM_PROVIDER=claude_cli
+CLAUDE_CLI_MODEL=opus        # or "sonnet", or a full model name
+CLAUDE_CLI_TIMEOUT_SECONDS=180
+CLAUDE_CLI_MAX_TURNS=1       # vision calls raise this automatically
+```
+
+How it works and what it costs:
+
+* Prompts go in on **stdin**, so large DOM extracts are not limited by the
+  Windows command-line length.
+* Built-in Claude Code tools are disabled for text calls (`--restricted`), so the
+  harness answers instead of exploring your filesystem. Vision is the exception:
+  the screenshot is written to a scratch dir and `Read` is allowed for that call.
+* Structured output uses the CLI's native `--json-schema`, returning an
+  already-validated object.
+* **Overhead**: each call spawns a process and re-sends Claude Code's own system
+  prompt (~2-6K cached tokens), so expect ~3-4 s per text call and ~12 s per
+  vision call — slower and more token-hungry per call than the `claude` API
+  provider. Usage counts against your Claude Code limits.
+
+```ini
+# Anthropic Claude (cloud)
+LLM_PROVIDER=claude
+ANTHROPIC_API_KEY=sk-ant-...
+CLAUDE_MODEL=claude-opus-5
+CLAUDE_EFFORT=high          # low | medium | high | xhigh | max
+CLAUDE_THINKING=true        # adaptive thinking
+CLAUDE_FALLBACK_ENABLED=true
 ```
 
 Key environment variables (see [docs/configuration.md](docs/configuration.md) for the full list):

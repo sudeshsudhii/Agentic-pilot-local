@@ -91,7 +91,7 @@ echo                 AGENTIC PILOT - RUNTIME LAUNCHER
 echo               Autonomous Multi-Environment AI Agent
 echo ======================================================================
 echo.
-echo   Active LLM Provider : Google Gemini API (gemini-2.5-flash) [DEFAULT]
+echo   Active LLM Provider : Anthropic Claude API (claude-opus-5) [DEFAULT]
 echo   Fallback Runtime    : Local Ollama Models (qwen2.5 / moondream)
 echo   Local Web UI        : http://127.0.0.1:1420
 echo   Backend REST API    : http://127.0.0.1:8765
@@ -99,7 +99,7 @@ echo.
 echo ----------------------------------------------------------------------
 echo   LAUNCH OPTIONS:
 echo ----------------------------------------------------------------------
-echo   [1] Start Agentic Pilot (Frontend + Backend + Gemini API)  [DEFAULT]
+echo   [1] Start Agentic Pilot (Frontend + Backend + Claude API)  [DEFAULT]
 echo   [2] Start Full System + Observatory Telemetry Dashboard (:3001)
 echo   [3] Start Backend Server Only (:8765)
 echo   [4] Stop All Running Pilot Services ^& Clear Ports

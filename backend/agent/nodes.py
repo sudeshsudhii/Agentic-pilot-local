@@ -33,6 +33,75 @@ from backend.verification.manager import verification_manager
 logger = logging.getLogger("pilot.agent.nodes")
 
 
+def _split_url(u: str) -> tuple[str, str]:
+    """Return (host, normalised path) so deep links are not treated as the host."""
+    u = u.strip().replace("https://", "").replace("http://", "")
+    u = u.split("#", 1)[0].split("?", 1)[0]
+    host, _, path = u.partition("/")
+    host = host.removeprefix("www.").strip()
+    return host, "/" + path.strip("/")
+
+
+#: Navigation chrome and legal boilerplate that is never the substance of a page.
+_EXTRACTION_BOILERPLATE = (
+    "toggle", "jump to", "skip to", "cookie", "accept all",
+    "sign in", "log in", "subscribe", "privacy policy",
+    "terms of service", "edit this page", "view source",
+)
+
+
+def summarize_page_extraction(title: str, snippet: str) -> tuple[str, list[str]]:
+    """Build a findings list and final-answer string from one page's extracted text.
+
+    Returns ``(final_answer, findings)``. ``findings`` is empty when nothing
+    substantive survived filtering, in which case ``final_answer`` falls back to
+    a trimmed raw snippet rather than inventing content.
+
+    This used to be replaced by a hardcoded "3 Useful Pieces of Information
+    about Kattankulathur Campus" template regardless of which page was actually
+    visited, left over from a single test fixture. Every extraction must be
+    derived from what the page actually says.
+    """
+    title = title or "Untitled page"
+    findings: list[str] = []
+    for ln in (raw.strip() for raw in (snippet or "").splitlines()):
+        if len(ln) < 40 or ln.startswith(("http", "<", "#", "|")):
+            continue
+        low = ln.lower()
+        if any(bp in low for bp in _EXTRACTION_BOILERPLATE):
+            continue
+        if ln not in findings:
+            findings.append(ln)
+        if len(findings) >= 5:
+            break
+
+    if findings:
+        body = "\n".join(f"- {f}" for f in findings)
+        final_answer = f"{title}\n\n{body}"
+    else:
+        trimmed = (snippet or "").strip()[:600]
+        final_answer = (
+            f"{title}\n\n{trimmed}" if trimmed else f"{title}\n\nNo readable text content was found on this page."
+        )
+    return final_answer, findings
+
+
+def is_repeat_navigation(current_url: str, target_url: str) -> bool:
+    """Return True when ``target_url`` names the page ``current_url`` already is.
+
+    Loop protection must only fire when we are genuinely on the requested page.
+    Comparing hosts alone made every deep link into an already-visited site look
+    like a repeat, so navigation was skipped and the task failed while sitting
+    on the wrong page (e.g. a Wikipedia article's Main_Page looked identical to
+    any other article on the same host).
+    """
+    cur_d, cur_p = _split_url((current_url or "").lower())
+    tgt_d, tgt_p = _split_url((target_url or "").lower())
+    host_match = bool(cur_d and tgt_d) and (cur_d == tgt_d or tgt_d in cur_d or cur_d in tgt_d)
+    path_match = tgt_p == "/" or cur_p == tgt_p
+    return host_match and path_match
+
+
 async def _get_task_page(state: AgentState):
     task_id = state["task_id"]
     session_id = state.get("session_id")
@@ -187,8 +256,11 @@ async def parse_intent_node(state: AgentState) -> dict:
         )
 
     cfg = get_config()
-    if (cfg.llm_provider or "gemini").lower() in ("gemini", "hybrid"):
-        has_vision_avail, vision_model_name = True, cfg.gemini_model
+    active_provider = (cfg.llm_provider or "claude").lower()
+    if active_provider == "claude":
+        has_vision_avail, vision_model_name = True, cfg.claude_model
+    elif active_provider in ("claude_cli", "claude-cli", "cli"):
+        has_vision_avail, vision_model_name = True, cfg.claude_cli_model
     else:
         from backend.vision.fallback import VisionFallback
         vf = VisionFallback()
@@ -837,12 +909,7 @@ Interactive Elements:
     if action.action_type == "navigate" and state.get("navigation_succeeded"):
         cur_url = (state.get("current_url") or manifest.url or "").lower()
         target_nav_url = (action.url or (intent.site if intent else "") or "").lower()
-        def _clean_d(u: str) -> str:
-            return u.replace("https://", "").replace("http://", "").split("/")[0].strip()
-        
-        cur_d = _clean_d(cur_url)
-        tgt_d = _clean_d(target_nav_url)
-        if cur_d and tgt_d and (cur_d == tgt_d or tgt_d in cur_d or cur_d in tgt_d):
+        if is_repeat_navigation(cur_url, target_nav_url):
             logger.info("LOOP PROTECTION: current_url (%s) matches target_url (%s) and navigation succeeded. Skipping repeated navigation.", cur_url, target_nav_url)
             action = PlannedAction(action_type="need_help", reasoning="Already at target site, skipping repeated navigation.")
 
@@ -1053,7 +1120,10 @@ async def execute_action_node(state: AgentState) -> dict:
                             continue
                         if el.tag in ("a", "button") or el.role in ("link", "button"):
                             input_words = [w for w in (state.get("input_text") or "").lower().split() if len(w) > 3 and w not in ["search", "google", "open", "extract", "return", "findings", "information"]]
-                            if any(w in text_lower for w in input_words) or ("srm" in text_lower) or ("result" in (el.css_selector or "").lower()):
+                            # Match the link against words from the user's own request.
+                            # A hardcoded "srm" bias used to sit here, which pulled
+                            # unrelated pages toward one organisation's results.
+                            if any(w in text_lower for w in input_words) or ("result" in (el.css_selector or "").lower()):
                                 target_elem = el
                                 break
                 if not target_elem:
@@ -1108,44 +1178,22 @@ async def execute_action_node(state: AgentState) -> dict:
             if result.success and result.data:
                 page_key = result.data.get("page_title") or f"page_{state.get('llm_call_count', 0)}"
                 extracted_data[page_key] = result.data
-                snippet = result.data.get("content_snippet", "")
-                title = result.data.get("page_title", "SRM Institute of Science and Technology")
-                
-                # Extract 3 useful pieces of campus info
-                lines = [ln.strip() for ln in snippet.splitlines() if len(ln.strip()) > 25]
-                facts = []
-                for ln in lines:
-                    ln_lower = ln.lower()
-                    if any(kw in ln_lower for kw in ["campus", "kattankulathur", "chennai", "acre", "program", "student", "faculty", "university", "institute", "engineering", "technology", "research", "hostel", "placement"]):
-                        if ln not in facts and not ln.startswith("http") and not ln.startswith("<"):
-                            facts.append(ln)
-                    if len(facts) >= 3:
-                        break
-                
-                if len(facts) < 3:
-                    fallback_facts = [
-                        "1. Sprawling 250+ acre lush green campus situated at Kattankulathur, Chengalpattu district near Chennai.",
-                        "2. Offers state-of-the-art infrastructure including advanced engineering laboratories, supercomputing facilities, and hi-tech auditoriums.",
-                        "3. Houses vibrant on-campus hostels, multi-cuisine food courts, sports complexes, and an extensive central library."
-                    ]
-                    facts = lines[:3] if len(lines) >= 3 else fallback_facts
-                
-                campus_info = "\n".join([f"- {f.lstrip('-123. ')}" for f in facts[:3]])
-                final_answer = (
-                    f"Page Title: {title}\n\n"
-                    f"3 Useful Pieces of Information about Kattankulathur Campus:\n"
-                    f"{campus_info}"
-                )
+                snippet = result.data.get("content_snippet", "") or ""
+                title = result.data.get("page_title") or "Untitled page"
+                page_url = result.data.get("url")
+
+                final_answer, findings = summarize_page_extraction(title, snippet)
+
                 extracted_data["final_findings"] = {
                     "page_title": title,
-                    "campus_information": facts[:3],
-                    "url": result.data.get("url")
+                    "findings": findings,
+                    "url": page_url,
                 }
                 await database.add_event(
                     state["task_id"],
                     "DATA_EXTRACTED",
                     f"Extracted information from {page_key}: {title}",
-                    {"page_title": title, "findings": facts[:3], "snippet": snippet[:300]}
+                    {"page_title": title, "findings": findings, "snippet": snippet[:300]},
                 )
         elif action.action_type == "select_option" and element and action.value:
             result = await executor.select_option(page, element, action.value)

@@ -16,33 +16,43 @@ class LLMProviderError(Exception):
     pass
 
 
-class MissingGeminiApiKeyError(LLMProviderError):
-    """Raised when Gemini provider is selected but GEMINI_API_KEY is not set."""
+class MissingAnthropicApiKeyError(LLMProviderError):
+    """Raised when Claude provider is selected but ANTHROPIC_API_KEY is not set."""
     pass
 
 
-class GeminiAuthenticationError(LLMProviderError):
-    """Raised when Gemini API key is invalid or unauthorized."""
+class ClaudeAuthenticationError(LLMProviderError):
+    """Raised when the Anthropic API key is invalid or unauthorized."""
     pass
 
 
-class GeminiRateLimitError(LLMProviderError):
-    """Raised when Gemini returns HTTP 429 Resource Exhausted / Rate Limit."""
+class ClaudeRateLimitError(LLMProviderError):
+    """Raised when Claude returns HTTP 429 Rate Limit / quota exhaustion."""
     pass
 
 
-class GeminiTimeoutError(LLMProviderError):
-    """Raised when a Gemini API request times out."""
+class ClaudeTimeoutError(LLMProviderError):
+    """Raised when a Claude API request times out."""
     pass
 
 
-class GeminiResponseError(LLMProviderError):
-    """Raised when Gemini returns an empty or unparsable response."""
+class ClaudeResponseError(LLMProviderError):
+    """Raised when Claude returns an empty or unparsable response."""
+    pass
+
+
+class MissingClaudeCliError(LLMProviderError):
+    """Raised when the Claude Code CLI provider is selected but `claude` is absent."""
+    pass
+
+
+class ClaudeRefusalError(LLMProviderError):
+    """Raised when Claude declines a request on policy grounds."""
     pass
 
 
 class BaseLLMProvider(ABC):
-    """Abstract base provider interface implemented by GeminiGateway and OllamaGateway.
+    """Abstract base provider interface implemented by the Claude and Ollama gateways.
     
     Provides uniform text generation, structured parsing, and health probing.
     """
@@ -50,7 +60,7 @@ class BaseLLMProvider(ABC):
     @property
     @abstractmethod
     def provider_name(self) -> str:
-        """Name of the provider (e.g. 'gemini', 'ollama', 'hybrid')."""
+        """Name of the provider (e.g. 'claude' or 'ollama')."""
         ...
 
     @abstractmethod

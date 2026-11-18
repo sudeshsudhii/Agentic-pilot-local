@@ -15,13 +15,30 @@ async def detect_captcha(page: Page) -> tuple[bool, str]:
         url = page.url.lower()
         if "/sorry/" in url or "sorry/index" in url:
             return True, "Google bot challenge /sorry/ page detected"
-        if "recaptcha" in url or "captcha" in url:
+        # Match a challenge host or an explicit query parameter, never a bare word
+        # anywhere in the path -- an article at /wiki/CAPTCHA or /wiki/ReCAPTCHA is
+        # about the topic, not an instance of the challenge itself.
+        if "challenges.cloudflare.com" in url or "google.com/recaptcha" in url or "hcaptcha.com" in url:
+            return True, f"CAPTCHA URL detected ({page.url})"
+        if any(tok in url for tok in ("captcha=", "captcha_", "?captcha")):
             return True, f"CAPTCHA URL detected ({page.url})"
 
         # Check page title
         try:
             title = (await page.title()).lower()
-            if "sorry..." in title or "captcha" in title or "robot" in title:
+            # Precise phrases only. A substring test for "robot" flagged every
+            # page whose title merely mentioned robots (e.g. "Robotics - Wikipedia").
+            # No bare "captcha" here either, for the same reason as "robot" above --
+            # it would flag an encyclopedia article titled "CAPTCHA" or "reCAPTCHA".
+            title_signals = (
+                "sorry...",
+                "i'm not a robot",
+                "im not a robot",
+                "are you a robot",
+                "robot check",
+                "attention required",
+            )
+            if any(sig in title for sig in title_signals):
                 return True, f"CAPTCHA page title detected: '{title}'"
         except Exception:
             pass
@@ -43,8 +60,23 @@ async def detect_captcha(page: Page) -> tuple[bool, str]:
                 "enter the characters you see",
                 "attention required! | cloudflare",
             ]
+            # A real challenge page is a short interstitial. A long article may
+            # legitimately discuss CAPTCHAs, bots or security checks, so on
+            # content-heavy pages require an actual challenge element instead
+            # (checked below) rather than trusting a phrase match.
+            unambiguous = (
+                "i'm not a robot",
+                "im not a robot",
+                "recaptcha",
+                "unusual traffic",
+                "automated queries",
+                "attention required! | cloudflare",
+            )
+            is_interstitial = len(text) < 2000
             for phrase in captcha_phrases:
-                if phrase in text:
+                if phrase not in text:
+                    continue
+                if is_interstitial or phrase in unambiguous:
                     return True, f"Bot verification phrase detected: '{phrase}'"
         except Exception:
             pass

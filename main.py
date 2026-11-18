@@ -526,12 +526,14 @@ class PilotOrchestrator:
             print("  Observatory API : http://127.0.0.1:8766")
         from backend.config import get_config
         cfg = get_config()
-        active_provider = (os.environ.get("LLM_PROVIDER") or cfg.llm_provider or "gemini").lower().strip()
-        if active_provider == "gemini":
-            print(f"  Active LLM Provider: Google Gemini API (Model: {cfg.gemini_model})")
+        active_provider = (os.environ.get("LLM_PROVIDER") or cfg.llm_provider or "claude").lower().strip()
+        if active_provider in ("claude_cli", "claude-cli", "cli"):
+            print(f"  Active LLM Provider: Claude Code CLI (Model: {cfg.claude_cli_model})")
+            print("  Auth Mode       : Local Claude Code session (no API key)")
             print("  Ollama Status   : Standby (Inactive to preserve laptop CPU/GPU/RAM)")
-        elif active_provider == "hybrid":
-            print(f"  Active LLM Provider: Hybrid (Gemini: {cfg.gemini_model} -> Ollama fallback)")
+        elif active_provider == "claude":
+            print(f"  Active LLM Provider: Anthropic Claude API (Model: {cfg.claude_model})")
+            print("  Ollama Status   : Standby (Inactive to preserve laptop CPU/GPU/RAM)")
         else:
             print(f"  Active LLM Provider: Local Ollama ({self.text_model})")
             print(f"  Ollama Service  : {self.ollama_url}")
@@ -718,19 +720,31 @@ class PilotOrchestrator:
         # Step 2 & 3: LLM Provider & Model verification
         from backend.config import get_config
         cfg = get_config()
-        active_provider = (os.environ.get("LLM_PROVIDER") or cfg.llm_provider or "gemini").lower().strip()
+        active_provider = (os.environ.get("LLM_PROVIDER") or cfg.llm_provider or "claude").lower().strip()
 
-        if active_provider == "gemini":
-            logger.info(f"{Colors.CYAN}[2/6] Cloud Provider active: Google Gemini API (Model: {cfg.gemini_model}){Colors.RESET}")
+        if active_provider in ("claude_cli", "claude-cli", "cli"):
+            logger.info(f"{Colors.CYAN}[2/6] Provider active: Claude Code CLI (Model: {cfg.claude_cli_model}){Colors.RESET}")
             logger.info(f"      Skipping local Ollama daemon startup to preserve laptop CPU/GPU/RAM.")
-            logger.info(f"{Colors.CYAN}[3/6] Verifying Gemini configuration...{Colors.RESET}")
-            has_key = bool(cfg.gemini_api_key or os.environ.get("GEMINI_API_KEY") or os.environ.get("PILOT_GEMINI_API_KEY"))
-            if has_key:
-                logger.info(f"{Colors.GREEN}      Gemini API key verified in environment.{Colors.RESET}")
+            logger.info(f"{Colors.CYAN}[3/6] Verifying Claude Code CLI...{Colors.RESET}")
+            cli_bin = shutil.which(cfg.claude_cli_path or "claude") or (
+                cfg.claude_cli_path if cfg.claude_cli_path and os.path.exists(cfg.claude_cli_path) else None
+            ) or shutil.which(os.environ.get("CLAUDE_CODE_EXECPATH") or "claude")
+            if cli_bin:
+                logger.info(f"{Colors.GREEN}      Claude Code CLI found: {cli_bin}{Colors.RESET}")
+                logger.info(f"{Colors.GREEN}      Using local Claude Code authentication (no API key required).{Colors.RESET}")
             else:
-                logger.warning(f"{Colors.YELLOW}      GEMINI_API_KEY not found in environment. Set GEMINI_API_KEY in .env to run tasks.{Colors.RESET}")
+                logger.warning(f"{Colors.YELLOW}      'claude' not found on PATH. Install Claude Code or set CLAUDE_CLI_PATH in .env.{Colors.RESET}")
+        elif active_provider == "claude":
+            logger.info(f"{Colors.CYAN}[2/6] Cloud Provider active: Anthropic Claude API (Model: {cfg.claude_model}){Colors.RESET}")
+            logger.info(f"      Skipping local Ollama daemon startup to preserve laptop CPU/GPU/RAM.")
+            logger.info(f"{Colors.CYAN}[3/6] Verifying Claude configuration...{Colors.RESET}")
+            has_key = bool(cfg.anthropic_api_key or os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("PILOT_ANTHROPIC_API_KEY"))
+            if has_key:
+                logger.info(f"{Colors.GREEN}      Anthropic API key verified in environment.{Colors.RESET}")
+            else:
+                logger.warning(f"{Colors.YELLOW}      ANTHROPIC_API_KEY not found in environment. Set ANTHROPIC_API_KEY in .env to run tasks.{Colors.RESET}")
         else:
-            # Step 2: Ollama daemon (for local ollama or hybrid modes)
+            # Step 2: Ollama daemon (local provider only)
             ollama_bin = self.ensure_ollama()
 
             # Step 3: Multi-model availability

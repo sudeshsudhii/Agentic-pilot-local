@@ -12,7 +12,7 @@ const statusIcon = {
   failed: <AlertCircle size={17} />,
   waiting_approval: <ShieldAlert size={17} />,
   running: <Clock3 size={17} />,
-  blocked: <ShieldAlert size={17} style={{ color: "#d97706" }} />
+  blocked: <ShieldAlert size={17} className="icon-warn" />
 };
 
 export function ExecutionPanel({ task, events }: Props) {
@@ -237,35 +237,23 @@ export function ExecutionPanel({ task, events }: Props) {
           <div className="blocked-header">
             <ShieldAlert size={22} className="blocked-icon" />
             <div>
-              <strong style={{ fontSize: "14px", color: "#b45309" }}>Action Required: Bot Verification Challenge</strong>
-              <p style={{ margin: "4px 0 0", fontSize: "13px", color: "#78350f" }}>
+              <strong className="recovery-title">Action Required: Bot Verification Challenge</strong>
+              <p className="recovery-body">
                 Google has presented a CAPTCHA challenge. Complete it manually in the open browser, or switch to safe search.
               </p>
             </div>
           </div>
           {recoveryError && (
-            <div className="recovery-error-banner" style={{ background: "#fef2f2", color: "#b91c1c", padding: "8px 12px", borderRadius: "6px", fontSize: "12.5px", margin: "10px 0" }}>
+            <div className="recovery-error-banner">
               {recoveryError}
             </div>
           )}
-          <div className="recovery-buttons-row" style={{ display: "flex", gap: "10px", marginTop: "12px" }}>
+          <div className="recovery-buttons-row">
             <button
               className="recovery-btn resume-btn"
               onClick={handleResumeTask}
               disabled={recovering}
               id="resume-captcha-btn"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "8px 14px",
-                background: "#059669",
-                color: "#ffffff",
-                border: "none",
-                borderRadius: "6px",
-                fontWeight: 500,
-                cursor: "pointer",
-              }}
             >
               <CheckCircle2 size={15} />
               {recovering ? "Checking Page…" : "Complete CAPTCHA & Resume"}
@@ -275,18 +263,6 @@ export function ExecutionPanel({ task, events }: Props) {
               onClick={handleFallbackTask}
               disabled={recovering}
               id="fallback-search-btn"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                padding: "8px 14px",
-                background: "#2563eb",
-                color: "#ffffff",
-                border: "none",
-                borderRadius: "6px",
-                fontWeight: 500,
-                cursor: "pointer",
-              }}
             >
               <Globe size={15} />
               {recovering ? "Switching Provider…" : "Use Safe Search Fallback"}
@@ -343,11 +319,11 @@ export function ExecutionPanel({ task, events }: Props) {
             <>
               <div className="dashboard-card card-wide">
                 <span className="dashboard-label">Reason</span>
-                <span className="dashboard-value" style={{ color: "#b45309" }}>Google requires human verification</span>
+                <span className="dashboard-value value-warn">Google requires human verification</span>
               </div>
               <div className="dashboard-card card-wide">
                 <span className="dashboard-label">Recovery</span>
-                <span className="dashboard-value" style={{ color: "#047857" }}>Waiting for user / fallback available</span>
+                <span className="dashboard-value value-ok">Waiting for user / fallback available</span>
               </div>
             </>
           )}
@@ -365,7 +341,7 @@ export function ExecutionPanel({ task, events }: Props) {
           </div>
           <div className="dashboard-card card-wide">
             <span className="dashboard-label">Browser URL</span>
-            <span className="dashboard-value" style={{ fontFamily: "monospace", fontSize: "12.5px" }}>{currentUrl}</span>
+            <span className="dashboard-value value-mono">{currentUrl}</span>
           </div>
         </div>
       ) : null}
@@ -375,7 +351,7 @@ export function ExecutionPanel({ task, events }: Props) {
         <div className="findings-box">
           <h3>Extracted Campus Information</h3>
           {Object.entries(extractedData).map(([key, item]: [string, any]) => (
-            <div key={key} style={{ marginBottom: "10px" }}>
+            <div key={key} className="stack-item">
               <strong>{item?.page_title || key}</strong>
               {item?.content_snippet && <p className="findings-content">{item.content_snippet}</p>}
             </div>
@@ -384,15 +360,15 @@ export function ExecutionPanel({ task, events }: Props) {
       )}
 
       {finalAnswer && (
-        <div className="findings-box" style={{ background: "#f0f9ff", borderColor: "#bae6fd" }}>
-          <h3 style={{ color: "#0369a1" }}>Final Answer</h3>
-          <p className="findings-content" style={{ color: "#0c4a6e", whiteSpace: "pre-wrap" }}>{finalAnswer}</p>
+        <div className="findings-box findings-answer">
+          <h3>Final Answer</h3>
+          <p className="findings-content">{finalAnswer}</p>
         </div>
       )}
 
       {screenshotFilename && task?.task_id && (
         <div className="evidence-container">
-          <p className="dashboard-label" style={{ marginBottom: "6px" }}>Browser Observation Proof</p>
+          <p className="dashboard-label proof-label">Browser Observation Proof</p>
           <img 
             src={`${API_BASE}/api/tasks/${task.task_id}/evidence/${screenshotFilename}`} 
             alt="Browser Evidence" 
@@ -401,7 +377,7 @@ export function ExecutionPanel({ task, events }: Props) {
         </div>
       )}
 
-      {task ? <p className="task-line" style={{ marginTop: "12px", fontSize: "13px" }}><strong>Task Goal:</strong> {task.input_text}</p> : <p className="muted">No task is running.</p>}
+      {task ? <p className="task-line task-goal"><strong>Task Goal:</strong> {task.input_text}</p> : <p className="muted">No task is running.</p>}
       
       <div className="event-list">
         {events.map((event) => (

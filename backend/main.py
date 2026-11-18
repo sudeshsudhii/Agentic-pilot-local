@@ -24,6 +24,7 @@ from backend.api import approvals, health, observability, plugins, sessions, set
 from backend.browser.pool import browser_pool
 from backend.config import get_config
 from backend.db.database import database
+from backend.design import router as design_router
 
 
 config = get_config()
@@ -39,7 +40,7 @@ class HealthResponse(BaseModel):
 
     status: str
     model: str
-    llm_provider: str = "gemini"
+    llm_provider: str = "claude"
 
 
 @asynccontextmanager
@@ -52,8 +53,8 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     await database.connect()
     app.state.task_runner = TaskRunner(database, config)
     safe_config = config.model_dump()
-    if safe_config.get("gemini_api_key"):
-        safe_config["gemini_api_key"] = "[REDACTED]"
+    if safe_config.get("anthropic_api_key"):
+        safe_config["anthropic_api_key"] = "[REDACTED]"
     logger.info("Starting Pilot backend with config: %s", safe_config)
 
     # Verify active LLM provider at startup
@@ -63,13 +64,26 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     provider_name = provider.provider_name
     logger.info("Active LLM Provider: %s", provider_name.upper())
 
-    if provider_name == "gemini":
-        has_key = bool(config.gemini_api_key or os.environ.get("GEMINI_API_KEY") or os.environ.get("PILOT_GEMINI_API_KEY"))
-        if has_key:
-            logger.info("Google Gemini cloud inference configured (Model: %s)", config.gemini_model)
+    if provider_name == "claude_cli":
+        from backend.llm.claude_cli import ClaudeCLIGateway
+        cli_gw = ClaudeCLIGateway(config)
+        if await cli_gw.health_check():
+            logger.info(
+                "Claude Code CLI inference configured (Model: %s) - using local Claude Code auth",
+                config.claude_cli_model,
+            )
         else:
-            logger.warning("GEMINI_API_KEY is not set in environment. Tasks will require GEMINI_API_KEY.")
-    elif provider_name in ("ollama", "hybrid"):
+            logger.critical(
+                "The Claude Code CLI ('claude') was not found or did not respond. "
+                "Install it from https://claude.com/claude-code or set CLAUDE_CLI_PATH in .env."
+            )
+    elif provider_name == "claude":
+        has_key = bool(config.anthropic_api_key or os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("PILOT_ANTHROPIC_API_KEY"))
+        if has_key:
+            logger.info("Anthropic Claude cloud inference configured (Model: %s)", config.claude_model)
+        else:
+            logger.warning("ANTHROPIC_API_KEY is not set in environment. Tasks will require ANTHROPIC_API_KEY.")
+    elif provider_name == "ollama":
         from backend.llm.gateway import OllamaGateway
         from backend.llm.registry import model_registry
         ollama_gw = OllamaGateway(config)
@@ -77,14 +91,11 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
             logger.info("Ollama is reachable at %s", config.ollama_base_url)
             await model_registry.probe_installed(ollama_gw)
         else:
-            if provider_name == "ollama":
-                logger.critical(
-                    "Ollama is NOT reachable at %s — LLM features will fail. "
-                    "Start Ollama with 'ollama serve' and ensure model '%s' is pulled.",
-                    config.ollama_base_url, config.ollama_model,
-                )
-            else:
-                logger.warning("Hybrid mode: Ollama not reachable, Gemini will handle inference.")
+            logger.critical(
+                "Ollama is NOT reachable at %s — LLM features will fail. "
+                "Start Ollama with 'ollama serve' and ensure model '%s' is pulled.",
+                config.ollama_base_url, config.ollama_model,
+            )
     try:
         yield
     finally:
@@ -115,6 +126,7 @@ app.include_router(plugins.router)
 app.include_router(settings.router)
 app.include_router(health.router)
 app.include_router(observability.router)
+app.include_router(design_router.router)
 
 
 @app.middleware("http")
@@ -153,8 +165,13 @@ async def unhandled_exception_handler(_: Request, exc: Exception) -> JSONRespons
 @app.get("/health", response_model=HealthResponse)
 async def health() -> HealthResponse:
     """Return a lightweight backend health status."""
-    provider = (config.llm_provider or "gemini").lower().strip()
-    active_model = config.gemini_model if provider in ("gemini", "hybrid") else config.ollama_model
+    provider = (config.llm_provider or "claude").lower().strip()
+    if provider == "claude":
+        active_model = config.claude_model
+    elif provider in ("claude_cli", "claude-cli", "cli"):
+        active_model = f"{config.claude_cli_model} (Claude Code CLI)"
+    else:
+        active_model = config.ollama_model
     return HealthResponse(status="ok", model=active_model, llm_provider=provider)
 
 

@@ -1,6 +1,6 @@
 import { CheckCircle2, Download, Play, ShieldCheck } from "lucide-react";
 import { useState } from "react";
-import { Settings, updateSettings } from "../api/client";
+import { Settings, isCloudProvider, providerLabel, updateSettings } from "../api/client";
 
 type Props = {
   settings: Settings;
@@ -10,6 +10,8 @@ type Props = {
 export function SetupWizard({ settings, onComplete }: Props) {
   const [step, setStep] = useState(1);
   const [status, setStatus] = useState("");
+  // A hosted reasoning engine needs no local daemon or model download
+  const cloud = isCloudProvider(settings.llm_provider);
 
   async function finish() {
     await updateSettings({ setup_complete: true });
@@ -31,7 +33,10 @@ export function SetupWizard({ settings, onComplete }: Props) {
           <div className="setup-content">
             <ShieldCheck size={36} />
             <h1>Pilot</h1>
-            <p>Your data never leaves this device. All AI runs locally.</p>
+            <p>
+              Browsing, credentials and captured evidence stay on this machine. Reasoning runs on the
+              configured model provider.
+            </p>
             <button className="primary-button" onClick={() => setStep(2)}>
               Get Started
             </button>
@@ -41,8 +46,8 @@ export function SetupWizard({ settings, onComplete }: Props) {
         {step === 2 ? (
           <div className="setup-content">
             <CheckCircle2 size={36} />
-            <h1>Ollama</h1>
-            <p>{settings.ollama_base_url}</p>
+            <h1>{providerLabel(settings.llm_provider)}</h1>
+            <p>{cloud ? "No local daemon required." : settings.ollama_base_url}</p>
             <button className="primary-button" onClick={() => setStep(3)}>
               Continue
             </button>
@@ -53,11 +58,13 @@ export function SetupWizard({ settings, onComplete }: Props) {
           <div className="setup-content">
             <Download size={36} />
             <h1>Model</h1>
-            <p>{settings.ollama_model}</p>
+            <p>{cloud ? "Planner · Executor · Vision · Recovery" : settings.ollama_model}</p>
             <button
               className="primary-button"
               onClick={() => {
-                setStatus("Use the backend setup endpoint or run ollama pull qwen2.5:7b.");
+                if (!cloud) {
+                  setStatus("Pull the configured on-device models before running tasks.");
+                }
                 setStep(4);
               }}
             >

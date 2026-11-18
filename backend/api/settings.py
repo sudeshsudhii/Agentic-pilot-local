@@ -21,11 +21,11 @@ async def get_settings(request: Request) -> SettingsResponse:
 
     config = get_config()
     setup_complete = await request.app.state.database.get_setting("setup_complete", "false")
-    provider = (config.llm_provider or "gemini").lower().strip()
-    if provider == "gemini":
-        active_model = config.gemini_model
-    elif provider == "hybrid":
-        active_model = f"{config.gemini_model} (hybrid)"
+    provider = (config.llm_provider or "claude").lower().strip()
+    if provider == "claude":
+        active_model = config.claude_model
+    elif provider in ("claude_cli", "claude-cli", "cli"):
+        active_model = f"{config.claude_cli_model} (Claude Code CLI)"
     else:
         active_model = config.ollama_model
     return SettingsResponse(

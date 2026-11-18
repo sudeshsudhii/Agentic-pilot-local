@@ -11,6 +11,15 @@ from backend.api.settings import db_size_mb
 from backend.config import get_config
 from backend.llm.gateway import get_llm_provider
 
+
+def _active_model_name(config, provider_name: str) -> str:
+    """Return the model name of the currently active provider."""
+    if provider_name == "claude":
+        return config.claude_model
+    if provider_name == "claude_cli":
+        return f"{config.claude_cli_model} (Claude Code CLI)"
+    return config.ollama_model
+
 router = APIRouter(prefix="/api/health", tags=["health"])
 
 
@@ -30,7 +39,7 @@ async def detailed_health(request: Request) -> DetailedHealthResponse:
         "llm": {
             "provider": gateway.provider_name,
             "status": "connected" if llm_ok else "disconnected",
-            "model": config.gemini_model if gateway.provider_name == "gemini" else config.ollama_model,
+            "model": _active_model_name(config, gateway.provider_name),
             "latency_ms": llm_latency,
         },
         "ollama": {

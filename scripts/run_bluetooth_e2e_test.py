@@ -1,10 +1,10 @@
 """Real End-to-End Bluetooth Desktop Test and Latency Benchmark.
 
 Executes:
-1. LLM Performance Benchmark (Ollama vs Gemini API for simple planning request)
+1. LLM Performance Benchmark (Ollama vs Claude API for simple planning request)
 2. Live Bluetooth Desktop Task through LangGraph:
    "Open Windows Settings, navigate to Bluetooth settings, and make sure Bluetooth is ON."
-   - Environment Resolver -> Desktop Observer -> Gemini -> Action -> Executor -> Re-observe -> Deterministic Verification
+   - Environment Resolver -> Desktop Observer -> Claude -> Action -> Executor -> Re-observe -> Deterministic Verification
    - Preserves Bluetooth if already ON (no unnecessary toggling)
    - Independent verification that Bluetooth == ON
 """
@@ -33,7 +33,7 @@ from backend.desktop.models import GoalCondition, GoalPredicate, GoalTarget
 from backend.desktop.verifier import desktop_verifier
 from backend.desktop.observer import desktop_observer
 from backend.llm.gateway import OllamaGateway, get_llm_provider
-from backend.llm.gemini import GeminiGateway
+from backend.llm.claude import ClaudeGateway
 from backend.llm.parser import PlannedAction
 
 logging.basicConfig(
@@ -44,8 +44,8 @@ logger = logging.getLogger("bluetooth_e2e_test")
 
 
 async def benchmark_llm_planning() -> dict:
-    """Benchmark Ollama vs Gemini response latency for a planning request."""
-    logger.info("=== 1. LATENCY BENCHMARK: OLLAMA vs GEMINI ===")
+    """Benchmark Ollama vs Claude response latency for a planning request."""
+    logger.info("=== 1. LATENCY BENCHMARK: OLLAMA vs CLAUDE ===")
     config = get_config()
 
     planning_system = (
@@ -61,41 +61,41 @@ async def benchmark_llm_planning() -> dict:
 
     results = {}
 
-    # 1. Gemini Cloud Benchmark
-    gemini_gw = GeminiGateway(config=config)
-    gemini_t0 = time.perf_counter()
-    gemini_resp = None
-    gemini_error = None
+    # 1. Claude Cloud Benchmark
+    claude_gw = ClaudeGateway(config=config)
+    claude_t0 = time.perf_counter()
+    claude_resp = None
+    claude_error = None
     try:
-        gemini_resp = await gemini_gw.complete_structured(
+        claude_resp = await claude_gw.complete_structured(
             system=planning_system,
             user=planning_prompt,
             schema=PlannedAction,
         )
-        gemini_latency = time.perf_counter() - gemini_t0
-        results["gemini"] = {
-            "provider": "gemini",
-            "model": config.gemini_model,
-            "latency_seconds": round(gemini_latency, 3),
+        claude_latency = time.perf_counter() - claude_t0
+        results["claude"] = {
+            "provider": "claude",
+            "model": config.claude_model,
+            "latency_seconds": round(claude_latency, 3),
             "status": "success",
-            "action": gemini_resp.action_type if gemini_resp else "unknown",
+            "action": claude_resp.action_type if claude_resp else "unknown",
         }
         logger.info(
-            "Gemini [%s]: %.3fs (action: %s)",
-            config.gemini_model,
-            gemini_latency,
-            gemini_resp.action_type if gemini_resp else "",
+            "Claude [%s]: %.3fs (action: %s)",
+            config.claude_model,
+            claude_latency,
+            claude_resp.action_type if claude_resp else "",
         )
     except Exception as e:
-        gemini_latency = time.perf_counter() - gemini_t0
-        results["gemini"] = {
-            "provider": "gemini",
-            "model": config.gemini_model,
-            "latency_seconds": round(gemini_latency, 3),
+        claude_latency = time.perf_counter() - claude_t0
+        results["claude"] = {
+            "provider": "claude",
+            "model": config.claude_model,
+            "latency_seconds": round(claude_latency, 3),
             "status": "error",
             "error": str(e),
         }
-        logger.warning("Gemini benchmark error: %s", e)
+        logger.warning("Claude benchmark error: %s", e)
 
     # 2. Ollama Local Benchmark (probe if running)
     ollama_gw = OllamaGateway(config=config)
@@ -132,7 +132,7 @@ async def benchmark_llm_planning() -> dict:
             "model": config.ollama_model,
             "latency_seconds": None,
             "status": "standby_offline",
-            "notes": "Ollama daemon was not started because LLM_PROVIDER=gemini preserves laptop CPU/RAM/thermals.",
+            "notes": "Ollama daemon was not started because LLM_PROVIDER=claude preserves laptop CPU/RAM/thermals.",
         }
         logger.info(
             "Ollama: Standby/Offline (daemon not loaded to eliminate laptop heat and load)."
@@ -208,7 +208,7 @@ async def run_bluetooth_e2e() -> dict:
     assert graph is not None, "Failed to compile Agentic Pilot LangGraph"
 
     task_start_time = time.perf_counter()
-    gemini_api_durations = []
+    claude_api_durations = []
     desktop_exec_durations = []
 
     logger.info("Launching task '%s' through LangGraph state machine...", task_goal)
@@ -245,7 +245,7 @@ async def run_bluetooth_e2e() -> dict:
         "independent_verification_seconds": round(verif_duration, 3),
         "bluetooth_verified_on": verif_res.verified or (observed_bluetooth_toggle == "On"),
         "observed_bluetooth_toggle_state": observed_bluetooth_toggle or "On",
-        "gemini_call_count": final_state.get("llm_call_count", 1),
+        "claude_call_count": final_state.get("llm_call_count", 1),
         "active_environment": final_state.get("current_environment"),
     }
 
@@ -262,7 +262,7 @@ async def main():
         "e2e_report": e2e_report,
     }
 
-    output_path = PROJECT_ROOT / "tests" / "data" / "gemini_bluetooth_results.json"
+    output_path = PROJECT_ROOT / "tests" / "data" / "claude_bluetooth_results.json"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(full_output, indent=2), encoding="utf-8")
     print("\n" + "=" * 60)
